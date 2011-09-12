@@ -29,5 +29,9 @@ class IParticipant(Interface):
     """ Participant model. """
 
 
+class IQuestions(Interface):
+    """ A questions model - contains question objects. """
+
+
 class IQuestion(Interface):
     """ A question model. """

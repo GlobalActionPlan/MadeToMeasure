@@ -24,19 +24,19 @@ class QuestionTests(unittest.TestCase):
 
     def test_question_text(self):
         obj = self._make_obj()
-        self.assertEqual(obj.get_question_text('nolang'), None)
-        obj.set_question_text('somelang', "Hello")
-        self.assertEqual(obj.get_question_text('somelang'), "Hello")
+        self.assertEqual(obj.get_question_text(), [])
+        obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
+        self.assertEqual(obj.get_question_text(), [{'lang': 'somelang', 'text': 'Very important text'}])
         
     def test_schema_type(self):
         obj = self._make_obj()
-        obj.set_schema_type('Some type')
-        self.assertEqual(obj.get_schema_type(), "Some type")
+        obj.set_question_type_schema('Some type')
+        self.assertEqual(obj.get_question_type_schema(), "Some type")
         
     def test_get_schema(self):
         obj = self._make_obj()
-        obj.set_schema_type('FreeTextQuestion')
-        obj.set_question_text('somelang', "Very important text")
+        obj.set_question_type_schema('FreeTextQuestion')
+        obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
         
         schema = obj.get_schema('somelang')
         self.assertEqual(schema['text'].title, "Very important text")

@@ -30,6 +30,7 @@ def bootstrap_root():
     
     root['surveys'] = Surveys()
     root['participants'] = Participants()
+    root['questions'] = Questions()
     
     return root
 
@@ -68,7 +69,7 @@ class User(Folder):
     implements(IUser)
     content_type = 'User'
     display_name = _(u"User")
-    allowed_contexts = ('Users')
+    allowed_contexts = ('Users',)
     
     @property
     def userid(self):
@@ -111,7 +112,7 @@ class Survey(Folder):
     implements(ISurvey)
     content_type = 'Survey'
     display_name = _(u"Survey")
-    allowed_contexts = ('Surveys')
+    allowed_contexts = ('Surveys',)
 
 
 class Participants(Folder):
@@ -131,15 +132,35 @@ class Participant(Folder):
     implements(IParticipant)
     content_type = 'Participant'
     display_name = _(u"Participant")
-    allowed_contexts = ('Participants') #Not manually addable
+    allowed_contexts = ('Participants',) #Not manually addable
+
+    def set_email(self, value):
+        self.__email__ = value
+    
+    def get_email(self):
+        return getattr(self, '__email__', '')
+
+
+class Questions(Folder):
+    implements(IQuestions)
+    content_type = 'Questions'
+    display_name = _(u"Questions")
+    allowed_contexts = () #Not manually addable
+    
+    def get_title(self):
+        return self.display_name
 
 
 class Question(Folder):
     implements(IQuestion)
-    
+    content_type = 'Question'
+    display_name = _(u"Question")
+    allowed_contexts = ('Questions', )
+
     def __init__(self):
         self.__question_text__ = OOBTree()
-        self.__schema_type__ = ''
+        self.__question_type_schema__ = ''
+        super(Question, self).__init__()
     
     def get_title(self):
         return getattr(self, '__title__', '')
@@ -147,25 +168,41 @@ class Question(Folder):
     def set_title(self, value):
         self.__title__ = value
     
-    def get_question_text(self, lang):
-        return self.__question_text__.get(lang, None)
+    def get_question_text(self):
+        results = []
+        for (lang, text) in self.__question_text__.items():
+            results.append({'lang':lang,'text':text})
+        return results
 
-    def set_question_text(self, lang, value):
-        self.__question_text__[lang] = value
+    def set_question_text(self, value):
+        """ Example value: [{'lang': u'sv', 'text': u'Svensk text'}] """
+        new_keys = [x['lang'] for x in value]
+        for entry in value:
+            self.__question_text__[entry['lang']] = entry['text']
+        #Remove any keys not present in the form. They've been deleted
+        for k in self.__question_text__.keys():
+            if k not in new_keys:
+                del self.__question_text__[k]
     
-    def get_schema_type(self):
-        return self.__schema_type__
+    def get_question_type_schema(self):
+        return self.__question_type_schema__
     
-    def set_schema_type(self, value):
-        self.__schema_type__ = value
+    def set_question_type_schema(self, value):
+        self.__question_type_schema__ = value
 
     def get_schema(self, lang):
         """ Get a question schema with 'text' as the translated text of the question. """
-        title = self.get_question_text(lang)
+        title = self.__question_text__.get(lang, None)
         if title is None:
             title = self.get_title()
-        schema_type = self.get_schema_type()
+        schema_type = self.get_question_type_schema()
         if schema_type not in QUESTION_SCHEMAS:
             raise KeyError("There's no schema called %s in QUESTION_SCHEMAS" % schema_type)
         return QUESTION_SCHEMAS[schema_type]().bind(question_title = title)
-    
+
+
+CONTENT_TYPES = {'User':User,
+                 'Survey':Survey,
+                 'Participant':Participant,
+                 'Question':Question,
+                 }
