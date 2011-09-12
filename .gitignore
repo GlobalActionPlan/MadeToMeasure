@@ -11,5 +11,7 @@ eggs
 develop-eggs
 parts
 *.pyc
+*.pt.py
 Data.fs*
+.tmp*
 *.egg-info
