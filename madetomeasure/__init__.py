@@ -2,6 +2,7 @@ from pyramid.config import Configurator
 from repoze.zodbconn.finder import PersistentApplicationFinder
 from madetomeasure.models import appmaker
 
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -12,6 +13,7 @@ def main(global_config, **settings):
     finder = PersistentApplicationFinder(zodb_uri, appmaker)
     def get_root(request):
         return finder(request.environ)
+    
     config = Configurator(root_factory=get_root, settings=settings)
     config.add_static_view('static', 'madetomeasure:static')
     config.scan('madetomeasure')
