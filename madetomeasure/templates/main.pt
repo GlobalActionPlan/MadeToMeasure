@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:define-macro="master"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="voteit.core">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <metal:page_title define-slot="head_title">
+           <title>Made to measure</title>
+        </metal:page_title>
+    <meta name="keywords" content="python web application" />
+    <meta name="description" content="pyramid web application" />
+    
+    <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
+    <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
+
+    <tal:deform tal:condition="form_resources|False">
+	    <tal:css repeat="css_file form_resources['css']|[]">
+	    <link rel="stylesheet"
+	          tal:attributes="href string:/deform/${css_file}" type="text/css" />
+	    </tal:css>
+        <tal:js repeat="js_file form_resources['js']|[]">
+        <script type="text/javascript"
+                tal:attributes="src string:/deform/${js_file}" />
+        </tal:js>
+	    <script type="text/javascript">
+	        deform.load()
+	    </script>
+    </tal:deform>
+
+    <metal:head define-slot="head"></metal:head>
+    
+</head>
+<body>
+	
+	<div tal:condition="userid">
+		Userid: ${userid}
+		<a href="${resource_url(root, request)+'logout'}">Logout</a>
+	</div>
+    
+	<metal:heading define-slot="page_heading">
+		<h1 tal:content="context.get_title()">Title</h1>
+	</metal:heading>
+	
+	<metal:main-content define-slot="content">
+		
+	</metal:main-content>
+	
+
+
+</body>
+</html>

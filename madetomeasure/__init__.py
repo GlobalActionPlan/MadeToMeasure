@@ -1,11 +1,20 @@
 from pyramid.config import Configurator
 from repoze.zodbconn.finder import PersistentApplicationFinder
-from madetomeasure.models import appmaker
+
+from pyramid.i18n import TranslationStringFactory
+from pyramid.session import UnencryptedCookieSessionFactoryConfig
+
+
+MadeToMeasureTSF = TranslationStringFactory('MadeToMeasure')
 
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
+    from madetomeasure.models import appmaker
+    from madetomeasure.security import authn_policy
+    from madetomeasure.security import authz_policy
+    
     zodb_uri = settings.get('zodb_uri', False)
     if zodb_uri is False:
         raise ValueError("No 'zodb_uri' in application configuration.")
@@ -14,7 +23,22 @@ def main(global_config, **settings):
     def get_root(request):
         return finder(request.environ)
     
-    config = Configurator(root_factory=get_root, settings=settings)
+
+    sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
+    
+    config = Configurator(settings=settings,
+                          authentication_policy=authn_policy,
+                          authorization_policy=authz_policy,
+                          root_factory=get_root,
+                          session_factory = sessionfact,)
+    
     config.add_static_view('static', 'madetomeasure:static')
+    config.add_static_view('deform', 'deform:static')
+
     config.scan('madetomeasure')
     return config.make_wsgi_app()
+
+
+
+
+

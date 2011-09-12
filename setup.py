@@ -18,6 +18,7 @@ requires = [
     'Babel',
     'repoze.folder',
     #'repoze.workflow',
+    'colander',
     'deform',
     'slugify',
     'lingua',
