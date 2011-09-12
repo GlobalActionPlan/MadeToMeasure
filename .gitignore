@@ -10,4 +10,6 @@ lib
 eggs
 develop-eggs
 parts
-
+*.pyc
+Data.fs*
+*.egg-info
