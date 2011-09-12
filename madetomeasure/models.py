@@ -1,10 +1,13 @@
 from hashlib import sha1
+from BTrees.OOBTree import OOBTree
 
+import colander
 from repoze.folder import Folder
 from zope.interface import implements
 
-from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.interfaces import *
+from madetomeasure.schemas import QUESTION_SCHEMAS
 
 
 def appmaker(zodb_root):
@@ -127,10 +130,42 @@ class Participant(Folder):
     """
     implements(IParticipant)
     content_type = 'Participant'
-    display_name = _(u"Participants")
+    display_name = _(u"Participant")
     allowed_contexts = ('Participants') #Not manually addable
 
 
+class Question(Folder):
+    implements(IQuestion)
+    
+    def __init__(self):
+        self.__question_text__ = OOBTree()
+        self.__schema_type__ = ''
+    
+    def get_title(self):
+        return getattr(self, '__title__', '')
+    
+    def set_title(self, value):
+        self.__title__ = value
+    
+    def get_question_text(self, lang):
+        return self.__question_text__.get(lang, None)
 
+    def set_question_text(self, lang, value):
+        self.__question_text__[lang] = value
+    
+    def get_schema_type(self):
+        return self.__schema_type__
+    
+    def set_schema_type(self, value):
+        self.__schema_type__ = value
 
+    def get_schema(self, lang):
+        """ Get a question schema with 'text' as the translated text of the question. """
+        title = self.get_question_text(lang)
+        if title is None:
+            title = self.get_title()
+        schema_type = self.get_schema_type()
+        if schema_type not in QUESTION_SCHEMAS:
+            raise KeyError("There's no schema called %s in QUESTION_SCHEMAS" % schema_type)
+        return QUESTION_SCHEMAS[schema_type]().bind(question_title = title)
     

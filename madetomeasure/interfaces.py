@@ -27,3 +27,7 @@ class IParticipants(Interface):
 
 class IParticipant(Interface):
     """ Participant model. """
+
+
+class IQuestion(Interface):
+    """ A question model. """
