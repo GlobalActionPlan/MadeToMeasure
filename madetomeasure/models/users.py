@@ -26,6 +26,9 @@ class Users(BaseFolder):
     def get_title(self):
         return self.display_name
 
+    def set_title(self, value):
+        pass
+
 
 class User(BaseFolder):
     """ A system user """
@@ -37,12 +40,6 @@ class User(BaseFolder):
     @property
     def userid(self):
         return self.__name__
-    
-    def set_title(self, value):
-        self.__title__ = value
-    
-    def get_title(self):
-        return getattr(self, '__title__', '')
     
     def set_email(self, value):
         self.__email__ = value

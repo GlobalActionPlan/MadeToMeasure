@@ -17,6 +17,8 @@ class Questions(BaseFolder):
     def get_title(self):
         return self.display_name
 
+    def set_title(self, value):
+        pass
 
 class Question(BaseFolder):
     implements(IQuestion)
@@ -29,12 +31,6 @@ class Question(BaseFolder):
         self.__question_type_schema__ = ''
         super(Question, self).__init__()
     
-    def get_title(self):
-        return getattr(self, '__title__', '')
-    
-    def set_title(self, value):
-        self.__title__ = value
-    
     def get_question_text(self):
         results = []
         for (lang, text) in self.__question_text__.items():
@@ -42,7 +38,9 @@ class Question(BaseFolder):
         return results
 
     def set_question_text(self, value):
-        """ Example value: [{'lang': u'sv', 'text': u'Svensk text'}] """
+        """ Example value: [{'lang': u'sv', 'text': u'Svensk text'}]
+            This is only for the translations of the question, since the title is the base language.
+        """
         new_keys = [x['lang'] for x in value]
         for entry in value:
             self.__question_text__[entry['lang']] = entry['text']

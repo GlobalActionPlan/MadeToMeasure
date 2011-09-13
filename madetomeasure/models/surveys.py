@@ -15,17 +15,15 @@ class Surveys(BaseFolder):
     def get_title(self):
         return self.display_name
 
+    def set_title(self, value):
+        pass
+
+
 class Survey(BaseFolder):
     implements(ISurvey)
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
-    
-    def get_title(self):
-        return getattr(self, '__title__', '')
-    
-    def set_title(self, value):
-        self.__title__ = value
 
 
 class SurveySection(BaseFolder):
@@ -33,9 +31,3 @@ class SurveySection(BaseFolder):
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)
-    
-    def get_title(self):
-        return getattr(self, '__title__', '')
-    
-    def set_title(self, value):
-        self.__title__ = value

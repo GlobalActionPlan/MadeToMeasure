@@ -14,6 +14,9 @@ class Participants(BaseFolder):
 
     def get_title(self):
         return self.display_name
+
+    def set_title(self, value):
+        pass
     
 
 class Participant(BaseFolder):

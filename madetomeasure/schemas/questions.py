@@ -18,7 +18,6 @@ def deferred_context_title(node, kw):
 @colander.deferred
 def deferred_lang_widget(node, kw):
     choices = (('sv', 'Svenska'),
-               ('en', 'English'),
                )
     return deform.widget.SelectWidget(values=choices)
 
