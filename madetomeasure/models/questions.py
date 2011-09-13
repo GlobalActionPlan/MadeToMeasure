@@ -20,6 +20,16 @@ class Questions(BaseFolder):
     def set_title(self, value):
         pass
 
+    def questions_by_type(self, question_type):
+        """ Return available question objects according to a specific type. """
+        results = set()
+        for obj in self.values():
+            if not IQuestion.providedBy(obj):
+                continue
+            if obj.get_question_type() == question_type:
+                results.add(obj)
+        return results
+
 class Question(BaseFolder):
     implements(IQuestion)
     content_type = 'Question'
@@ -28,7 +38,6 @@ class Question(BaseFolder):
 
     def __init__(self):
         self.__question_text__ = OOBTree()
-        self.__question_type_schema__ = ''
         super(Question, self).__init__()
     
     def get_question_text(self):
@@ -49,18 +58,18 @@ class Question(BaseFolder):
             if k not in new_keys:
                 del self.__question_text__[k]
     
-    def get_question_type_schema(self):
-        return self.__question_type_schema__
+    def get_question_type(self):
+        return getattr(self, '__question_type__', '')
     
-    def set_question_type_schema(self, value):
-        self.__question_type_schema__ = value
+    def set_question_type(self, value):
+        self.__question_type__ = value
 
     def get_schema(self, lang):
         """ Get a question schema with 'text' as the translated text of the question. """
         title = self.__question_text__.get(lang, None)
         if title is None:
             title = self.get_title()
-        schema_type = self.get_question_type_schema()
+        schema_type = self.get_question_type()
         if schema_type not in QUESTION_SCHEMAS:
             raise KeyError("There's no schema called %s in QUESTION_SCHEMAS" % schema_type)
         return QUESTION_SCHEMAS[schema_type]().bind(question_title = title)

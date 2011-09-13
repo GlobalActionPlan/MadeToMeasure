@@ -31,3 +31,16 @@ class SurveySection(BaseFolder):
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)
+
+    def get_question_type(self):
+        return getattr(self, '__question_type__', '')
+    
+    def set_question_type(self, value):
+        self.__question_type__ = value
+
+    def get_question_ids(self):
+        return getattr(self, '__question_ids__', set())
+
+    def set_question_ids(self, value):
+        self.__question_ids__ = value
+    

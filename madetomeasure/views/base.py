@@ -58,6 +58,7 @@ class BaseView(object):
     @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE)
+    @view_config(context=ISurvey, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IQuestions, renderer=BASE_VIEW_TEMPLATE)
     def admin_listing_view(self):

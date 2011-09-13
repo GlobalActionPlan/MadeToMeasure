@@ -4,7 +4,6 @@ import deform
 from madetomeasure import MadeToMeasureTSF as _
 
 
-
 @colander.deferred
 def deferred_question_type_widget(node, kw):
     from madetomeasure.schemas import QUESTION_SCHEMAS
@@ -24,7 +23,7 @@ def deferred_lang_widget(node, kw):
 
 class AddQuestionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String())
-    question_type_schema = colander.SchemaNode(colander.String(),
+    question_type = colander.SchemaNode(colander.String(),
                                       widget=deferred_question_type_widget,)
 
 

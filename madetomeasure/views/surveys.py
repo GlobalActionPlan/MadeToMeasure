@@ -12,12 +12,15 @@ from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
+from madetomeasure.models.app import generate_slug
 
 
-class QuestionsView(BaseView):
+class SurveysView(BaseView):
 
-    @view_config(name='add', context=IQuestions, renderer='templates/form.pt')
+    @view_config(name='add', context=ISurveys, renderer='templates/form.pt')
+    @view_config(name='add', context=ISurvey, renderer='templates/form.pt')
     def add_view(self):
+        """ Add Survey and Survey Section. """
         #FIXME: Check permissions
         type_to_add = self.request.GET.get('content_type')
         if type_to_add not in self.addable_types():
@@ -43,7 +46,8 @@ class QuestionsView(BaseView):
                 mutator = getattr(obj, 'set_%s' % k)
                 mutator(v)
             
-            self.context[str(uuid4())] = obj
+            name = generate_slug(self.context, obj.get_title())
+            self.context[name] = obj
     
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
@@ -52,12 +56,20 @@ class QuestionsView(BaseView):
         return self.response
 
 
-    @view_config(name='edit', context=IQuestion, renderer='templates/form.pt')
+    @view_config(name='edit', context=ISurvey, renderer='templates/form.pt')
+    @view_config(name='edit', context=ISurveySection, renderer='templates/form.pt')
     def edit_view(self):
         #FIXME: Check permissions
+        
+        def _question_types():
+            #FIXME: Handle several?
+            if hasattr(self.context, 'get_question_type'):
+                return [self.context.get_question_type()]
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context,
+                             question_types = _question_types())
+                
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         

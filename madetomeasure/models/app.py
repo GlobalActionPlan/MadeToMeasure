@@ -1,3 +1,5 @@
+from slugify import slugify
+
 
 def appmaker(zodb_root):
     if not 'app_root' in zodb_root:
@@ -29,3 +31,25 @@ def bootstrap_root():
     root['questions'] = Questions()
     
     return root
+
+
+def generate_slug(context, text, limit=20):
+    """ Suggest a name for content that will be added.
+        text is a title or similar to be used.
+    """
+    suggestion = slugify(text[:limit])
+    
+    #Is the suggested ID already unique?
+    if suggestion not in context:
+        return suggestion
+    
+    #ID isn't unique, let's try to generate a unique one.
+    RETRY = 100
+    i = 1
+    while i <= RETRY:
+        new_s = "%s-%s" % (suggestion, str(i))
+        if new_s not in context:
+            return new_s
+        i += 1
+    #If no id was found, don't just continue
+    raise KeyError("No unique id could be found")

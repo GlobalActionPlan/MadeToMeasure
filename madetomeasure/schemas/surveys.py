@@ -1,5 +1,6 @@
 import colander
 import deform
+from pyramid.traversal import find_root
 
 from madetomeasure.schemas.questions import deferred_question_type_widget
 from madetomeasure import MadeToMeasureTSF as _
@@ -20,17 +21,34 @@ def deferred_survey_section_title(node, kw):
         raise ValueError("survey_section_title must be part of schema binding.")
     return title
 
-
-class SurveySectionSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),)
-    question_type = colander.SchemaNode(colander.String(),
-                                        widget=deferred_question_type_widget,)
-
-
-class SectionsSequenceSchema(colander.SequenceSchema):
-    section = SurveySectionSchema()
+@colander.deferred
+def deferred_questions_for_types_widget(node, kw):
+    question_types = kw['question_types']
+    context = kw['context']
+    root = find_root(context)
+    questions = root['questions']
+    
+    results = set()
+    for question_type in question_types:
+        results.update(questions.questions_by_type(question_type))
+    
+    choices = [(x.__name__, x.get_title()) for x in results]
+    return deform.widget.CheckboxChoiceWidget(values=choices)
 
 
 class AddSurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
-    sections = SectionsSequenceSchema(title=_(u"Add sections"),)
+
+
+class AddSurveySectionSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    question_type = colander.SchemaNode(colander.String(),
+                                        widget=deferred_question_type_widget,)
+    
+
+class EditSurveySectionSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    question_ids = colander.SchemaNode(deform.Set(),
+                                       title = _(u"Questions in this survey section"),
+                                       widget=deferred_questions_for_types_widget,)
+    

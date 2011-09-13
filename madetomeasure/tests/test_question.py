@@ -30,12 +30,12 @@ class QuestionTests(unittest.TestCase):
         
     def test_schema_type(self):
         obj = self._make_obj()
-        obj.set_question_type_schema('Some type')
-        self.assertEqual(obj.get_question_type_schema(), "Some type")
+        obj.set_question_type('Some type')
+        self.assertEqual(obj.get_question_type(), "Some type")
         
     def test_get_schema(self):
         obj = self._make_obj()
-        obj.set_question_type_schema('FreeTextQuestion')
+        obj.set_question_type('FreeTextQuestion')
         obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
         
         schema = obj.get_schema('somelang')
