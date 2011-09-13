@@ -39,4 +39,5 @@ class QuestionTests(unittest.TestCase):
         obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
         
         schema = obj.get_schema('somelang')
-        self.assertEqual(schema['text'].title, "Very important text")
+        #Answer is the field that will have the title of the actual question
+        self.assertEqual(schema['answer'].title, "Very important text")
