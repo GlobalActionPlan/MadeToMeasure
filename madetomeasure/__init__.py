@@ -11,7 +11,7 @@ MadeToMeasureTSF = TranslationStringFactory('MadeToMeasure')
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
-    from madetomeasure.models import appmaker
+    from madetomeasure.models.app import appmaker
     from madetomeasure.security import authn_policy
     from madetomeasure.security import authz_policy
     
