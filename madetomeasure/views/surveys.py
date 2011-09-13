@@ -100,4 +100,39 @@ class SurveysView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
     
-    
+    @view_config(name='invitation_emails', context=ISurvey, renderer='templates/form.pt')
+    def invitation_emails_view(self):
+        """ Edit email addresses for who should be part of a survey. """
+        #FIXME: Check permissions
+
+        schema = CONTENT_SCHEMAS["SurveyInvitation"]()
+        schema = schema.bind()
+        form = Form(schema, buttons=(self.buttons['save'],))
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        if 'save' in self.request.POST:
+            controls = self.request.POST.items()
+
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            for (k, v) in appstruct.items():
+                mutator = getattr(self.context, 'set_%s' % k)
+                mutator(v)
+                
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        marker = object()
+        appstruct = {}
+        for field in schema:
+            accessor = getattr(self.context, "get_%s" % field.name, marker)
+            if accessor != marker:
+                appstruct[field.name] = accessor()
+
+        self.response['form'] = form.render(appstruct)
+        return self.response

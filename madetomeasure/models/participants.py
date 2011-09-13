@@ -18,6 +18,12 @@ class Participants(BaseFolder):
     def set_title(self, value):
         pass
     
+    def participants_by_emails(self, emails):
+        results = set()
+        for obj in self.values():
+            if obj.get_email() in emails:
+                results.add(obj)
+        return results
 
 class Participant(BaseFolder):
     """ A Participant is a light-weight user object. They're not meant to be able to login.

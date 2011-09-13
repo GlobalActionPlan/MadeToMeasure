@@ -24,6 +24,12 @@ class Survey(BaseFolder):
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
+    
+    def get_invitation_emails(self):
+        return getattr(self, '__invitation_emails__', '')
+    
+    def set_invitation_emails(self, value):
+        self.__invitation_emails__ = value
 
 
 class SurveySection(BaseFolder):
