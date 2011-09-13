@@ -7,7 +7,7 @@ from madetomeasure import MadeToMeasureTSF as _
 @colander.deferred
 def deferred_question_type_widget(node, kw):
     choices = [(x, x) for x in QUESTION_SCHEMAS.keys()]
-    return deform.widget.SelectWidget(values=choices)
+    return deform.widget.RadioChoiceWidget(values=choices)
 
 @colander.deferred
 def deferred_context_title(node, kw):
@@ -58,6 +58,7 @@ class LoginSchema(colander.Schema):
                                     missing='',
                                     default=deferred_came_from,)
 
+#Question schemas
 
 @colander.deferred
 def deferred_question_title(node, kw):
@@ -66,10 +67,47 @@ def deferred_question_title(node, kw):
         raise ValueError("question_title must be part of schema binding.")
     return title
 
+
 class FreeTextQuestionSchema(colander.Schema):
-    text = colander.SchemaNode(colander.String(),
-                               missing=u'',
-                               title=deferred_question_title)
+    answer = colander.SchemaNode(colander.String(),
+                                 missing=u'',
+                                 title=deferred_question_title)
 
 
-QUESTION_SCHEMAS = {'FreeTextQuestion': FreeTextQuestionSchema}
+importance_choices = \
+    (('1', _(u'1 - Not important')),
+     ('2', u'2'),
+     ('3', u'3'),
+     ('4', u'4'),
+     ('5', u'5'),
+     ('6', u'6'),
+     ('7', _(u'7 - Very important')),)
+
+
+class ImportanceScaleQuestionSchema(colander.Schema):
+    answer = colander.SchemaNode(
+                colander.String(),
+                validator=colander.OneOf([x[0] for x in importance_choices]),
+                widget=deform.widget.RadioChoiceWidget(values=importance_choices),
+                title=deferred_question_title,)
+
+
+frequency_scale = \
+    (('never', _(u'(almost) never')),
+     ('sometimes', _(u'sometimes yes / sometimes no')),
+     ('always', _(u'(almost) always')),
+     ('n_a', _(u'not applicable (n.a.)')),)
+
+
+class FrequencyScaleQuestionSchema(colander.Schema):
+    answer = colander.SchemaNode(
+                colander.String(),
+                validator=colander.OneOf([x[0] for x in frequency_scale]),
+                widget=deform.widget.RadioChoiceWidget(values=frequency_scale),
+                title=deferred_question_title,)
+
+
+
+QUESTION_SCHEMAS = {'FreeTextQuestion': FreeTextQuestionSchema,
+                    'ImportanceScaleQuestion': ImportanceScaleQuestionSchema,
+                    'FrequencyScaleQuestion': FrequencyScaleQuestionSchema,}
