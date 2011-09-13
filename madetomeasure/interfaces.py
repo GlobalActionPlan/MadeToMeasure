@@ -21,6 +21,10 @@ class ISurvey(Interface):
     """ Survey model. """
 
 
+class ISurveySection(Interface):
+    """ Survey Section model. """
+
+
 class IParticipants(Interface):
     """ Participants model. """
 

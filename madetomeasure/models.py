@@ -113,6 +113,29 @@ class Survey(Folder):
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
+    
+    def get_title(self):
+        return getattr(self, '__title__', '')
+    
+    def set_title(self, value):
+        self.__title__ = value
+        
+    def set_sections(self, value):
+        
+    def get_sections(self):
+
+
+class SurveySection(Folder):
+    implements(ISurvey)
+    content_type = 'SurveySection'
+    display_name = _(u"Survey Section")
+    allowed_contexts = ('Survey',)
+    
+    def get_title(self):
+        return getattr(self, '__title__', '')
+    
+    def set_title(self, value):
+        self.__title__ = value
 
 
 class Participants(Folder):

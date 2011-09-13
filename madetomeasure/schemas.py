@@ -38,10 +38,6 @@ class EditQuestionSchema(colander.Schema):
     question_text = TranslationSequenceSchema(title=_(u"Add translations"),)
 
 
-CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
-                   'EditQuestion':EditQuestionSchema,}
-
-
 @colander.deferred
 def deferred_came_from(node, kw):
     return kw.get('came_from', u'')
@@ -57,6 +53,40 @@ class LoginSchema(colander.Schema):
                                     widget = deform.widget.HiddenWidget(),
                                     missing='',
                                     default=deferred_came_from,)
+
+
+@colander.deferred
+def deferred_survey_title(node, kw):
+    title = kw.get('survey_title', None)
+    if title is None:
+        raise ValueError("survey_title must be part of schema binding.")
+    return title
+    
+@colander.deferred
+def deferred_survey_section_title(node, kw):
+    title = kw.get('survey_section_title', None)
+    if title is None:
+        raise ValueError("survey_section_title must be part of schema binding.")
+    return title
+
+class SurveySectionSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    question_type = colander.SchemaNode(colander.String(),
+                                        widget=deferred_question_type_widget,)
+
+class SectionsSequenceSchema(colander.SequenceSchema):
+    section = SurveySectionSchema()
+
+class AddSurveySchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    sections = SectionsSequenceSchema(title=_(u"Add sections"),)
+
+
+
+CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
+                   'EditQuestion':EditQuestionSchema,
+                   'AddSurvey':AddSurveySchema,}
+
 
 #Question schemas
 

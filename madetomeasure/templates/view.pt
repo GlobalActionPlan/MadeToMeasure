@@ -14,6 +14,9 @@
 		<a href="${resource_url(context, request) + 'add?content_type=' + type_id}">Add ${type_id}</a>
 	</tal:iterate>
 	</div>
+	<div id="editmenu" tal:condition="userid and not addable_types">
+		<a href="${resource_url(context, request) + 'edit'}">Edit</a>
+	</div>
 
     
     <tal:iterate repeat="obj context.values()">
