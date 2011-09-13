@@ -6,6 +6,8 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 
 from madetomeasure.interfaces import *
+from uuid import uuid4
+
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
 from madetomeasure.models import CONTENT_TYPES

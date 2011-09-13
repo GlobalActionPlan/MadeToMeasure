@@ -4,8 +4,10 @@ import deform
 from madetomeasure import MadeToMeasureTSF as _
 
 
+
 @colander.deferred
 def deferred_question_type_widget(node, kw):
+    from madetomeasure.schemas import QUESTION_SCHEMAS
     choices = [(x, x) for x in QUESTION_SCHEMAS.keys()]
     return deform.widget.RadioChoiceWidget(values=choices)
 

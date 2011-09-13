@@ -8,6 +8,7 @@ from madetomeasure.schemas.question_types import FrequencyScaleQuestionSchema
 
 from madetomeasure.schemas.system import LoginSchema
 
+
 CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'EditQuestion':EditQuestionSchema,
                    'AddSurvey':AddSurveySchema,}
