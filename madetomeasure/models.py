@@ -119,10 +119,6 @@ class Survey(Folder):
     
     def set_title(self, value):
         self.__title__ = value
-        
-    def set_sections(self, value):
-        
-    def get_sections(self):
 
 
 class SurveySection(Folder):
