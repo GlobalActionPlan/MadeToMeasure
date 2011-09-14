@@ -242,3 +242,18 @@ class SurveysView(BaseView):
         """
         self.response['text'] = self.context.get_finished_text()
         return self.response
+
+    @view_config(name="results", context=ISurvey, renderer='templates/results.pt')
+    def results_view(self):
+        """ Results screen
+        """
+        def _get_questions(section):
+            results = []
+            for name in section.get_question_ids():
+                results.append(section.question_object_from_id(name))
+            return results
+
+        
+        self.response['sections'] = self.context.values()
+        self.response['get_questions_for_section'] = _get_questions
+        return self.response

@@ -5,6 +5,8 @@ from zope.interface import implements
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IQuestionNodeFactory
 
+#FIXME: Move to models?
+
 
 importance_choices = \
     (('1', _(u'1 - Not important')),
@@ -46,6 +48,7 @@ class StringQuestionNode(object):
                                    name=name,
                                    widget=self.widget,
                                    **kw)
+
     def __repr__(self):
         return "<StringQuestionNode '%s'>" % self.type_title
 
