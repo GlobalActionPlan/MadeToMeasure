@@ -60,6 +60,7 @@ class BaseView(object):
         buttons['send'] = Button('send', _(u"Send"))
         buttons['next'] = Button('next', _(u"Next"))
         buttons['previous'] = Button('previous', _(u"Previous"))
+        buttons['cancel'] = Button('cancel', _(u"Cancel"))
         
         return buttons
 

@@ -107,13 +107,17 @@ class SurveysView(BaseView):
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """
         #FIXME: Check permissions
+        post = self.request.POST
+        if 'cancel' in post:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
 
         schema = CONTENT_SCHEMAS["SurveyInvitation"]()
         schema = schema.bind()
-        form = Form(schema, buttons=(self.buttons['save'], self.buttons['send']))
+        form = Form(schema, buttons=(self.buttons['save'], self.buttons['send'], self.buttons['cancel']))
         self.response['form_resources'] = form.get_widget_resources()
-        
-        post = self.request.POST
+
         if 'save' in post or 'send' in post:
             controls = self.request.POST.items()
 

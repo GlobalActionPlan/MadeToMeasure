@@ -86,6 +86,11 @@ a {
 	text-align: center;
 }
 
+#deformcancel {
+    border-color: red;
+	color: red;
+}
+
 /* Regular form tweaks */
 button {
     border: 1px solid #4A9EC6;
