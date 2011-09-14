@@ -53,6 +53,7 @@ class BaseView(object):
         buttons = {}
         buttons['login'] = Button('login', _(u"Login"))
         buttons['save'] = Button('save', _(u"Save"))
+        buttons['send'] = Button('send', _(u"Send"))
         return buttons
 
     @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE)

@@ -1,9 +1,18 @@
+from uuid import uuid4
+
+from BTrees.OOBTree import OOBTree
 from zope.interface import implements
+from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
+from pyramid.url import resource_url
+from pyramid.exceptions import Forbidden
+from pyramid.traversal import find_root
+from pyramid.renderers import render
 
 from madetomeasure.models.base import BaseFolder
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
-
+from madetomeasure.models.participants import Participant
 
 
 class Surveys(BaseFolder):
@@ -31,9 +40,100 @@ class Survey(BaseFolder):
     def set_invitation_emails(self, value):
         self.__invitation_emails__ = value
 
+    def get_from_address(self):
+        return getattr(self, '__from_address__', '')
+
+    def set_from_address(self, value):
+        self.__from_address__ = value
+
+    def get_mail_message(self):
+        return getattr(self, '__mail_message__', '')
+
+    def set_mail_message(self, value):
+        self.__mail_message__ = value
+
+
+    def _extract_emails(self):
+        results = set()
+        for email in self.get_invitation_emails().splitlines():
+            results.add(email.strip())
+        return results
+    
+    @property
+    def tickets(self):
+        if not hasattr(self, '__tickets__'):
+            self.__tickets__ = OOBTree()
+        return self.__tickets__
+        
+    def create_ticket(self, email):
+        ticket_uid = unicode(uuid4())
+        self.tickets[ticket_uid] = email
+        return ticket_uid
+
+    def send_invitations(self, request, text=None):
+        """ Send out invitations to any emails stored as invitation_emails.
+            Creates a ticket that a survey participant will "claim" to start the survey.
+            Also removes emails from invitation pool.
+        """
+        mailer = get_mailer(request)
+        sender = self.get_from_address()
+        
+        for email in self._extract_emails():
+            invitation_uid = self.create_ticket(email)
+            
+            response = {}
+            response['message'] = u"A message" #FIXME
+            response['access_link'] = "%sdo?uid=%s" % (resource_url(self, request), invitation_uid)
+            body_html = render('../views/templates/survey_invitation_mail.pt', response, request=request)            
+
+            #Must contain link etc, so each mail must be unique
+            msg = Message(subject=_(u"Survey invitation"),
+                          sender = sender and sender or None,
+                          recipients=[email],
+                          html=body_html)
+
+            mailer.send(msg)
+            
+        self.set_invitation_emails('') #Blank out emails, since we've already sent them
+
+    def start_survey(self, request):
+        """ Initiates survey.
+            - Checks that the incoming uid is correct
+            - Adds a participant if it doesn't exist
+            - Set participation in a survey on the participant
+            - Returns participant_uid (taken from GET or POST in the request)
+        """
+
+        participant_uid = request.params.get('uid')
+        if not participant_uid in self.tickets:
+            raise Forbidden("Invalid ticket")
+        
+        root = find_root(self)
+        participants = root['participants']
+        
+        #Have this person participated before?
+        participant_email = self.tickets[participant_uid]
+        result = participants.participants_by_emails((participant_email,))
+        if len(result) == 1:
+            #This participant has participated in another survey. Update information
+            obj = result[0]
+        elif not result:
+            #This is a new participant. Add info
+            obj = Participant()
+            obj.set_email(participant_email) #Fetches email
+            participants[unicode(uuid4())] = obj
+        else:
+            raise ValueError("A single email address returned several users. Email was: %s" % participant_email)
+        
+        #Add survey
+        obj.add_survey(self.__name__, participant_uid)
+        
+        return participant_uid
+
+
 
 class SurveySection(BaseFolder):
-    implements(ISurvey)
+    implements(ISurveySection)
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)

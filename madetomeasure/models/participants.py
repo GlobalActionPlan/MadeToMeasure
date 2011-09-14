@@ -1,4 +1,5 @@
 from zope.interface import implements
+from BTrees.OOBTree import OOBTree
 
 from madetomeasure.models.base import BaseFolder
 from madetomeasure import MadeToMeasureTSF as _
@@ -25,6 +26,7 @@ class Participants(BaseFolder):
                 results.add(obj)
         return results
 
+
 class Participant(BaseFolder):
     """ A Participant is a light-weight user object. They're not meant to be able to login.
     """
@@ -38,4 +40,16 @@ class Participant(BaseFolder):
     
     def get_email(self):
         return getattr(self, '__email__', '')
+    
+    @property
+    def surveys(self):
+        """ Surveys consist of survey_id (which is the __name__ paramterer of a survey)
+            and the participant_uid that is stored in that surveys tickets.
+        """
+        if not hasattr(self, '__surveys__'):
+            self.__surveys__ = OOBTree()
+        return self.__surveys__
 
+    def add_survey(self, survey_id, participant_uid):
+        self.surveys[survey_id] = participant_uid
+    

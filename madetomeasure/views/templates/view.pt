@@ -17,6 +17,9 @@
 	<div id="editmenu" tal:condition="userid and not addable_types">
 		<a href="${resource_url(context, request) + 'edit'}">Edit</a>
 	</div>
+	<div id="invitaions" tal:condition="userid and context.content_type == 'Survey'">
+		<a href="${resource_url(context, request) + 'invitation_emails'}">Invitations</a>
+	</div>
 
     
     <tal:iterate repeat="obj context.values()">
