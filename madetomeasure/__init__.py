@@ -35,6 +35,9 @@ def main(global_config, **settings):
     config.add_static_view('static', 'madetomeasure:static')
     config.add_static_view('deform', 'deform:static')
 
+    #Set which mailer to use
+    config.include(settings['mailer'])
+
     config.scan('madetomeasure')
     return config.make_wsgi_app()
 
