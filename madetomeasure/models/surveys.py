@@ -54,6 +54,12 @@ class Survey(BaseFolder):
     def set_mail_message(self, value):
         self.__mail_message__ = value
 
+    def get_finished_text(self):
+        return getattr(self, '__finished_text__', '')
+
+    def set_finished_text(self, value):
+        self.__finished_text__ = value
+
     def _extract_emails(self):
         results = set()
         for email in self.get_invitation_emails().splitlines():
@@ -149,7 +155,7 @@ class SurveySection(BaseFolder):
 
     def set_question_ids(self, value):
         self.__question_ids__ = value
-    
+
     def append_questions_to_schema(self, schema):
         """ Append all questions to a schema. """
         root = find_root(self)

@@ -37,12 +37,15 @@ def deferred_questions_for_types_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=choices)
 
 
-class AddSurveySchema(colander.Schema):
+class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
     mail_message = colander.SchemaNode(colander.String(),
                                        widget=deform.widget.TextAreaWidget())
+    finished_text = colander.SchemaNode(colander.String(),
+                                        widget=deform.widget.TextAreaWidget(),
+                                        default=_(u"Thanks a lot for filling out the survey."),)
 
 class AddSurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)

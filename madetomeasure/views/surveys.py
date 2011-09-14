@@ -202,6 +202,7 @@ class SurveysView(BaseView):
                 url += "do?uid=%s" % participant_uid
             else:
                 url = resource_url(self.context.__parent__, self.request)
+                url += "finished"
             return HTTPFound(location=url)            
             
         appstruct = self.context.response_for_uid(participant_uid)
@@ -209,4 +210,11 @@ class SurveysView(BaseView):
 
         self.response['form'] = form.render(appstruct)
         return self.response
-        
+
+
+    @view_config(name="finished", context=ISurvey, renderer='templates/participant_finished.pt')
+    def finished_survey_view(self):
+        """ The thank-you screen
+        """
+        self.response['text'] = self.context.get_finished_text()
+        return self.response
