@@ -42,9 +42,9 @@ class SurveySchema(colander.Schema):
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
     mail_message = colander.SchemaNode(colander.String(),
-                                       widget=deform.widget.TextAreaWidget())
+                                       widget=deform.widget.TextAreaWidget(rows=10, cols=50))
     finished_text = colander.SchemaNode(colander.String(),
-                                        widget=deform.widget.TextAreaWidget(),
+                                        widget=deform.widget.TextAreaWidget(rows=10, cols=50),
                                         default=_(u"Thanks a lot for filling out the survey."),)
 
 class AddSurveySectionSchema(colander.Schema):

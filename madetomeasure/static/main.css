@@ -31,6 +31,22 @@ a {
     color: #4A9EC6;
     text-decoration: none;
 }
+a:hover {
+    text-decoration: underline;
+	cursor: pointer;
+}
+ul > li {
+	margin-left: 2em;
+	list-style-type:square;
+}
+
+/* Font size */
+body,
+input,
+textarea,
+button {
+    font-size: 16px;
+}
 
 /* area positions and layout */
 #page-wrapper {
@@ -70,16 +86,18 @@ a {
 #context-toolbar {}
 
 
+/* Survey form tweaks */
+#survey ul.deformSet > li {
+    display: inline;
+    margin: 0.5em;
+}
+
 /* Deform tweaks */
 #deform label {
     margin: 1em 0 0.5em 0;
 }
 #deform > fieldset > ul > li {
     border-top: solid 1px #ccc;
-}
-#deform ul.deformSet > li {
-	display: inline;
-	margin: 1em;
 }
 #deform li.buttons {
 	padding-top: 1em;
@@ -98,9 +116,11 @@ button {
 	color: #4A9EC6;
 	font-weight: bold;
 	padding: 0.5em 1em;
-	font-size: 16px;
-
 }
 button:hover {
     cursor: pointer;
+}
+textarea,
+input {
+	border: 2px solid #ccc;
 }

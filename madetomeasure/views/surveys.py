@@ -25,13 +25,18 @@ class SurveysView(BaseView):
     def add_view(self):
         """ Add Survey and Survey Section. """
         #FIXME: Check permissions
+
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+        
         type_to_add = self.request.GET.get('content_type')
         if type_to_add not in self.addable_types():
             raise ValueError("No content type called %s" % type_to_add)
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
         schema = schema.bind()
-        form = Form(schema, buttons=(self.buttons['save'],))
+        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         
         if 'save' in self.request.POST:
@@ -63,7 +68,11 @@ class SurveysView(BaseView):
     @view_config(name='edit', context=ISurveySection, renderer='templates/form.pt')
     def edit_view(self):
         #FIXME: Check permissions
-        
+
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
         def _question_types():
             #FIXME: Handle several?
             if hasattr(self.context, 'get_question_type'):
@@ -73,7 +82,7 @@ class SurveysView(BaseView):
         schema = schema.bind(context = self.context,
                              question_types = _question_types())
                 
-        form = Form(schema, buttons=(self.buttons['save'],))
+        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         
         if 'save' in self.request.POST:
@@ -148,7 +157,7 @@ class SurveysView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
 
-    @view_config(name="do", context=ISurvey, renderer='templates/form.pt')
+    @view_config(name="do", context=ISurvey)
     def start_survey_view(self):
         """ This view simply redirects to the first section.
             This starts the survey for this participant.
@@ -188,7 +197,7 @@ class SurveysView(BaseView):
         except IndexError:
             return        
 
-    @view_config(name="do", context=ISurveySection, renderer='templates/form.pt')
+    @view_config(name="do", context=ISurveySection, renderer='templates/survey_form.pt')
     def do_survey_section_view(self):
         """ Where participants go to tell us about their life... """
         survey = self.context.__parent__

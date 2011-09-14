@@ -66,7 +66,7 @@ class Question(BaseFolder):
 
     def question_schema_node(self, name, lang=None):
         #If the correct question type isn't set, this might raise a ComponentLookupError
-        node_util = getUtility(IQuestionNodeFactory, name=self.get_question_type())
+        node_util = getUtility(IQuestionNode, name=self.get_question_type())
         #FIXME: Update with lang
         return node_util.node(name, title=self.get_title())
 
