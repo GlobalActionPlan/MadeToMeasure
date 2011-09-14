@@ -1,11 +1,11 @@
 import colander
 import deform
 from zope.interface import implements
+from BTrees.OOBTree import OOBTree
+from pyramid.renderers import render
 
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.interfaces import IQuestionNodeFactory
-
-#FIXME: Move to models?
+from madetomeasure.interfaces import IQuestionNode
 
 
 importance_choices = \
@@ -29,7 +29,9 @@ frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequenc
 
 text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
 
-class StringQuestionNode(object):
+class BasicQuestionNode(object):
+    """ A question node that simply displays all of its results. """
+    implements(IQuestionNode)
     
     def __init__(self, type_title, widget):
         """ Create object.
@@ -38,7 +40,7 @@ class StringQuestionNode(object):
         self.type_title = type_title
         self.widget = widget
     
-    def __call__(self, name, **kw):
+    def node(self, name, **kw):
         """ Return a schema node.
             You can pass along keyword arguments that will be accepted
             by the SchemaNode class.
@@ -50,20 +52,41 @@ class StringQuestionNode(object):
                                    **kw)
 
     def __repr__(self):
-        return "<StringQuestionNode '%s'>" % self.type_title
+        return "<%s '%s'>" % (self.__class__.__module__, self.type_title)
+
+    def count_occurences(self, data):
+        #FIXME: Perhaps count makes more sense?
+        results = OOBTree()
+        for item in data:
+            if item not in results:
+                results[item] = 1
+            else:
+                results[item]+=1
+        return results
+
+    def render_result(self, request, data):
+        response = {'data':data,}
+        return render('../views/templates/results/basic.pt', response, request=request)
 
 
+
+class ChoiceQuestionNode(BasicQuestionNode):
+    """ Single choice type of question. """
+    
+    def render_result(self, request, data):
+        response = {'occurences':self.count_occurences(data)}
+        return render('../views/templates/results/choice.pt', response, request=request)
 
 
 def register_question_node_utilities(config):
     #FIXME: Make utility registratio configurable?
     
-    free_text = StringQuestionNode(_(u"Free text question"), text_area_widget)
-    config.registry.registerUtility(free_text, IQuestionNodeFactory, 'free_text')
+    free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget)
+    config.registry.registerUtility(free_text, IQuestionNode, 'free_text')
 
-    importance_scale = StringQuestionNode(_(u"Importance scale question"), importance_choices_widget)
-    config.registry.registerUtility(importance_scale, IQuestionNodeFactory, 'importance_scale')
+    importance_scale = ChoiceQuestionNode(_(u"Importance scale question"), importance_choices_widget)
+    config.registry.registerUtility(importance_scale, IQuestionNode, 'importance_scale')
 
-    frequency_scale = StringQuestionNode(_(u"Frequency scale question"), frequency_scale_choices_widget)
-    config.registry.registerUtility(frequency_scale, IQuestionNodeFactory, 'frequency_scale')
+    frequency_scale = ChoiceQuestionNode(_(u"Frequency scale question"), frequency_scale_choices_widget)
+    config.registry.registerUtility(frequency_scale, IQuestionNode, 'frequency_scale')
 

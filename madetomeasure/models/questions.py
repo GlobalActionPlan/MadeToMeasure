@@ -68,4 +68,11 @@ class Question(BaseFolder):
         #If the correct question type isn't set, this might raise a ComponentLookupError
         node_util = getUtility(IQuestionNodeFactory, name=self.get_question_type())
         #FIXME: Update with lang
-        return node_util(name, title=self.get_title())
+        return node_util.node(name, title=self.get_title())
+
+    def render_result(self, request, data):
+        if not data:
+            return _(u"(Nothing)")
+        node_util = getUtility(IQuestionNode, name=self.get_question_type())
+        return node_util.render_result(request, data)
+        

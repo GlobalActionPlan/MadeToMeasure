@@ -1,0 +1,6 @@
+<ul class="replies">
+    <li tal:repeat="item occurences.items()">
+    	<span tal:content="item[0]">Item</span>
+        <span tal:content="item[1]">1</span>
+    </li>
+</ul>

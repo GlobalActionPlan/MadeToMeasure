@@ -2,6 +2,7 @@ from uuid import uuid4
 
 from deform import Form
 from deform.exception import ValidationFailure
+import colander
 
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
@@ -15,7 +16,6 @@ from madetomeasure.views.base import BaseView
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.app import generate_slug
-import colander
 
 
 class SurveysView(BaseView):
@@ -247,13 +247,22 @@ class SurveysView(BaseView):
     def results_view(self):
         """ Results screen
         """
+
+        sections = []
+        section_results = {}
+        #Loop through all sections and save them in sections
+        #Also add section data with section.__name__ as key
+        for section in self.context.values():
+            sections.append(section)
+            section_results[section.__name__] = section.question_format_results()
+
         def _get_questions(section):
             results = []
             for name in section.get_question_ids():
                 results.append(section.question_object_from_id(name))
             return results
-
         
-        self.response['sections'] = self.context.values()
+        self.response['sections'] = sections
+        self.response['section_results'] = section_results
         self.response['get_questions_for_section'] = _get_questions
         return self.response

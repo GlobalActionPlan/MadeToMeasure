@@ -40,6 +40,9 @@ def main(global_config, **settings):
     from madetomeasure.models.question_types import register_question_node_utilities
     register_question_node_utilities(config)
 
+    config.add_translation_dirs('madetomeasure:locale/')
+
+
     config.hook_zca()
     config.scan('madetomeasure')
     return config.make_wsgi_app()

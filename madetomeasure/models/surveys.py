@@ -188,36 +188,12 @@ class SurveySection(BaseFolder):
     def question_format_results(self):
         """ Return a structure suitable for looking up responses for each question.
         """
-        resultscounter = ResultsCounter()
+        results = OOBTree()
+        
         for response in self.responses.values():
-            resultscounter.add(response)
-        return resultscounter()
-
-
-class ResultsCounter(object):
-    """ Counts results of responses.
-        The structure of questions is as follows:
-        { <question_uid>:{<reply>:<reply_count>, <reply>:<reply_count>}, <etc...>}
-    """
-    def __init__(self):
-        self.questions = OOBTree()
+            for (k, v) in response.items():
+                if k not in results:
+                    results[k] = []
+                results[k].append(v)
+        return results
     
-    def add(self, response):
-        """ Response is a dict where keys are questions and values are responses.
-            Like: {u'56a05419-46b0-47cd-a830-6599b00959d4': u'always',
-                   u'e8dbbec0-1a0e-490a-a9cd-8c72bc9261ae': u'never'}
-        """
-        for (k, v) in response.items():
-            #Does the question exist already?
-            if k not in self.questions:
-                self.questions[k] = OOBTree()
-            
-            #Count number of unique replies
-            replies = self.questions[k]
-            if v not in replies:
-                replies[v] = 1
-            else:
-                replies[v]+=1
-    
-    def __call__(self):
-        return self.questions
