@@ -4,7 +4,6 @@ from repoze.zodbconn.finder import PersistentApplicationFinder
 from pyramid.i18n import TranslationStringFactory
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
-
 MadeToMeasureTSF = TranslationStringFactory('MadeToMeasure')
 
 
@@ -38,6 +37,10 @@ def main(global_config, **settings):
     #Set which mailer to use
     config.include(settings['mailer'])
 
+    from madetomeasure.schemas.question_types import register_question_node_utilities
+    register_question_node_utilities(config)
+
+    config.hook_zca()
     config.scan('madetomeasure')
     return config.make_wsgi_app()
 

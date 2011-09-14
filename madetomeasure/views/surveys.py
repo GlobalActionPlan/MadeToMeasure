@@ -15,7 +15,7 @@ from madetomeasure.views.base import BaseView
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.app import generate_slug
-from madetomeasure.schemas.surveys import DoSurveySchema
+import colander
 
 
 class SurveysView(BaseView):
@@ -156,20 +156,57 @@ class SurveysView(BaseView):
         url = resource_url(self.context[section_id], self.request)
         url += "do?uid=%s" % participant_uid
         return HTTPFound(location=url)
-        
+
+    def _next_section(self):
+        """ Return next section if there is one.
+        """
+        parent = self.context.__parent__
+        section_order = tuple(parent.order)
+        cur_index = section_order.index(self.context.__name__)
+        try:
+            next_name = section_order[cur_index+1]
+            return parent[next_name]
+        except IndexError:
+            return
+
     @view_config(name="do", context=ISurveySection, renderer='templates/form.pt')
     def do_survey_section_view(self):
         """ Where participants go to tell us about their life... """
         survey = self.context.__parent__
-
+                
         participant_uid = self.request.params.get('uid')
         if not participant_uid in survey.tickets:
             raise Forbidden("Invalid ticket")
 
-        schema = DoSurveySchema().bind(participant_uid=participant_uid,)
+        schema = colander.Schema()
+        self.context.append_questions_to_schema(schema)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
-        self.response['form'] = form.render()
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = self.request.POST.items()
+
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            self.context.update_question_responses(participant_uid, appstruct)
+            next_section = self._next_section()
+            if next_section:
+                url = resource_url(next_section, self.request)
+                url += "do?uid=%s" % participant_uid
+            else:
+                url = resource_url(self.context.__parent__, self.request)
+            return HTTPFound(location=url)            
+            
+        appstruct = self.context.response_for_uid(participant_uid)
+
+
+        self.response['form'] = form.render(appstruct)
         return self.response
         

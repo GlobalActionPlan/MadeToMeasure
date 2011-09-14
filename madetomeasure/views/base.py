@@ -4,7 +4,11 @@ from pyramid.traversal import find_root
 from pyramid.url import resource_url
 from pyramid.renderers import get_renderer
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
 from deform import Button
+from deform import Form
+from colander import Schema
+
 
 from madetomeasure.interfaces import *
 from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
@@ -71,3 +75,23 @@ class BaseView(object):
         #FIXME: Should probably not exist at all :)
         return self.response
 
+
+    @view_config(name="delete", renderer="templates/form.pt")
+    def delete_form(self):
+        #FIXME: This is temporary!
+        
+        schema = Schema()
+        
+        form = Form(schema, buttons=('delete',))
+        self.response['form_resources'] = form.get_widget_resources()
+
+        post = self.request.POST
+        if 'delete' in post:
+            parent = self.context.__parent__
+            del parent[self.context.__name__]
+
+            url = resource_url(parent, self.request)
+            return HTTPFound(location=url)
+
+        self.response['form'] = form.render()
+        return self.response

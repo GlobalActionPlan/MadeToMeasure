@@ -62,12 +62,3 @@ class SurveyInvitationSchema(colander.Schema):
                                             title = _(u"Participant email addresses - add one per row."),
                                             validator = multiple_email_validator,
                                             widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
-
-
-@colander.deferred
-def deferred_participant_uid_widget(node, kw):
-    return deform.widget.HiddenWidget(default=kw['participant_uid'],)
-
-class DoSurveySchema(colander.Schema):
-    participant_uid = colander.SchemaNode(colander.String(),
-                                          widget=deferred_participant_uid_widget,)

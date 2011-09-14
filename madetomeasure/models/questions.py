@@ -1,10 +1,10 @@
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
+from zope.component import getUtility
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
 from madetomeasure.models.base import BaseFolder
-from madetomeasure.schemas import QUESTION_SCHEMAS
 
 
 
@@ -64,12 +64,8 @@ class Question(BaseFolder):
     def set_question_type(self, value):
         self.__question_type__ = value
 
-    def get_schema(self, lang):
-        """ Get a question schema with 'text' as the translated text of the question. """
-        title = self.__question_text__.get(lang, None)
-        if title is None:
-            title = self.get_title()
-        schema_type = self.get_question_type()
-        if schema_type not in QUESTION_SCHEMAS:
-            raise KeyError("There's no schema called %s in QUESTION_SCHEMAS" % schema_type)
-        return QUESTION_SCHEMAS[schema_type]().bind(question_title = title)
+    def question_schema_node(self, name, lang=None):
+        #If the correct question type isn't set, this might raise a ComponentLookupError
+        node_util = getUtility(IQuestionNodeFactory, name=self.get_question_type())
+        #FIXME: Update with lang
+        return node_util(name, title=self.get_title())

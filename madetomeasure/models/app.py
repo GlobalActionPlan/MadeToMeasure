@@ -32,7 +32,6 @@ def bootstrap_root():
     
     return root
 
-
 def generate_slug(context, text, limit=20):
     """ Suggest a name for content that will be added.
         text is a title or similar to be used.

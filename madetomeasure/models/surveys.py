@@ -1,5 +1,7 @@
 from uuid import uuid4
 
+import colander
+import deform
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid_mailer import get_mailer
@@ -51,7 +53,6 @@ class Survey(BaseFolder):
 
     def set_mail_message(self, value):
         self.__mail_message__ = value
-
 
     def _extract_emails(self):
         results = set()
@@ -113,7 +114,7 @@ class Survey(BaseFolder):
         
         #Have this person participated before?
         participant_email = self.tickets[participant_uid]
-        result = participants.participants_by_emails((participant_email,))
+        result = tuple(participants.participants_by_emails((participant_email,)))
         if len(result) == 1:
             #This participant has participated in another survey. Update information
             obj = result[0]
@@ -129,7 +130,6 @@ class Survey(BaseFolder):
         obj.add_survey(self.__name__, participant_uid)
         
         return participant_uid
-
 
 
 class SurveySection(BaseFolder):
@@ -150,3 +150,24 @@ class SurveySection(BaseFolder):
     def set_question_ids(self, value):
         self.__question_ids__ = value
     
+    def append_questions_to_schema(self, schema):
+        """ Append all questions to a schema. """
+        root = find_root(self)
+        questions = root['questions']
+        lang = None #FIXME:
+
+        for id in self.get_question_ids():
+            question = questions[id]
+            schema.add(question.question_schema_node(id))
+
+    @property
+    def responses(self):
+        if not hasattr(self, '__responses__'):
+            self.__responses__ = OOBTree()
+        return self.__responses__
+        
+    def update_question_responses(self, participant_uid, responses):
+        self.responses[participant_uid] = responses
+
+    def response_for_uid(self, participant_uid):
+        return self.responses.get(participant_uid, {})

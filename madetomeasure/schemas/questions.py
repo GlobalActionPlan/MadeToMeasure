@@ -1,13 +1,16 @@
 import colander
 import deform
+from zope.component import getUtilitiesFor
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.interfaces import IQuestionNodeFactory
 
 
 @colander.deferred
 def deferred_question_type_widget(node, kw):
-    from madetomeasure.schemas import QUESTION_SCHEMAS
-    choices = [(x, x) for x in QUESTION_SCHEMAS.keys()]
+    choices = []
+    for (name, util) in getUtilitiesFor(IQuestionNodeFactory):
+        choices.append((name, util.type_title))
     return deform.widget.RadioChoiceWidget(values=choices)
 
 @colander.deferred
