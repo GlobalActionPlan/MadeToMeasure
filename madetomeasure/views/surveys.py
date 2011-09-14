@@ -158,7 +158,7 @@ class SurveysView(BaseView):
         return HTTPFound(location=url)
 
     def _next_section(self):
-        """ Return next section if there is one.
+        """ Return next section object if there is one.
         """
         parent = self.context.__parent__
         section_order = tuple(parent.order)
@@ -168,6 +168,21 @@ class SurveysView(BaseView):
             return parent[next_name]
         except IndexError:
             return
+
+    def _previous_section(self):
+        """ Return previous section object if there is one.
+        """
+        parent = self.context.__parent__
+        section_order = tuple(parent.order)
+        cur_index = section_order.index(self.context.__name__)
+        if cur_index == 0:
+            #Since -1 is a valid index :)
+            return
+        try:
+            previous_name = section_order[cur_index-1]
+            return parent[previous_name]
+        except IndexError:
+            return        
 
     @view_config(name="do", context=ISurveySection, renderer='templates/form.pt')
     def do_survey_section_view(self):
@@ -181,11 +196,17 @@ class SurveysView(BaseView):
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema)
         
-        form = Form(schema, buttons=(self.buttons['save'],))
+        next_section = self._next_section()
+        previous_section = self._previous_section()
+        
+        buttons = [self.buttons['next']]
+        if previous_section:
+            buttons.insert(0, self.buttons['previous'])
+        form = Form(schema, buttons=buttons)
         self.response['form_resources'] = form.get_widget_resources()
 
         post = self.request.POST
-        if 'save' in post:
+        if 'next' in post or 'previous' in post:
             controls = self.request.POST.items()
 
             try:
@@ -196,17 +217,20 @@ class SurveysView(BaseView):
                 return self.response
             
             self.context.update_question_responses(participant_uid, appstruct)
-            next_section = self._next_section()
-            if next_section:
-                url = resource_url(next_section, self.request)
+            
+            if 'next' in post:
+                if next_section:
+                    url = resource_url(next_section, self.request)
+                    url += "do?uid=%s" % participant_uid
+                else:
+                    url = resource_url(self.context.__parent__, self.request)
+                    url += "finished"
+            if 'previous' in post:
+                url = resource_url(previous_section, self.request)
                 url += "do?uid=%s" % participant_uid
-            else:
-                url = resource_url(self.context.__parent__, self.request)
-                url += "finished"
-            return HTTPFound(location=url)            
+            return HTTPFound(location=url)
             
         appstruct = self.context.response_for_uid(participant_uid)
-
 
         self.response['form'] = form.render(appstruct)
         return self.response

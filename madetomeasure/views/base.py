@@ -58,6 +58,9 @@ class BaseView(object):
         buttons['login'] = Button('login', _(u"Login"))
         buttons['save'] = Button('save', _(u"Save"))
         buttons['send'] = Button('send', _(u"Send"))
+        buttons['next'] = Button('next', _(u"Next"))
+        buttons['previous'] = Button('previous', _(u"Previous"))
+        
         return buttons
 
     @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE)
