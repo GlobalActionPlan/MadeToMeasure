@@ -1,0 +1,101 @@
+/* The basics */
+body {
+    font-size: 16px;
+    font-family: 'Judson', serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 0.5em 0;
+    font-family: 'Ubuntu', sans-serif;
+}
+h1 {
+    font-size: 200%;
+}
+h2 {
+    font-size: 175%;
+}
+h3 {
+    font-size: 150%;
+}
+h4 {
+    font-size: 125%;
+}
+h5 {
+    font-size: 100%;
+}
+h6 {
+    font-size: 85%;
+}
+a {
+    color: #4A9EC6;
+    text-decoration: none;
+}
+
+/* area positions and layout */
+#page-wrapper {
+	background: #4A9EC6;
+	min-height: 100%;
+	min-width: 100%;
+	position: absolute;
+	padding-bottom: 50px;
+}
+#page-header {
+    height: 100px;
+	display: block;
+}
+#main-area {
+	width: 1000px;
+	position: relative;
+	margin: auto;
+	background: #fff;
+	padding: 20px;
+    border-radius: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px #ccc;
+}
+#content {}
+#footer {}
+
+#system-toolbar {
+	background: #fff;
+	padding: 10px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px 0 #ccc;
+}
+#context-toolbar {}
+
+
+/* Deform tweaks */
+#deform label {
+    margin: 1em 0 0.5em 0;
+}
+#deform > fieldset > ul > li {
+    border-top: solid 1px #ccc;
+}
+#deform ul.deformSet > li {
+	display: inline;
+	margin: 1em;
+}
+#deform li.buttons {
+	padding-top: 1em;
+	text-align: center;
+}
+
+/* Regular form tweaks */
+button {
+    border: 1px solid #4A9EC6;
+	background: #fff;
+	color: #4A9EC6;
+	font-weight: bold;
+	padding: 0.5em 1em;
+	font-size: 16px;
+
+}
+button:hover {
+    cursor: pointer;
+}

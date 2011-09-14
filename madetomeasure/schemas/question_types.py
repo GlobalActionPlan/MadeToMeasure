@@ -25,7 +25,7 @@ frequency_scale = \
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
-text_area_widget = deform.widget.TextAreaWidget()
+text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
 
 class StringQuestionNode(object):
     
