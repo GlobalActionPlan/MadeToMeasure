@@ -156,6 +156,31 @@ class SurveysView(BaseView):
 
         self.response['form'] = form.render(appstruct)
         return self.response
+        
+    @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt')
+    def participants_view(self):
+        """ Overview of participants. """
+        #FIXME: Check permissions
+        
+        self.response['participants'] = self.context.get_participants_data()
+        
+        return self.response
+        
+    @view_config(name='resend_invitation', context=ISurvey)
+    def resend_invitaton(self):
+        """ Resends an invitation to a participant. """
+        #FIXME: Check permissions
+        
+        ticket = self.request.GET.get('ticket')
+        if not ticket in self.context.tickets.keys():
+            raise ValueError("No such ticket")
+        
+        email = self.context.tickets[ticket]
+        self.context.send_invitation_email(self.request, email, ticket)
+        
+        url = resource_url(self.context, self.request)
+        url = url + 'participants'
+        return HTTPFound(location = url)
 
     @view_config(name="do", context=ISurvey)
     def start_survey_view(self):

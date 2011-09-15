@@ -67,6 +67,9 @@
 			        <div id="invitaions">
 			            <a href="${resource_url(context, request) + 'invitation_emails'}">Invitations</a>
 			        </div>
+			        <div id="participants">
+			            <a href="${resource_url(context, request) + 'participants'}">Participants</a>
+			        </div>
                     <div id="results">
                         <a href="${resource_url(context, request) + 'results'}">Results</a>
                     </div>
