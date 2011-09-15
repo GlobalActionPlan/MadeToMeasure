@@ -61,6 +61,8 @@ class BaseView(object):
         buttons['next'] = Button('next', _(u"Next"))
         buttons['previous'] = Button('previous', _(u"Previous"))
         buttons['cancel'] = Button('cancel', _(u"Cancel"))
+        buttons['request'] = Button('request', _(u"Request"))
+        buttons['change'] = Button('change', _(u"Change"))
         
         return buttons
 
@@ -76,6 +78,7 @@ class BaseView(object):
         return self.response
 
     @view_config(context=IQuestion, renderer=BASE_VIEW_TEMPLATE)
+    @view_config(context=IUser, renderer=BASE_VIEW_TEMPLATE)
     def admin_view(self):
         #FIXME: Should probably not exist at all :)
         return self.response

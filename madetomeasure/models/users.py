@@ -1,6 +1,14 @@
+from datetime import datetime
+from datetime import timedelta
 from hashlib import sha1
+from random import choice
+import string
 
+from pyramid.url import resource_url
 from zope.interface import implements
+from pyramid_mailer import get_mailer
+from pyramid_mailer.message import Message
+from pyramid.i18n import get_localizer
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
@@ -29,6 +37,11 @@ class Users(BaseFolder):
     def set_title(self, value):
         pass
 
+    def get_user_by_email(self, email):
+        for user in self.values():
+            if user.get_email() == email:
+                return user
+
 
 class User(BaseFolder):
     """ A system user """
@@ -40,12 +53,30 @@ class User(BaseFolder):
     @property
     def userid(self):
         return self.__name__
+        
+    def get_title(self):
+        title = "%s %s" % (self.get_first_name(), self.get_last_name())
+        if not title.strip():
+            title = getattr(self, '__title__', '')
+        return title
     
     def set_email(self, value):
         self.__email__ = value
     
     def get_email(self):
         return getattr(self, '__email__', '')
+
+    def set_first_name(self, value):
+        self.__first_name__ = value
+    
+    def get_first_name(self):
+        return getattr(self, '__first_name__', '')
+
+    def set_last_name(self, value):
+        self.__last_name__ = value
+
+    def get_last_name(self):
+        return getattr(self, '__last_name__', '')
 
     def set_password(self, value):
         self.__password__ = get_sha_password(value)
@@ -57,4 +88,48 @@ class User(BaseFolder):
 
     def get_password(self):
         return self.__password__
+        
+    def new_request_password_token(self, request):
+        """ Set a new request password token and email user. """
+        locale = get_localizer(request)
+        
+        self.__token__ = RequestPasswordToken()
+        
+        #FIXME: Email should use a proper template
+        pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
+        body = locale.translate(_('request_new_password_text',
+                 default=u"password link: ${pw_link}",
+                 mapping={'pw_link':pw_link},))
+        
+        msg = Message(subject=_(u"Password reset request from VoteIT"),
+                       recipients=[self.get_email()],
+                       body=body)
+
+        mailer = get_mailer(request)
+        mailer.send(msg)
+        
+    def remove_password_token(self):
+        self.__token__ = None
+
+    def validate_password_token(self, node, value):
+        """ Validate input from a colander form. See token_password_change schema """
+        #FIXME: We need to handle an error here in a nicer way
+        self.__token__.validate(value)
+
+
+class RequestPasswordToken(object):
+
+    def __init__(self):
+        self.token = ''.join([choice(string.letters + string.digits) for x in range(30)])
+        self.created = datetime.utcnow()
+        self.expires = self.created + timedelta(days=3)
+        
+    def __call__(self):
+        return self.token
+    
+    def validate(self, value):
+        if value != self.token:
+            raise ValueError("Token doesn't match.")
+        if datetime.utcnow() > self.expires:
+            raise ValueError("Token expired.")
     

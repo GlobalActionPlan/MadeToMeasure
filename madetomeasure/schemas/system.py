@@ -2,6 +2,7 @@ import colander
 import deform
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.schemas.users import password_validation
 
 
 @colander.deferred
@@ -20,3 +21,21 @@ class LoginSchema(colander.Schema):
                                     missing='',
                                     default=deferred_came_from,)
 
+
+class RequestPasswordSchema(colander.Schema):
+    userid_or_email = colander.SchemaNode(colander.String(),
+                                          title = _(u"UserID or email address."))
+
+
+def TokenPasswordChange(context):
+    class _schema(colander.Schema):
+        token = colander.SchemaNode(colander.String(),
+                                    validator = context.validate_password_token,
+                                    missing = u'',
+                                    widget = deform.widget.HiddenWidget(),)
+        password = colander.SchemaNode(colander.String(),
+                                       validator=password_validation,
+                                       widget=deform.widget.CheckedPasswordWidget(size=20),
+                                       title=_('Password'))
+                                       
+    return _schema()
