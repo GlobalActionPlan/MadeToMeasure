@@ -1,8 +1,9 @@
 import unittest
 
+import colander
 from pyramid import testing
 from zope.interface.verify import verifyObject
-
+from BTrees.OOBTree import OOBTree
 
 class QuestionTests(unittest.TestCase):
     def setUp(self):
@@ -14,6 +15,14 @@ class QuestionTests(unittest.TestCase):
     def _make_obj(self):
         from madetomeasure.models import Question
         return Question()
+    
+    def _utils_fixture(self):
+        from madetomeasure.models.question_types import register_question_node_utilities
+        register_question_node_utilities(self.config)
+
+    def _mock_text_question_data(self):
+        data = OOBTree()
+        data['dummy_question'] = [u"First answer", u"Second answer"]
 
     def test_title(self):
         obj = self._make_obj()
@@ -28,16 +37,20 @@ class QuestionTests(unittest.TestCase):
         obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
         self.assertEqual(obj.get_question_text(), [{'lang': 'somelang', 'text': 'Very important text'}])
         
-    def test_schema_type(self):
+    def test_question_type(self):
         obj = self._make_obj()
+        self.assertEqual(obj.get_question_type(), "")
         obj.set_question_type('Some type')
         self.assertEqual(obj.get_question_type(), "Some type")
-        
-    def test_get_schema(self):
+
+    def test_question_schema_node(self):
+        self._utils_fixture()
         obj = self._make_obj()
-        obj.set_question_type('FreeTextQuestion')
-        obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
-        
-        schema = obj.get_schema('somelang')
-        #Answer is the field that will have the title of the actual question
-        self.assertEqual(schema['answer'].title, "Very important text")
+        obj.set_question_type('free_text')
+        node = obj.question_schema_node('dummy')
+        self.assertTrue(isinstance(node, colander.SchemaNode))
+    
+    def test_render_result(self):
+        self._utils_fixture()
+        obj = self._make_obj()
+        #FIXME: Use mock data
