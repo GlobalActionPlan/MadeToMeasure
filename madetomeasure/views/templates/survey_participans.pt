@@ -13,11 +13,13 @@
 	<table condition="participants">
 	    <tr>
 	        <th i18n:translate="">Email</th>
+	        <th i18n:translate="">% finished</th>
 	        <th></th>
 	    </tr>
         <tal:iterate repeat="participant participants">
             <tr>
-                <td tal:content="participant['email']">Email</td>
+                <td>${participant['email']}</td>
+                <td>${participant['finished']}</td>
                 <td>
                     <a href="${resource_url(context, request) + 'resend_invitation?ticket=' + participant['uid']}" i18n:translate="">Resend invitation</a>
                 </td>

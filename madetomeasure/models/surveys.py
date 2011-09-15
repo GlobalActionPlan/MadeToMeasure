@@ -1,3 +1,4 @@
+from decimal import Decimal
 from uuid import uuid4
 
 import colander
@@ -153,7 +154,15 @@ class Survey(BaseFolder):
             
             participant['uid'] = uid
             participant['email'] = email
-            
+        
+            response = 0
+            questions = 0
+            for section in self.values():
+                response += len(section.response_for_uid(uid))
+                questions += len(section.get_question_ids())
+                
+            participant['finished'] = "%.0f" % (Decimal(response) / Decimal(questions) * 100)
+                
             participants.append(participant)
         
         return participants
