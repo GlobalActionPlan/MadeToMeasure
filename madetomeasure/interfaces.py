@@ -1,4 +1,5 @@
 from zope.interface import Interface
+from zope.interface import Attribute
 
 
 class ISiteRoot(Interface):
@@ -61,4 +62,18 @@ class IQuestionNode(Interface):
             Returns a renderer.
             Data is the result data to be displayed. It must be of this questions own format.
         """
-        
+
+
+class IQuestionTranslations(Interface):
+    """ Helper util when handling runtime translation of questions. """
+    default_locale_name = Attribute("Default locale country code, like 'en'")
+    available_languages = Attribute("A list of all available languages country codes")
+    translatable_languages = Attribute("Same as available_languages, but minus default_locale_name value")
+    
+    def title_for_code(lang):
+        """ Return readable name from a country code. """
+    
+    def add_translations_schema(schema):
+        """ Fetch all possible translations (according to settings)
+            and create a shecma with each lang as a node.
+        """

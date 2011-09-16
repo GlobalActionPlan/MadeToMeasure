@@ -17,8 +17,7 @@ class QuestionTests(unittest.TestCase):
         return Question()
     
     def _utils_fixture(self):
-        from madetomeasure.models.question_types import register_question_node_utilities
-        register_question_node_utilities(self.config)
+        self.config.include('madetomeasure.models.question_types')
 
     def test_title(self):
         obj = self._make_obj()
@@ -29,10 +28,15 @@ class QuestionTests(unittest.TestCase):
 
     def test_question_text(self):
         obj = self._make_obj()
-        self.assertEqual(obj.get_question_text(), [])
-        obj.set_question_text([{'lang':'somelang', 'text':"Very important text"}])
-        self.assertEqual(obj.get_question_text(), [{'lang': 'somelang', 'text': 'Very important text'}])
+        self.assertEqual(len(obj.get_question_text()), 0)
+        obj.set_question_text({'sv':'Hej hej'})
+        self.assertEqual(obj.get_question_text(), {'sv':'Hej hej'})
         
+    def test_question_text_empty_value(self):
+        obj = self._make_obj()
+        obj.set_question_text({'sv':'Hej hej', 'other':''})
+        self.assertEqual(obj.get_question_text(), {'sv':'Hej hej'})
+
     def test_question_type(self):
         obj = self._make_obj()
         self.assertEqual(obj.get_question_type(), "")

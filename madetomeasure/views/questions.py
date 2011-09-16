@@ -6,6 +6,7 @@ from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from zope.component import getUtility
 
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
@@ -15,6 +16,10 @@ from madetomeasure.schemas import CONTENT_SCHEMAS
 
 
 class QuestionsView(BaseView):
+    
+    def _add_translations_schema(self, schema):
+        util = getUtility(IQuestionTranslations)
+        util.add_translations_schema(schema)
 
     @view_config(name='add', context=IQuestions, renderer='templates/form.pt')
     def add_view(self):
@@ -25,6 +30,9 @@ class QuestionsView(BaseView):
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
         schema = schema.bind()
+        
+        self._add_translations_schema(schema['question_text'])
+
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         
@@ -58,6 +66,8 @@ class QuestionsView(BaseView):
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
         schema = schema.bind(context = self.context,)
+        self._add_translations_schema(schema['question_text'])
+        
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         

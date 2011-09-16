@@ -37,9 +37,10 @@ def main(global_config, **settings):
     #Set which mailer to use
     config.include(settings['mailer'])
 
-    from madetomeasure.models.question_types import register_question_node_utilities
-    register_question_node_utilities(config)
-
+    config.include('madetomeasure.models.question_types')
+    config.include('madetomeasure.models.translations')
+    
+    
     config.add_translation_dirs('madetomeasure:locale/')
 
 

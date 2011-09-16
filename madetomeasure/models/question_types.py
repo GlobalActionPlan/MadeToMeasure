@@ -88,7 +88,7 @@ class ChoiceQuestionNode(BasicQuestionNode):
         return render('../views/templates/results/choice.pt', response, request=request)
 
 
-def register_question_node_utilities(config):
+def includeme(config):
     #FIXME: Make utility registratio configurable?
     
     free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget)

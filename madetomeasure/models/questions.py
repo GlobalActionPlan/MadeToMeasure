@@ -41,24 +41,20 @@ class Question(BaseFolder):
         super(Question, self).__init__()
     
     def get_question_text(self):
-        results = []
-        for (lang, text) in self.__question_text__.items():
-            results.append({'lang':lang,'text':text})
-        return results
+        return getattr(self, '__question_text__', {})
 
     def set_question_text(self, value):
-        """ Example value: [{'lang': u'sv', 'text': u'Svensk text'}]
-            This is only for the translations of the question, since the title is the base language.
+        """ This is only for the translations of the question, since the title is the base language.
+            value here should be a dict with country codes as keys and questions as values.
+            Any empty value should be removed before saving.
         """
-        new_keys = [x['lang'] for x in value]
-        for entry in value:
-            self.__question_text__[entry['lang']] = entry['text']
-        #Remove any keys not present in the form. They've been deleted
-        for k in self.__question_text__.keys():
-            if k not in new_keys:
-                del self.__question_text__[k]
+        for (k, v) in value.items():
+            if not v.strip():
+                del value[k]
+        self.__question_text__ = value
     
     def get_question_type(self):
+        """ Return a dict with country codes as key and question translations as value. """
         return getattr(self, '__question_type__', '')
     
     def set_question_type(self, value):
