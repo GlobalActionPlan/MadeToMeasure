@@ -181,10 +181,10 @@ class SurveySection(BaseFolder):
         self.__question_type__ = value
 
     def get_question_ids(self):
-        return getattr(self, '__question_ids__', set())
+        return getattr(self, '__question_ids__', [])
 
     def set_question_ids(self, value):
-        self.__question_ids__ = value
+        self.__question_ids__ = list(value)
 
     def append_questions_to_schema(self, schema):
         """ Append all questions to a schema. """
