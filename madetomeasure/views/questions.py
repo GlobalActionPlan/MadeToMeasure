@@ -1,16 +1,19 @@
 from uuid import uuid4
 
+from colander import Schema
 from deform import Form
 from deform.exception import ValidationFailure
-
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from zope.component import getUtility
+from zope.component import getUtilitiesFor
 
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BASE_VIEW_TEMPLATE
+from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 
@@ -21,7 +24,7 @@ class QuestionsView(BaseView):
         util = getUtility(IQuestionTranslations)
         util.add_translations_schema(schema)
 
-    @view_config(name='add', context=IQuestions, renderer='templates/form.pt')
+    @view_config(name='add', context=IQuestions, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
         #FIXME: Check permissions
         type_to_add = self.request.GET.get('content_type')
@@ -60,7 +63,7 @@ class QuestionsView(BaseView):
         return self.response
 
 
-    @view_config(name='edit', context=IQuestion, renderer='templates/form.pt')
+    @view_config(name='edit', context=IQuestion, renderer=BASE_FORM_TEMPLATE)
     def edit_view(self):
         #FIXME: Check permissions
 
@@ -97,5 +100,27 @@ class QuestionsView(BaseView):
 
         self.response['form'] = form.render(appstruct)
         return self.response
+        
+    @view_config(context=IQuestions, renderer='templates/questions.pt')
+    def admin_listing_view(self):
+        
+        types = {}
+        for (name, util) in getUtilitiesFor(IQuestionNode):
+            types[name] = {}
+            types[name]['name'] = getattr(util, 'type_title', '')
+            types[name]['questions'] = self.context.questions_by_type(name)
+            
+        self.response['types'] = types
+        
+        return self.response
     
-    
+    @view_config(context=IQuestion, renderer='templates/dummy_form.pt')
+    def admin_view(self):
+        schema = Schema()
+        schema.add(self.context.question_schema_node('dummy'))
+        
+        form = Form(schema)
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        self.response['dummy_form'] = form.render()
+        return self.response
