@@ -9,7 +9,8 @@
 
 <div metal:fill-slot="content">
 
-    <tal:form replace="structure dummy_form">Form html code</tal:form>
+    <!-- Keep css id to allow overrides of default deform behaviour -->
+    <div id="survey" tal:content="structure dummy_form">Form html code</div>
 
 </div>
 </body>
