@@ -1,10 +1,11 @@
 import colander
 import deform
-from pyramid.traversal import find_root
+from pyramid.traversal import find_root, find_interface
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.questions import deferred_question_type_widget
 from madetomeasure.schemas.validators import multiple_email_validator
+from madetomeasure.interfaces import IOrganisation
 
 
 @colander.deferred
@@ -26,12 +27,17 @@ def deferred_survey_section_title(node, kw):
 def deferred_questions_for_types_widget(node, kw):
     question_types = kw['question_types']
     context = kw['context']
+    
     root = find_root(context)
-    questions = root['questions']
+    #FIXME: Refactor to use local questions too
+    root_questions = root['questions']
+    org = find_interface(context, IOrganisation)
+    local_questions = org['questions']
     
     results = set()
     for question_type in question_types:
-        results.update(questions.questions_by_type(question_type))
+        results.update(root_questions.questions_by_type(question_type))
+        results.update(local_questions.questions_by_type(question_type))
     
     choices = [(x.__name__, x.get_title()) for x in results]
     return deform.widget.CheckboxChoiceWidget(values=choices)

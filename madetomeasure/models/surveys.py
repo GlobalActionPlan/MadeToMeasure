@@ -9,6 +9,7 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
+from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.renderers import render
 
@@ -185,15 +186,13 @@ class SurveySection(BaseFolder):
 
     def set_question_ids(self, value):
         self.__question_ids__ = list(value)
-
+    
     def append_questions_to_schema(self, schema):
         """ Append all questions to a schema. """
-        root = find_root(self)
-        questions = root['questions']
         lang = None #FIXME:
 
         for id in self.get_question_ids():
-            question = questions[id]
+            question = self.question_object_from_id(id)
             schema.add(question.question_schema_node(id))
 
     @property
@@ -211,9 +210,15 @@ class SurveySection(BaseFolder):
     def question_object_from_id(self, id):
         """ id is the same as the Question __name__ attribute.
             Will raise KeyError if not found.
+            Will global question pool but IDs shouldn't be the same
+            anyway so that's probably not a concern
         """
         root = find_root(self)
-        return root['questions'][id]
+        try:
+            return root['questions'][id]
+        except KeyError:
+            org = find_interface(self, IOrganisation)
+            return org['questions'][id]
 
     def question_format_results(self):
         """ Return a structure suitable for looking up responses for each question.

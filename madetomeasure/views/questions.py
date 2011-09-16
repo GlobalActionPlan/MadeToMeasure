@@ -108,6 +108,7 @@ class QuestionsView(BaseView):
         for (name, util) in getUtilitiesFor(IQuestionNode):
             types[name] = {}
             types[name]['name'] = getattr(util, 'type_title', '')
+            #FIXME: Use for local questions too
             types[name]['questions'] = self.context.questions_by_type(name)
             
         self.response['types'] = types
