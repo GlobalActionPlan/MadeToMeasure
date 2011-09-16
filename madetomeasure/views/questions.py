@@ -1,5 +1,6 @@
 from uuid import uuid4
 
+from colander import Schema
 from deform import Form
 from deform.exception import ValidationFailure
 
@@ -88,4 +89,13 @@ class QuestionsView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
     
-    
+    @view_config(context=IQuestion, renderer='templates/dummy_form.pt')
+    def admin_view(self):
+        schema = Schema()
+        schema.add(self.context.question_schema_node('dummy'))
+        
+        form = Form(schema)
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        self.response['dummy_form'] = form.render()
+        return self.response

@@ -304,3 +304,15 @@ class SurveysView(BaseView):
         self.response['section_results'] = section_results
         self.response['get_questions_for_section'] = _get_questions
         return self.response
+        
+    @view_config(context=ISurveySection, renderer='templates/dummy_form.pt')
+    def admin_view(self):
+        schema = colander.Schema()
+        self.context.append_questions_to_schema(schema)
+        
+        form = Form(schema)
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        self.response['dummy_form'] = form.render()
+        return self.response
+

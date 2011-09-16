@@ -77,7 +77,6 @@ class BaseView(object):
         #FIXME: move when implemented
         return self.response
 
-    @view_config(context=IQuestion, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IUser, renderer=BASE_VIEW_TEMPLATE)
     def admin_view(self):
         #FIXME: Should probably not exist at all :)
