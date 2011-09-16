@@ -12,7 +12,7 @@ class Questions(BaseFolder):
     implements(IQuestions)
     content_type = 'Questions'
     display_name = _(u"Questions")
-    allowed_contexts = () #Not manually addable
+    allowed_contexts = ()
     
     def get_title(self):
         return self.display_name

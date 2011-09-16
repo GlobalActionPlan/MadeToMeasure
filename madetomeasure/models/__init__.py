@@ -1,3 +1,4 @@
+from madetomeasure.models.organisation import Organisation
 from madetomeasure.models.users import User
 from madetomeasure.models.surveys import Survey
 from madetomeasure.models.surveys import SurveySection
@@ -10,4 +11,5 @@ CONTENT_TYPES = {'User':User,
                  'SurveySection':SurveySection,
                  'Participant':Participant,
                  'Question':Question,
+                 'Organisation':Organisation,
                  }

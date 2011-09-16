@@ -17,103 +17,10 @@ from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
-from madetomeasure.models.app import generate_slug
 
 
 class SurveysView(BaseView):
 
-    @view_config(name='add', context=ISurveys, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='add', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
-    def add_view(self):
-        """ Add Survey and Survey Section. """
-        #FIXME: Check permissions
-
-        if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location = url)
-        
-        type_to_add = self.request.GET.get('content_type')
-        if type_to_add not in self.addable_types():
-            raise ValueError("No content type called %s" % type_to_add)
-
-        schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
-        schema = schema.bind()
-        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
-        self.response['form_resources'] = form.get_widget_resources()
-        
-        if 'save' in self.request.POST:
-            controls = self.request.POST.items()
-
-            try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            obj = CONTENT_TYPES[type_to_add]()
-            for (k, v) in appstruct.items():
-                mutator = getattr(obj, 'set_%s' % k)
-                mutator(v)
-            
-            name = generate_slug(self.context, obj.get_title())
-            self.context[name] = obj
-    
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location = url)
-
-        self.response['form'] = form.render()
-        return self.response
-
-
-    @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
-    def edit_view(self):
-        #FIXME: Check permissions
-
-        if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location = url)
-
-        def _question_types():
-            #FIXME: Handle several?
-            if hasattr(self.context, 'get_question_type'):
-                return [self.context.get_question_type()]
-
-        schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,
-                             question_types = _question_types())
-                
-        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
-        self.response['form_resources'] = form.get_widget_resources()
-        
-        if 'save' in self.request.POST:
-            controls = self.request.POST.items()
-
-            try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
-                
-            url = resource_url(self.context, self.request)
-            return HTTPFound(location = url)
-
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-
-        self.response['form'] = form.render(appstruct)
-        return self.response
-    
     @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """

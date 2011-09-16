@@ -42,6 +42,10 @@ class IQuestion(Interface):
     """ A question model. """
 
 
+class IOrganisation(Interface):
+    """ An organisation model. """
+    
+
 class IQuestionNode(Interface):
     """ A utility that will create a question colander.SchemaNode when called. """
 
