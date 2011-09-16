@@ -20,10 +20,6 @@ class QuestionTests(unittest.TestCase):
         from madetomeasure.models.question_types import register_question_node_utilities
         register_question_node_utilities(self.config)
 
-    def _mock_text_question_data(self):
-        data = OOBTree()
-        data['dummy_question'] = [u"First answer", u"Second answer"]
-
     def test_title(self):
         obj = self._make_obj()
         self.assertEqual(obj.get_title(), u'')
@@ -46,11 +42,17 @@ class QuestionTests(unittest.TestCase):
     def test_question_schema_node(self):
         self._utils_fixture()
         obj = self._make_obj()
-        obj.set_question_type('free_text')
+        obj.set_question_type('importance_scale')
         node = obj.question_schema_node('dummy')
         self.assertTrue(isinstance(node, colander.SchemaNode))
     
     def test_render_result(self):
         self._utils_fixture()
         obj = self._make_obj()
-        #FIXME: Use mock data
+        obj.set_question_type('free_text')
+        
+        request = testing.DummyRequest()
+        data = ['I wrote something', "She wrote something else"]
+        
+        result = obj.render_result(request, data)
+        self.assertTrue('I wrote something' in result)

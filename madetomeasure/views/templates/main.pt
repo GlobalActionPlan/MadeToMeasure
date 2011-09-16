@@ -43,6 +43,12 @@
         	<!-- for logo etc -->
 			
 			<div tal:condition="userid" id="system-toolbar">
+				
+                <a href="${resource_url(root['surveys'], request)}">Surveys</a> |
+                <a href="${resource_url(root['participants'], request)}">Participants</a> |
+                <a href="${resource_url(root['questions'], request)}">Questions</a> |
+                <a href="${resource_url(root['users'], request)}">System users</a> |
+				
 				Userid: ${userid}
 				<a href="${resource_url(root, request)+'logout'}">Logout</a>
 			</div>

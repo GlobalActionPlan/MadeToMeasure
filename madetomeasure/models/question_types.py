@@ -55,7 +55,6 @@ class BasicQuestionNode(object):
         return "<%s '%s'>" % (self.__class__.__module__, self.type_title)
 
     def count_occurences(self, data):
-        #FIXME: Perhaps count makes more sense?
         results = OOBTree()
         for item in data:
             if item not in results:
@@ -73,8 +72,19 @@ class BasicQuestionNode(object):
 class ChoiceQuestionNode(BasicQuestionNode):
     """ Single choice type of question. """
     
+    def choice_values(self):
+        """ Return dict of possible choices with choice id as key,
+            and rendered title as value.
+        """
+        choices = {}
+        for (id, title) in self.widget.values:
+            choices[id] = title
+        return choices
+    
     def render_result(self, request, data):
-        response = {'occurences':self.count_occurences(data)}
+        response = {}
+        response['occurences'] = self.count_occurences(data)
+        response['choices'] = self.choice_values()
         return render('../views/templates/results/choice.pt', response, request=request)
 
 
