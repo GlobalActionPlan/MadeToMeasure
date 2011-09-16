@@ -15,11 +15,12 @@ from madetomeasure.schemas.system import RequestPasswordSchema
 from madetomeasure.schemas.system import TokenPasswordChange
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BASE_FORM_TEMPLATE
 
 
 class SystemView(BaseView):
 
-    @view_config(context=ISiteRoot, name='login', renderer='templates/form.pt')
+    @view_config(context=ISiteRoot, name='login', renderer=BASE_FORM_TEMPLATE)
     def login(self):
         
         login_schema = LoginSchema().bind(came_from = self.request.GET.get('came_from', ''),)
@@ -67,7 +68,7 @@ class SystemView(BaseView):
         return HTTPFound(location = resource_url(self.context, self.request),
                          headers = headers)
                          
-    @view_config(context=ISiteRoot, name='request_password', renderer='templates/form.pt')
+    @view_config(context=ISiteRoot, name='request_password', renderer=BASE_FORM_TEMPLATE)
     def request_password(self):
         
         schema = RequestPasswordSchema().bind()
@@ -107,7 +108,7 @@ class SystemView(BaseView):
         self.response['form'] = form.render()
         return self.response
         
-    @view_config(context=IUser, name="token_pw", renderer='templates/form.pt')
+    @view_config(context=IUser, name="token_pw", renderer=BASE_FORM_TEMPLATE)
     def token_password_change(self):
         
         schema = TokenPasswordChange(self.context)

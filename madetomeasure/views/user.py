@@ -8,13 +8,14 @@ from pyramid.url import resource_url
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.schemas.users import ChangePasswordSchema
 
 
 class UsersView(BaseView):
-    @view_config(name='add', context=IUsers, renderer='templates/form.pt')
+    @view_config(name='add', context=IUsers, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
         #FIXME: Check permissions
         type_to_add = self.request.GET.get('content_type')
@@ -52,7 +53,7 @@ class UsersView(BaseView):
         self.response['form'] = form.render()
         return self.response
         
-    @view_config(name='edit', context=IUser, renderer='templates/form.pt')
+    @view_config(name='edit', context=IUser, renderer=BASE_FORM_TEMPLATE)
     def edit_view(self):
         #FIXME: Check permissions
 
@@ -88,7 +89,7 @@ class UsersView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
         
-    @view_config(name='change_password', context=IUser, renderer='templates/form.pt')
+    @view_config(name='change_password', context=IUser, renderer=BASE_FORM_TEMPLATE)
     def change_password_view(self):
         #FIXME: Check permissions
 

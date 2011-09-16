@@ -17,6 +17,7 @@ from madetomeasure.models import CONTENT_TYPES
 
 
 BASE_VIEW_TEMPLATE = 'templates/view.pt'
+BASE_FORM_TEMPLATE = 'templates/form.pt'
 
 class BaseView(object):
 
@@ -72,7 +73,6 @@ class BaseView(object):
     @view_config(context=ISurveySection, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=ISurvey, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=IQuestions, renderer=BASE_VIEW_TEMPLATE)
     def admin_listing_view(self):
         #FIXME: move when implemented
         return self.response

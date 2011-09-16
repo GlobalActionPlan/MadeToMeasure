@@ -13,6 +13,8 @@ from pyramid.exceptions import Forbidden
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BASE_VIEW_TEMPLATE
+from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.app import generate_slug
@@ -20,8 +22,8 @@ from madetomeasure.models.app import generate_slug
 
 class SurveysView(BaseView):
 
-    @view_config(name='add', context=ISurveys, renderer='templates/form.pt')
-    @view_config(name='add', context=ISurvey, renderer='templates/form.pt')
+    @view_config(name='add', context=ISurveys, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='add', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
         """ Add Survey and Survey Section. """
         #FIXME: Check permissions
@@ -64,8 +66,8 @@ class SurveysView(BaseView):
         return self.response
 
 
-    @view_config(name='edit', context=ISurvey, renderer='templates/form.pt')
-    @view_config(name='edit', context=ISurveySection, renderer='templates/form.pt')
+    @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
     def edit_view(self):
         #FIXME: Check permissions
 
@@ -112,7 +114,7 @@ class SurveysView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
     
-    @view_config(name='invitation_emails', context=ISurvey, renderer='templates/form.pt')
+    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """
         #FIXME: Check permissions
