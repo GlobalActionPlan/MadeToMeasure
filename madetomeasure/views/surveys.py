@@ -205,7 +205,7 @@ class SurveysView(BaseView):
 
         def _get_questions(section):
             results = []
-            for name in section.get_question_ids():
+            for name in section.question_ids:
                 results.append(section.question_object_from_id(name))
             return results
         

@@ -23,25 +23,6 @@ def deferred_survey_section_title(node, kw):
         raise ValueError("survey_section_title must be part of schema binding.")
     return title
 
-@colander.deferred
-def deferred_questions_for_types_widget(node, kw):
-    question_types = kw['question_types']
-    context = kw['context']
-    
-    root = find_root(context)
-    #FIXME: Refactor to use local questions too
-    root_questions = root['questions']
-    org = find_interface(context, IOrganisation)
-    local_questions = org['questions']
-    
-    results = set()
-    for question_type in question_types:
-        results.update(root_questions.questions_by_type(question_type))
-        results.update(local_questions.questions_by_type(question_type))
-    
-    choices = [(x.__name__, x.get_title()) for x in results]
-    return deform.widget.CheckboxChoiceWidget(values=choices)
-
 
 class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
@@ -53,17 +34,10 @@ class SurveySchema(colander.Schema):
                                         widget=deform.widget.TextAreaWidget(rows=10, cols=50),
                                         default=_(u"Thanks a lot for filling out the survey."),)
 
-class AddSurveySectionSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),)
-    question_type = colander.SchemaNode(colander.String(),
-                                        widget=deferred_question_type_widget,)
-    
 
-class EditSurveySectionSchema(colander.Schema):
+class SurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
-    question_ids = colander.SchemaNode(deform.Set(),
-                                       title = _(u"Questions in this survey section"),
-                                       widget=deferred_questions_for_types_widget,)
+    structured_question_ids = colander.Schema(title=_(u"Select participating questions"),)
 
 
 class SurveyInvitationSchema(colander.Schema):

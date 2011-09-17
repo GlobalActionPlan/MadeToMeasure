@@ -160,7 +160,7 @@ class Survey(BaseFolder):
             questions = 0
             for section in self.values():
                 response += len(section.response_for_uid(uid))
-                questions += len(section.get_question_ids())
+                questions += len(section.question_ids)
                 
             participant['finished'] = "%.0f" % (Decimal(response) / Decimal(questions) * 100)
                 
@@ -169,11 +169,59 @@ class Survey(BaseFolder):
         return participants
 
 
+    def structured_local_question_objects(self):
+        org = find_interface(self, IOrganisation)
+        questions = org['questions']
+        results = {}
+        for question in questions.values():
+            if not IQuestion.providedBy(question):
+                continue
+            type = question.get_question_type()
+            if type not in results:
+                results[type] = []
+            results[type].append(question)
+        return results
+    
+    def structured_global_question_objects(self):
+        root = find_root(self)
+        questions = root['questions']
+        results = {}
+        for question in questions.values():
+            if not IQuestion.providedBy(question):
+                continue
+            type = question.get_question_type()
+            if type not in results:
+                results[type] = []
+            results[type].append(question)
+        return results
+
+    def add_structured_question_choices(self, schema):
+        """ Append all selectable questions to a schema.
+        """
+        questions = self.structured_global_question_objects()
+        questions.update(self.structured_local_question_objects())
+
+        for (type, questions) in questions.items():
+            choices = [(x.__name__, x.get_title()) for x in questions]
+            schema.add(colander.SchemaNode(deform.Set(allow_empty=True),
+                                           name=type,
+                                           widget=deform.widget.CheckboxChoiceWidget(values=choices),),
+                                           )
+
+
+
 class SurveySection(BaseFolder):
     implements(ISurveySection)
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)
+    
+    @property
+    def question_ids(self):
+        results = set()
+        for v in self.get_structured_question_ids().values():
+            results.update(v)
+        return results
 
     def get_question_type(self):
         return getattr(self, '__question_type__', '')
@@ -181,17 +229,17 @@ class SurveySection(BaseFolder):
     def set_question_type(self, value):
         self.__question_type__ = value
 
-    def get_question_ids(self):
-        return getattr(self, '__question_ids__', [])
+    def get_structured_question_ids(self):
+        return getattr(self, '__structured_question_ids__', {})
 
-    def set_question_ids(self, value):
-        self.__question_ids__ = list(value)
-    
+    def set_structured_question_ids(self, value):
+        self.__structured_question_ids__ = value
+
     def append_questions_to_schema(self, schema):
         """ Append all questions to a schema. """
-        lang = None #FIXME:
-
-        for id in self.get_question_ids():
+        lang = None #FIXME
+ 
+        for id in self.question_ids:
             question = self.question_object_from_id(id)
             schema.add(question.question_schema_node(id))
 

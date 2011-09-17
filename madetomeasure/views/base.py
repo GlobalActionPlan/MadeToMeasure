@@ -8,6 +8,7 @@ from pyramid.httpexceptions import HTTPFound
 from deform import Button
 from deform import Form
 from colander import Schema
+from deform.exception import ValidationFailure
 
 from madetomeasure.models.app import generate_slug
 from madetomeasure.interfaces import *
@@ -124,6 +125,11 @@ class BaseView(object):
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
         schema = schema.bind()
+
+        #FIXME: Need better way of determining ways of adding fields to schema. After bind?
+        if type_to_add == 'SurveySection':
+            self.context.add_structured_question_choices(schema['structured_question_ids'])
+
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         
@@ -165,14 +171,11 @@ class BaseView(object):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        def _question_types():
-            #FIXME: Handle several?
-            if hasattr(self.context, 'get_question_type'):
-                return [self.context.get_question_type()]
-
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,
-                             question_types = _question_types())
+        schema = schema.bind(context = self.context,)
+        
+        if ISurveySection.providedBy(self.context):
+            self.context.__parent__.add_structured_question_choices(schema['structured_question_ids'])
                 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
