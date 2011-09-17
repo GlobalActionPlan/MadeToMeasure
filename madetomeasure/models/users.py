@@ -56,10 +56,12 @@ class User(BaseFolder):
         
     def get_title(self):
         title = "%s %s" % (self.get_first_name(), self.get_last_name())
-        if not title.strip():
-            title = getattr(self, '__title__', '')
-        return title
-    
+        return title.strip()
+
+    def set_title(self, value):
+        """ For compatibility, shouldn't be used"""
+        pass
+
     def set_email(self, value):
         self.__email__ = value
     
