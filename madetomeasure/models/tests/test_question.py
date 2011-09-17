@@ -5,6 +5,7 @@ from pyramid import testing
 from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOBTree
 
+
 class QuestionTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -18,6 +19,11 @@ class QuestionTests(unittest.TestCase):
     
     def _utils_fixture(self):
         self.config.include('madetomeasure.models.question_types')
+
+    def test_interface(self):
+        from madetomeasure.interfaces import IQuestion
+        obj = self._make_obj()
+        self.assertTrue(verifyObject(IQuestion, obj))
 
     def test_title(self):
         obj = self._make_obj()
