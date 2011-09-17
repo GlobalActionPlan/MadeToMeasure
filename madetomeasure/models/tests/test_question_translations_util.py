@@ -41,3 +41,15 @@ class QuestionTranslationsTests(unittest.TestCase):
         
         self.assertEqual(schema['ru'].title, u"\u0440\u0443\u0441\u0441\u043a\u0438\u0439")
         self.assertEqual(schema['sv'].title, u"svenska")
+
+    def test_registration(self):
+        #The util needs a few things in settings to work
+        from pyramid.interfaces import ISettings
+        settings = self.config.registry.getUtility(ISettings)
+        settings['default_locale_name'] = 'en'
+        settings['available_languages'] = 'sv de'
+        
+        from madetomeasure.interfaces import IQuestionTranslations
+        self.config.include('madetomeasure.models.translations')
+        
+        self.assertTrue(self.config.registry.queryUtility(IQuestionTranslations))

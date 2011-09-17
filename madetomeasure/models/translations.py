@@ -25,7 +25,8 @@ class QuestionTranslations(object):
         available_languages = [x for x in settings['available_languages'].split()]
         
         translatable_languages = copy(available_languages)
-        translatable_languages.remove(self.default_locale_name)
+        if self.default_locale_name in translatable_languages:
+            translatable_languages.remove(self.default_locale_name)
         
         self.available_languages = tuple(available_languages)
         self.translatable_languages = tuple(translatable_languages)
