@@ -9,7 +9,11 @@
 
 <div metal:fill-slot="content">
     <!-- Keep css id to allow overrides of default deform behaviour -->
-    <div id="survey" tal:content="structure form">Form html code</div>
+	<tal:dummy condition="dummy_form|False">
+		<h3 i18n:translate="">Displaying section form</h3>
+		<div i18n:translate="">This is how the survey section will appear to participants.</div>
+	</tal:dummy>
+    <div id="survey" tal:content="structure form|dummy_form">Form html code</div>
 
 </div>
 </body>

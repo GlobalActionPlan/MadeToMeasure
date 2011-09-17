@@ -115,7 +115,7 @@ class QuestionsView(BaseView):
         
         return self.response
     
-    @view_config(context=IQuestion, renderer='templates/dummy_form.pt')
+    @view_config(context=IQuestion, renderer='templates/survey_form.pt')
     def admin_view(self):
         schema = Schema()
         schema.add(self.context.question_schema_node('dummy'))
