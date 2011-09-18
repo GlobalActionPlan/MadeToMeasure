@@ -51,7 +51,7 @@ class BasicQuestionNode(object):
                                    widget=self.widget,
                                    **kw)
 
-    def __repr__(self):
+    def __repr__(self): # pragma: no cover
         return "<%s '%s'>" % (self.__class__.__module__, self.type_title)
 
     def count_occurences(self, data):
