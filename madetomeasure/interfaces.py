@@ -2,6 +2,18 @@ from zope.interface import Interface
 from zope.interface import Attribute
 
 
+class IBaseFolder(Interface):
+    """ Most other persistent objects inherit fron this class."""
+    content_type = Attribute("Works like an id for this content type. Must be implemented by subclass.")
+    display_name = Attribute("Name that will be used in the UI. Must be implemented by subclass.")
+    allowed_contexts = Attribute("List of content types where this content type is allowed to be added. Must be implemented by subclass.")
+
+    def get_title():
+        """ Return title of object. Usually used as heading. """
+    
+    def set_title(value):
+        """ Set title. """
+
 class ISiteRoot(Interface):
     """ SiteRoot model. """
 
