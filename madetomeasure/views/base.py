@@ -15,6 +15,7 @@ from madetomeasure.interfaces import *
 from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.models import CONTENT_TYPES
+from madetomeasure.views.macros import FlashMessages
 
 
 BASE_VIEW_TEMPLATE = 'templates/view.pt'
@@ -25,12 +26,14 @@ class BaseView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        self.flash_messages = FlashMessages(request)
         self.response = dict(
             userid = self.userid,
             main_macro = self.main_macro,
             resource_url = resource_url,
             root = self.root,
             addable_types = self.addable_types(),
+            flash_messages = self.flash_messages,
         )
 
     @reify
