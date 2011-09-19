@@ -9,7 +9,6 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 requires = [
     'pyramid',
     'pyramid_mailer',
-    #'pyramid_zcml',
     'repoze.zodbconn',
     'repoze.tm2>=1.0b1', # default_commit_veto
     'repoze.retry',
@@ -17,12 +16,12 @@ requires = [
     'WebError',
     'Babel',
     'repoze.folder',
-    #'repoze.workflow',
     'colander',
     'deform',
     'slugify',
     'lingua',
     'webhelpers',
+    'pytz',
     ]
 
 setup(name='MadeToMeasure',

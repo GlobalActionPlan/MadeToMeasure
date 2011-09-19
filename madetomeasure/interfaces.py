@@ -93,3 +93,9 @@ class IQuestionTranslations(Interface):
         """ Fetch all possible translations (according to settings)
             and create a shecma with each lang as a node.
         """
+
+
+class IDateTimeHelper(Interface):
+    """ Helper util for datetime things. """
+    
+    

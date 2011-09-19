@@ -34,6 +34,7 @@ class BaseView(object):
             root = self.root,
             addable_types = self.addable_types(),
             organisation = self.organisation,
+            dt_helper = request.registry.getAdapter(request, IDateTimeHelper),
         )
 
     @reify

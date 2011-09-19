@@ -39,7 +39,7 @@ def main(global_config, **settings):
 
     config.include('madetomeasure.models.question_types')
     config.include('madetomeasure.models.translations')
-    
+    config.include('madetomeasure.models.date_time_helper')
     
     config.add_translation_dirs('madetomeasure:locale/')
 
