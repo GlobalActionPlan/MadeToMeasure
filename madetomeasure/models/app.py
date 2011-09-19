@@ -26,7 +26,6 @@ def bootstrap_root():
     admin.set_title('Administrator')
     root['users']['admin'] = admin
     
-    root['surveys'] = Surveys()
     root['participants'] = Participants()
     root['questions'] = Questions()
     
