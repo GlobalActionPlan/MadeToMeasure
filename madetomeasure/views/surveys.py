@@ -73,24 +73,36 @@ class SurveysView(BaseView):
         
         self.response['participants'] = self.context.get_participants_data()
         
+        schema = CONTENT_SCHEMAS["SurveyReminder"]()
+        schema = schema.bind()
+        form = Form(schema, buttons=(self.buttons['send'],))
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        post = self.request.POST
+        if 'send' in post:
+            controls = self.request.POST.items()
+
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            participants = self.context.get_participants_data()
+            for participant in participants:
+                # a participant with less then 100% completion will resive the invite ticket again with specified message
+                if participant['finished'] < 100:
+                    ticket = participant['uid']
+                    email = self.context.tickets[ticket]
+                    self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
+                    
+            self.flash_messages.add(_(u"Reminder has been sent"))
+        
+        self.response['form'] = form.render()
+        
         return self.response
         
-    @view_config(name='resend_invitation', context=ISurvey)
-    def resend_invitaton(self):
-        """ Resends an invitation to a participant. """
-        #FIXME: Check permissions
-        
-        ticket = self.request.GET.get('ticket')
-        if not ticket in self.context.tickets.keys():
-            raise ValueError("No such ticket")
-        
-        email = self.context.tickets[ticket]
-        self.context.send_invitation_email(self.request, email, ticket)
-        
-        url = resource_url(self.context, self.request)
-        url = url + 'participants'
-        return HTTPFound(location = url)
-
     @view_config(name="do", context=ISurvey)
     def start_survey_view(self):
         """ This view simply redirects to the first section.

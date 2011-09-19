@@ -90,16 +90,17 @@ class Survey(BaseFolder):
         for email in self._extract_emails():
             invitation_uid = self.create_ticket(email)
             
-            self.send_invitation_email(request, email, invitation_uid)
+            message = u"A message" #FIXME
+            self.send_invitation_email(request, email, invitation_uid, message)
             
         self.set_invitation_emails('') #Blank out emails, since we've already sent them
         
-    def send_invitation_email(self, request, email, uid):
+    def send_invitation_email(self, request, email, uid, message):
         mailer = get_mailer(request)
         sender = self.get_from_address()
 
         response = {}
-        response['message'] = u"A message" #FIXME
+        response['message'] = message
         response['access_link'] = "%sdo?uid=%s" % (resource_url(self, request), uid)
         body_html = render('../views/templates/survey_invitation_mail.pt', response, request=request)
 
@@ -162,7 +163,10 @@ class Survey(BaseFolder):
                 response += len(section.response_for_uid(uid))
                 questions += len(section.question_ids)
                 
-            participant['finished'] = "%.0f" % (Decimal(response) / Decimal(questions) * 100)
+            if response != 0:
+                participant['finished'] = Decimal(response) / Decimal(questions) * 100
+            else:
+                participant['finished'] = 0
                 
             participants.append(participant)
         

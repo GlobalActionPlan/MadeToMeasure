@@ -45,3 +45,9 @@ class SurveyInvitationSchema(colander.Schema):
                                             title = _(u"Participant email addresses - add one per row."),
                                             validator = multiple_email_validator,
                                             widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
+
+
+class SurveyReminderSchema(colander.Schema):
+    message = colander.SchemaNode(colander.String(),
+                                  title = _(u"Remainder message"),
+                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
