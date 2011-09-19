@@ -1,3 +1,4 @@
+from pytz import common_timezones
 import colander
 import deform
 from pyramid.traversal import find_root, find_interface
@@ -31,6 +32,14 @@ class SurveySchema(colander.Schema):
     finished_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.TextAreaWidget(rows=10, cols=50),
                                         default=_(u"Thanks a lot for filling out the survey."),)
+    time_zone = colander.SchemaNode(colander.String(),
+                                    title = _(u"Timezone"),
+                                    description = _(u"Try start typing a timezone"),
+                                    validator = colander.OneOf(common_timezones),
+                                    widget = deform.widget.AutocompleteInputWidget(size=60,
+                                                                                   values = common_timezones,
+                                                                                   min_length=1),
+                                    )
 
 
 class SurveySectionSchema(colander.Schema):
