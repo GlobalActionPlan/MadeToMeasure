@@ -3,8 +3,6 @@ from datetime import datetime
 import pytz
 
 from zope.interface import implements
-from pyramid.i18n import get_locale_name
-from pyramid.threadlocal import get_current_request
 from babel.dates import format_date
 from babel.dates import format_time
 from babel.dates import format_datetime
@@ -14,16 +12,12 @@ from madetomeasure import MadeToMeasureTSF as _
 
 
 class DateTimeHelper(object):
-    """ Adapter for requests to help with date conversion/display. """
+    """ Class to help with date conversion/display. """
     implements(IDateTimeHelper)
     
-    def __init__(self, request):
-        timezone = request.session.get('timezone', None)
-        if not timezone:
-            timezone = request.registry.settings['default_timezone']
-        
+    def __init__(self, timezone, locale):
         self.timezone = pytz.timezone(timezone)
-        self.locale = get_locale_name(request)
+        self.locale = locale
 
     def utcnow(self):
         return utcnow()
@@ -82,7 +76,13 @@ def utcnow():
 
 
 def includeme(config):
-    """ Register DateTimeHelper as an adapter. """
-    from pyramid.interfaces import IRequest
-    config.registry.registerAdapter(DateTimeHelper, (IRequest,), IDateTimeHelper)
+    """ Register DateTimeHelper as a factory.
+        Checkout factories in Zope Component Architechture docs.
+        Example: registry.createObject('dt_helper', "GMT", "en")
+    """
+    from zope.component.factory import Factory
+    from zope.component.interfaces import IFactory
+    
+    factory = Factory(DateTimeHelper, 'DateTimeHelper')
+    config.registry.registerUtility(factory, IFactory, 'dt_helper')
 

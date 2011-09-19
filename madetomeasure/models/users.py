@@ -6,9 +6,11 @@ import string
 
 from pyramid.url import resource_url
 from zope.interface import implements
+from zope.component import getUtility
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
+from pyramid.interfaces import ISettings
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
@@ -79,6 +81,15 @@ class User(BaseFolder):
 
     def get_last_name(self):
         return getattr(self, '__last_name__', '')
+
+    def get_time_zone(self):
+        tz = getattr(self, '__time_zone__', None)
+        if tz is None:
+            return getUtility(ISettings)['default_timezone']
+        return tz
+
+    def set_time_zone(self, value):
+        self.__time_zone__ = value
 
     def set_password(self, value):
         self.__password__ = get_sha_password(value)

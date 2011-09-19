@@ -13,7 +13,6 @@ from pyramid.exceptions import Forbidden
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.renderers import render
-from pyramid.threadlocal import get_current_request
 from pyramid.interfaces import ISettings
 
 from madetomeasure.models.base import BaseFolder

@@ -1,10 +1,11 @@
 import datetime
 import iso8601
 
-from pyramid.threadlocal import get_current_request
 from colander import DateTime, Invalid, null, _
 
 from madetomeasure.interfaces import IDateTimeHelper
+from madetomeasure.models.app import get_users_dt_helper
+
 
 
 class TZDateTime(DateTime):
@@ -15,10 +16,6 @@ class TZDateTime(DateTime):
     is converted to UTC during deserialization. Serialization converts it back
     to the local timezone, so the conversion process is transparent to the user.
     """
-    def _get_dt_helper(self):
-        request = get_current_request()
-        return request.registry.getAdapter(request, IDateTimeHelper)
-
     def serialize(self, node, appstruct):
         if appstruct is null:
             return null
@@ -31,7 +28,7 @@ class TZDateTime(DateTime):
                           _("'${val}' is not valid as date and time",
                             mapping={'val':appstruct})
                           )
-        dt = self._get_dt_helper()
+        dt = get_users_dt_helper()
 
         return dt.utc_to_tz(appstruct).strftime('%Y-%m-%d %H:%M')
 
@@ -40,7 +37,7 @@ class TZDateTime(DateTime):
         if not cstruct:
             return null
 
-        dt = self._get_dt_helper()
+        dt = get_users_dt_helper()
 
         try:
             result = datetime.datetime.strptime(cstruct, "%Y-%m-%dT%H:%M")

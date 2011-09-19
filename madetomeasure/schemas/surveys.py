@@ -8,6 +8,7 @@ from madetomeasure.schemas.questions import deferred_question_type_widget
 from madetomeasure.schemas.validators import multiple_email_validator
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.models.fields import TZDateTime
+from madetomeasure.schemas.common import time_zone_node
 
 
 class SurveySchema(colander.Schema):
@@ -32,14 +33,7 @@ class SurveySchema(colander.Schema):
     finished_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.TextAreaWidget(rows=10, cols=50),
                                         default=_(u"Thanks a lot for filling out the survey."),)
-    time_zone = colander.SchemaNode(colander.String(),
-                                    title = _(u"Timezone"),
-                                    description = _(u"Try start typing a timezone"),
-                                    validator = colander.OneOf(common_timezones),
-                                    widget = deform.widget.AutocompleteInputWidget(size=60,
-                                                                                   values = common_timezones,
-                                                                                   min_length=1),
-                                    )
+    time_zone = time_zone_node()
 
 
 class SurveySectionSchema(colander.Schema):
