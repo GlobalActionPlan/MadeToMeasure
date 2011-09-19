@@ -6,26 +6,22 @@ from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.questions import deferred_question_type_widget
 from madetomeasure.schemas.validators import multiple_email_validator
 from madetomeasure.interfaces import IOrganisation
-
-
-@colander.deferred
-def deferred_survey_title(node, kw):
-    title = kw.get('survey_title', None)
-    if title is None:
-        raise ValueError("survey_title must be part of schema binding.")
-    return title
-
-
-@colander.deferred
-def deferred_survey_section_title(node, kw):
-    title = kw.get('survey_section_title', None)
-    if title is None:
-        raise ValueError("survey_section_title must be part of schema binding.")
-    return title
+from madetomeasure.models.fields import TZDateTime
 
 
 class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
+    start_time = colander.SchemaNode(
+         TZDateTime(),
+         title = _(u"Start time for survey"),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+    )
+
+    end_time = colander.SchemaNode(
+         TZDateTime(),
+         title = _(u"End time for survey"),
+         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+    )
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
     mail_message = colander.SchemaNode(colander.String(),

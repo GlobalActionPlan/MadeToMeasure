@@ -12,6 +12,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.renderers import render
+from pyramid.threadlocal import get_current_request
 
 from madetomeasure.models.base import BaseFolder
 from madetomeasure import MadeToMeasureTSF as _
@@ -61,6 +62,18 @@ class Survey(BaseFolder):
 
     def set_finished_text(self, value):
         self.__finished_text__ = value
+
+    def get_start_time(self):
+        return getattr(self, '__start_time__', None)
+
+    def set_start_time(self, value):
+        self.__start_time__ = value
+
+    def get_end_time(self):
+        return getattr(self, '__end_time__', None)
+
+    def set_end_time(self, value):
+        self.__end_time__ = value
 
     def _extract_emails(self):
         results = set()

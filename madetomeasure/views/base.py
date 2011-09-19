@@ -213,7 +213,9 @@ class BaseView(object):
         for field in schema:
             accessor = getattr(self.context, "get_%s" % field.name, marker)
             if accessor != marker:
-                appstruct[field.name] = accessor()
+                value = accessor()
+                if value is not None:
+                    appstruct[field.name] = accessor()
 
         self.response['form'] = form.render(appstruct)
         return self.response
