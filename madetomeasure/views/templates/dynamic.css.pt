@@ -11,4 +11,9 @@ button {
     background-color: ${hex_color};
 }
 </tal:color>
+<tal:logo condition="logo_link">
+#logo {
+    background-image: url(${logo_link});
+}
+</tal:logo>
 </style>

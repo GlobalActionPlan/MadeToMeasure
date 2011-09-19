@@ -15,7 +15,7 @@ class OrganisationSchema(colander.Schema):
                                 title = _(u"Organisation name"),)
     logo_link = colander.SchemaNode(colander.String(),
                                     title = _(u"Logo link"),
-                                    description = _(u"Must be a HTTP link to a Gif, Jpeg och Png file."),
+                                    description = _(u"Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height: 50/300 px."),
                                     validator = colander.Regex(LOGO_LINK),
                                     missing=u"",)
     hex_color = colander.SchemaNode(colander.String(),

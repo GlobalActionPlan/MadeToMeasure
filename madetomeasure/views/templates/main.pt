@@ -45,6 +45,8 @@
         <div id="page-header">
         	<!-- for logo etc -->
 			
+			<div id="logo"></div>
+			
 			<div tal:condition="userid" id="system-toolbar">
 				
                 <a href="${resource_url(root['participants'], request)}">Participants</a> |
