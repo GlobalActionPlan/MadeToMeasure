@@ -1,6 +1,7 @@
 from pyramid.decorator import reify
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
+from pyramid.traversal import find_interface
 from pyramid.url import resource_url
 from pyramid.renderers import get_renderer
 from pyramid.view import view_config
@@ -20,6 +21,7 @@ from madetomeasure.models import CONTENT_TYPES
 BASE_VIEW_TEMPLATE = 'templates/view.pt'
 BASE_FORM_TEMPLATE = 'templates/form.pt'
 
+
 class BaseView(object):
 
     def __init__(self, context, request):
@@ -31,6 +33,7 @@ class BaseView(object):
             resource_url = resource_url,
             root = self.root,
             addable_types = self.addable_types(),
+            organisation = self.organisation,
         )
 
     @reify
@@ -42,9 +45,13 @@ class BaseView(object):
         return find_root(self.context)
     
     @reify
+    def organisation(self):
+        return find_interface(self.context, IOrganisation)
+
+    @reify
     def main_macro(self):
         return get_renderer('templates/main.pt').implementation().macros['master']
-    
+
     def addable_types(self):
         #FIXME: Check permission?
         context_type = getattr(self.context, 'content_type', '')
