@@ -57,8 +57,14 @@ button {
 	padding-bottom: 50px;
 }
 #page-header {
-    height: 100px;
+    height: 50px;
 	display: block;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px 0 #ccc;
+	margin-bottom: 40px;
 }
 #main-area {
 	width: 1000px;
@@ -76,12 +82,18 @@ button {
 #content {}
 #footer {}
 
+#logo {
+	display: block;
+	float: left;
+	width: 400px;
+	height: 50px;
+    background: url(/static/dummy_logo.png) no-repeat;
+}
 #system-toolbar {
-	background: #fff;
-	padding: 10px;
-    box-shadow: 0 0 20px 0 #ccc;
-    -moz-box-shadow: 0 0 20px 0 #ccc;
-    -webkit-box-shadow: 0 0 20px 0 #ccc;
+	text-align: right;
+	margin-left: 400px;
+	z-index: -1;
+
 }
 #context-toolbar {}
 
