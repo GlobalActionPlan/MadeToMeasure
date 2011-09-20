@@ -252,18 +252,13 @@ class Survey(BaseFolder):
         
         #Check if it has start time and is started
         if start_time and start_time > now:
-            #FIXME: Timezones etc...
-            msg = _(u"not_started_error",
-                    default=_(u"Survey has not started yet, it will start at ${start_time}"),
-                    mapping={'start_time':start_time})
-            raise SurveyUnavailableError(self, msg=msg)
+            msg = u"Survey has not opened"
+            raise SurveyUnavailableError(self, msg=msg, not_started=True)
         
         #Check if it has end time and that it hasn't passed
         if end_time and end_time < now:
-            msg = _(u"ended_error",
-                    default=_(u"Survey has ended, it closed at ${end_time}"),
-                    mapping={'end_time':end_time})
-            raise SurveyUnavailableError(self, msg=msg)
+            msg = u"Survey has ended"
+            raise SurveyUnavailableError(self, msg=msg, ended=True)
         
         return True
 
@@ -336,4 +331,4 @@ class SurveySection(BaseFolder):
                     results[k] = []
                 results[k].append(v)
         return results
-    
+

@@ -17,6 +17,7 @@ from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
+from madetomeasure.models.exceptions import SurveyUnavailableError
 
 
 class SurveysView(BaseView):
@@ -65,7 +66,7 @@ class SurveysView(BaseView):
 
         self.response['form'] = form.render(appstruct)
         return self.response
-        
+
     @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt')
     def participants_view(self):
         """ Overview of participants. """
@@ -102,12 +103,38 @@ class SurveysView(BaseView):
         self.response['form'] = form.render()
         
         return self.response
-        
+
+    def _survey_error_msg(self, exeption):
+        if exeption.not_started:
+            start_time = self.survey_dt.dt_format(self.context.get_start_time(), format='full')
+            msg = _(u"not_started_error",
+                    default=_(u"Survey has not started yet, it will start at ${start_time}"),
+                    mapping={'start_time':start_time})
+        if exeption.ended:
+            end_time = self.survey_dt.dt_format(self.context.get_end_time(), format='full')
+            msg = _(u"ended_error",
+                    default=_(u"Survey has ended, it closed at ${end_time}"),
+                    mapping={'end_time':end_time})
+
+        self.flash_messages.add(msg)
+
+    @view_config(name="unavailable", context=ISurvey, renderer=BASE_VIEW_TEMPLATE)
+    def unavailable_view(self):
+        """ Renders when a survey is unavailable. """
+        return self.response
+
     @view_config(name="do", context=ISurvey)
     def start_survey_view(self):
         """ This view simply redirects to the first section.
             This starts the survey for this participant.
         """
+        try:
+            self.context.check_open()
+        except SurveyUnavailableError as e:
+            self._survey_error_msg(e)
+            url = resource_url(self.context, self.request) + 'unavailable'
+            return HTTPFound(location=url)
+            
         participant_uid = self.context.start_survey(self.request)
         
         #All good so far, let's redirect to the first section of the survey
@@ -147,6 +174,7 @@ class SurveysView(BaseView):
     def do_survey_section_view(self):
         """ Where participants go to tell us about their life... """
         survey = self.context.__parent__
+        survey.check_open()
                 
         participant_uid = self.request.params.get('uid')
         if not participant_uid in survey.tickets:
