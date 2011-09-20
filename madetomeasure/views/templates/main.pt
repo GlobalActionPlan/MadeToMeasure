@@ -67,7 +67,7 @@
 		</div>
 		
 	    <div id="main-area">
-	        <div id="flash_messages" tal:define="flash_messages flash_messages()" tal:condition="flash_messages">
+	        <div id="flash_messages" tal:define="flash_messages flash_messages()">
 	            <tal:iterate repeat="flash_message flash_messages">
 	                <div>${flash_message}</div>
 	            </tal:iterate>

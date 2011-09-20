@@ -18,8 +18,6 @@ def deferred_context_title(node, kw):
     return kw.get('title')
 
 
-
-
 class AddQuestionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 title=_(u"Initial question text"),

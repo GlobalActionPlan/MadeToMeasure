@@ -61,6 +61,12 @@ class Survey(BaseFolder):
     def get_finished_text(self):
         return getattr(self, '__finished_text__', '')
 
+    def set_available_languages(self, value):
+        self.__available_languages__ = value
+        
+    def get_available_languages(self):
+        return getattr(self, '__available_languages__', ())
+
     def set_finished_text(self, value):
         self.__finished_text__ = value
 
