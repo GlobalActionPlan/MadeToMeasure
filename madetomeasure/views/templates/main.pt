@@ -18,76 +18,75 @@
     <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
     <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
 
-	<style tal:condition="organisation and hex_color|False" type="text/css">
-		a,
-		button {
-		    color: ${hex_color};
-		}
-		button {
-		    border: 1px solid ${hex_color};
-		}
-		#page-wrapper {
-		    background-color: ${hex_color};
-		}
+    <style tal:condition="organisation and hex_color|False" type="text/css">
+        a,
+        button {
+            color: ${hex_color};
+        }
+        button {
+            border: 1px solid ${hex_color};
+        }
+        #page-wrapper {
+            background-color: ${hex_color};
+        }
 
     </style>
     <style tal:condition="organisation and logo_link|False" type="text/css">
-		#logo {
-		    background-image: url(${logo_link});
-		}
-	</style>
-	
+        #logo {
+            background-image: url(${logo_link});
+        }
+    </style>
 
     <tal:deform tal:condition="form_resources|False">
-	    <tal:css repeat="css_file form_resources['css']|[]">
-	    <link rel="stylesheet"
-	          tal:attributes="href string:/deform/${css_file}" type="text/css" />
-	    </tal:css>
+        <tal:css repeat="css_file form_resources['css']|[]">
+        <link rel="stylesheet"
+              tal:attributes="href string:/deform/${css_file}" type="text/css" />
+        </tal:css>
         <tal:js repeat="js_file form_resources['js']|[]">
         <script type="text/javascript"
                 tal:attributes="src string:/deform/${js_file}"></script>
         </tal:js>
-	    <script type="text/javascript">
-	        deform.load()
-	    </script>
+        <script type="text/javascript">
+            deform.load()
+        </script>
     </tal:deform>
 
     <metal:head define-slot="head"></metal:head>
     
 </head>
 <body>
-	
-	<div id="page-wrapper"><!-- Wraps around the whole page -->
-	
+    
+    <div id="page-wrapper"><!-- Wraps around the whole page -->
+    
         <div id="page-header">
-        	<!-- for logo etc -->
-			
-			<div id="logo"></div>
-			
-			
-			<div tal:condition="userid" id="system-toolbar">
-				
-				<span i18n:translate="">Your time</span>
-				<span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
-				|
-				<a href="${resource_url(user, request)}"
-				   title="Click to go to profile. There you can make changes as well."
-				   i18n:attributes="title">${user.get_title()} (${userid})</a>
-				|
-				<a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
-				<br/>
+            <!-- for logo etc -->
+            
+            <div id="logo"></div>
+            
+            
+            <div tal:condition="userid" id="system-toolbar">
+                
+                <span i18n:translate="">Your time</span>
+                <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
+                |
+                <a href="${resource_url(user, request)}"
+                   title="Click to go to profile. There you can make changes as well."
+                   i18n:attributes="title">${user.get_title()} (${userid})</a>
+                |
+                <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
+                <br/>
                 <a href="${resource_url(root, request)}" i18n:translate="">Root</a> |
                 <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
                 <a href="${resource_url(root['questions'], request)}" i18n:translate="">Global questions</a> |
                 <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
-			</div>
-		</div>
-		
-	    <div id="main-area">
-	        <div id="flash_messages" tal:define="flash_messages flash_messages()">
-	            <tal:iterate repeat="flash_message flash_messages">
-	                <div>${flash_message}</div>
-	            </tal:iterate>
+            </div>
+        </div>
+        
+        <div id="main-area">
+            <div id="flash_messages" tal:define="flash_messages flash_messages()">
+                <tal:iterate repeat="flash_message flash_messages">
+                    <div>${flash_message}</div>
+                </tal:iterate>
             </div>
 
             <div tal:condition="userid" id="path-bar">
@@ -97,47 +96,47 @@
                 </tal:iterate>
             </div>
 
-			<metal:heading define-slot="page_heading">
-				<h1 tal:content="context.get_title()">Title</h1>
-			</metal:heading>
-		
-		    <div id="context-toolbar" tal:condition="userid and not form|False">
-		
-		        <div id="addmenu" tal:condition="addable_types">
-		            <tal:iterate repeat="type_id addable_types">
-		                <a href="${resource_url(context, request) + 'add?content_type=' + type_id}">Add ${type_id}</a>
-		            </tal:iterate>
-		        </div>
-		        <div id="editmenu">
-		            <a href="${resource_url(context, request) + 'edit'}">Edit</a>
-		        </div>
-				<tal:survey condition="context.content_type == 'Survey'">
-			        <div id="invitaions">
-			            <a href="${resource_url(context, request) + 'invitation_emails'}">Invitations</a>
-			        </div>
-			        <div id="participants">
-			            <a href="${resource_url(context, request) + 'participants'}">Participants</a>
-			        </div>
+            <metal:heading define-slot="page_heading">
+                <h1 tal:content="context.get_title()">Title</h1>
+            </metal:heading>
+        
+            <div id="context-toolbar" tal:condition="userid and not form|userid|False">
+        
+                <div id="addmenu" tal:condition="addable_types">
+                    <tal:iterate repeat="type_id addable_types">
+                        <a href="${resource_url(context, request) + 'add?content_type=' + type_id}">Add ${type_id}</a>
+                    </tal:iterate>
+                </div>
+                <div id="editmenu">
+                    <a href="${resource_url(context, request) + 'edit'}">Edit</a>
+                </div>
+                <tal:survey condition="context.content_type == 'Survey'">
+                    <div id="invitaions">
+                        <a href="${resource_url(context, request) + 'invitation_emails'}">Invitations</a>
+                    </div>
+                    <div id="participants">
+                        <a href="${resource_url(context, request) + 'participants'}">Participants</a>
+                    </div>
                     <div id="results">
                         <a href="${resource_url(context, request) + 'results'}">Results</a>
                     </div>
                     <div id="translations">
                         <a href="${resource_url(context, request) + 'translations'}">Translations</a>
                     </div>
-				</tal:survey>
-		    </div>
-		
+                </tal:survey>
+            </div>
+        
             <div id="content">
-				<metal:main-content define-slot="content">
-					<!-- Content slot, where other templates render -->
-				</metal:main-content>
-			</div>
-		</div>
-	
+                <metal:main-content define-slot="content">
+                    <!-- Content slot, where other templates render -->
+                </metal:main-content>
+            </div>
+        </div>
+    
     </div>
-	<div id="footer" tal:condition="footer_html" tal:content="structure footer_html">
+    <div id="footer" tal:condition="footer_html" tal:content="structure footer_html">
         Footer html code
-	</div>
+    </div>
 
 </body>
 </html>
