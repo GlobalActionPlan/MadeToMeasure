@@ -86,3 +86,14 @@ class SurveyTests(unittest.TestCase):
         obj.set_end_time(future_date)
         self.assertEqual(obj.check_open(), True)
         
+    #FIXME: unfinished
+#    def test_untranslated_languages(self):
+#        from pyramid.interfaces import ISettings
+#        settings = self.config.registry.getUtility(ISettings)
+#        settings['default_locale_name'] = 'en'
+#        settings['available_languages'] = 'sv de'
+
+#        self.config.include('madetomeasure.models.translations')
+
+#        obj = self._make_obj()
+#        langs = obj.untranslated_languages()

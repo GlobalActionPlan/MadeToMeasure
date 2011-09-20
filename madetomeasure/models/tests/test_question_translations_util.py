@@ -29,6 +29,13 @@ class QuestionTranslationsTests(unittest.TestCase):
         self.assertEqual(obj.title_for_code('en'), u"English")
         #This is a translation string so it will look like this untranslated
         self.assertEqual(obj.title_for_code('404_lang'), u"Country code: ${country_code}")
+        
+    def test_title_for_code_default(self):
+        obj = self._make_obj()
+        self.assertEqual(obj.title_for_code_default('sv'), u"Swedish")
+        self.assertEqual(obj.title_for_code_default('en'), u"English")
+        #This is a translation string so it will look like this untranslated
+        self.assertEqual(obj.title_for_code_default('404_lang'), u"Country code: ${country_code}")
 
     def test_add_translations_schema(self):
         obj = self._make_obj()

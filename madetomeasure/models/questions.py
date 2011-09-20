@@ -59,6 +59,17 @@ class Question(BaseFolder):
             if not v.strip():
                 del value[k]
         self.__question_text__ = value
+        
+    def set_question_text_lang(self, value, lang):
+        """ Set translation for specific language
+        """
+        question_text = self.get_question_text()
+        if value:
+            question_text[lang] = value
+        else:
+            if lang in question_text:
+                del question_text[lang]
+        self.__question_text__ = question_text
     
     def get_question_type(self):
         """ Return a dict with country codes as key and question translations as value. """

@@ -37,10 +37,14 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(len(obj.get_question_text()), 0)
         obj.set_question_text({'sv':'Hej hej'})
         self.assertEqual(obj.get_question_text(), {'sv':'Hej hej'})
+        obj.set_question_text_lang('Hello world', 'en')
+        self.assertEqual(obj.get_question_text(), {'sv':'Hej hej', 'en': 'Hello world'})
         
     def test_question_text_empty_value(self):
         obj = self._make_obj()
         obj.set_question_text({'sv':'Hej hej', 'other':''})
+        self.assertEqual(obj.get_question_text(), {'sv':'Hej hej'})
+        obj.set_question_text_lang('', 'other')
         self.assertEqual(obj.get_question_text(), {'sv':'Hej hej'})
 
     def test_question_type(self):

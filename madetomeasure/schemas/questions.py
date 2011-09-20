@@ -37,3 +37,6 @@ class EditQuestionSchema(colander.Schema):
     question_text = question_text_node()
 
 
+
+class TranslateQuestionSchema(colander.Schema):
+    question_text = colander.Schema(title=_("Question translation"),) #Send this to add_translations_schema
