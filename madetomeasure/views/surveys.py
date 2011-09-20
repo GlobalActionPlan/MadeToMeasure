@@ -115,8 +115,7 @@ class SurveysView(BaseView):
             msg = _(u"ended_error",
                     default=_(u"Survey has ended, it closed at ${end_time}"),
                     mapping={'end_time':end_time})
-
-        self.flash_messages.add(msg)
+        return msg
 
     @view_config(name="unavailable", context=ISurvey, renderer=BASE_VIEW_TEMPLATE)
     def unavailable_view(self):
@@ -131,7 +130,8 @@ class SurveysView(BaseView):
         try:
             self.context.check_open()
         except SurveyUnavailableError as e:
-            self._survey_error_msg(e)
+            msg = self._survey_error_msg(e)
+            self.flash_messages.add(msg)
             url = resource_url(self.context, self.request) + 'unavailable'
             return HTTPFound(location=url)
             
@@ -255,7 +255,7 @@ class SurveysView(BaseView):
         return self.response
         
     @view_config(context=ISurveySection, renderer='templates/survey_form.pt')
-    def admin_view(self):
+    def show_dummy_form_view(self):
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema)
         
@@ -265,3 +265,24 @@ class SurveysView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
 
+    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
+    def survey_admin_view(self):
+        start_time = self.context.get_start_time()
+        end_time = self.context.get_end_time()
+        self.response['start_time'] = None
+        self.response['end_time'] = None
+        if start_time:
+            self.response['start_time'] = self.survey_dt.dt_format(start_time)
+        if end_time:
+            self.response['end_time'] = self.survey_dt.dt_format(end_time)
+        
+        #Is survey active?
+        try:
+            self.context.check_open()
+            msg = _(u"The survey is currently open.")
+            self.response['survey_state_msg'] = msg
+        except SurveyUnavailableError as e:
+            msg = self._survey_error_msg(e)
+            self.response['survey_state_msg'] = msg
+        
+        return self.response
