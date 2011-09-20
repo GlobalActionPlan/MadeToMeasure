@@ -97,6 +97,9 @@
                     <div id="results">
                         <a href="${resource_url(context, request) + 'results'}">Results</a>
                     </div>
+                    <div id="translations">
+                        <a href="${resource_url(context, request) + 'translations'}">Results</a>
+                    </div>
 				</tal:survey>
 		    </div>
 		
