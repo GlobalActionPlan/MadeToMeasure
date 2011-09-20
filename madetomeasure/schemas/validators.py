@@ -17,4 +17,4 @@ def multiple_email_validator(node, value):
             
     if invalid:
         emails = ", ".join(invalid)
-        raise colander.Invalid(node, _(u"The following adresses is invalid: ${emails}", mapping={'emails': emails}))
+        raise colander.Invalid(node, _(u"The following addresses is invalid: ${emails}", mapping={'emails': emails}))

@@ -114,7 +114,7 @@ class User(BaseFolder):
                  default=u"password link: ${pw_link}",
                  mapping={'pw_link':pw_link},))
         
-        msg = Message(subject=_(u"Password reset request from VoteIT"),
+        msg = Message(subject=_(u"Password reset request from MadeToMeasure"),
                        recipients=[self.get_email()],
                        body=body)
 
