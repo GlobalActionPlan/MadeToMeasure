@@ -84,7 +84,7 @@
 				<h1 tal:content="context.get_title()">Title</h1>
 			</metal:heading>
 		
-		    <div tal:condition="userid" id="context-toolbar" tal:condition="not:form|False">
+		    <div id="context-toolbar" tal:condition="userid and not form|False">
 		
 		        <div id="addmenu" tal:condition="addable_types">
 		            <tal:iterate repeat="type_id addable_types">
