@@ -31,7 +31,6 @@ class BaseView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.flash_messages = FlashMessages(request)
         self.response = dict(
             userid = self.userid,
             user = self.user_profile,
@@ -39,7 +38,7 @@ class BaseView(object):
             resource_url = resource_url,
             root = self.root,
             addable_types = self.addable_types(),
-            flash_messages = self.flash_messages,
+            flash_messages = self.get_flash_messages,
             organisation = self.organisation,
             survey_dt = self.survey_dt,
             user_dt = None
@@ -68,6 +67,13 @@ class BaseView(object):
     @reify
     def main_macro(self):
         return get_renderer('templates/main.pt').implementation().macros['master']
+        
+    def get_flash_messages(self):
+        for message in self.request.session.pop_flash():
+            yield message
+    
+    def add_flash_message(self, message):
+        self.request.session.flash(message)
 
     @reify
     def survey_dt(self):

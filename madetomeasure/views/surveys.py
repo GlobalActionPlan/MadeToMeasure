@@ -9,6 +9,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from pyramid.traversal import find_root
 from pyramid.exceptions import Forbidden
+from zope.component import getUtility
 
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
@@ -98,7 +99,7 @@ class SurveysView(BaseView):
                     email = self.context.tickets[ticket]
                     self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
                     
-            self.flash_messages.add(_(u"Reminder has been sent"))
+            self.add_flash_message(_(u"Reminder has been sent"))
         
         self.response['form'] = form.render()
         
@@ -122,11 +123,12 @@ class SurveysView(BaseView):
         """ Renders when a survey is unavailable. """
         return self.response
 
-    @view_config(name="do", context=ISurvey)
+    @view_config(name="do", context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     def start_survey_view(self):
-        """ This view simply redirects to the first section.
+        """ This view askes the participant which language it wants and redirects to the first section.
             This starts the survey for this participant.
         """
+
         try:
             self.context.check_open()
         except SurveyUnavailableError as e:
@@ -134,14 +136,47 @@ class SurveysView(BaseView):
             self.flash_messages.add(msg)
             url = resource_url(self.context, self.request) + 'unavailable'
             return HTTPFound(location=url)
-            
-        participant_uid = self.context.start_survey(self.request)
         
-        #All good so far, let's redirect to the first section of the survey
-        section_id = self.context.order[0]
-        url = resource_url(self.context[section_id], self.request)
-        url += "do?uid=%s" % participant_uid
-        return HTTPFound(location=url)
+        selected_language = None
+        
+        schema = CONTENT_SCHEMAS["SurveyLangugage"]()
+        schema = schema.bind(languages = self.context.get_available_languages())
+        form = Form(schema, buttons=(self.buttons['save'],))
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        post = self.request.POST
+        if 'save' in post:
+            controls = self.request.POST.items()
+
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            selected_language = appstruct['selected_language']
+                
+        # if no language is selected and survey only has one lanugage available set it as the seletect language
+        if not selected_language and len(self.context.get_available_languages()) == 1:
+            selected_language = self.context.get_available_languages()[0]
+
+        # redirect to first section if language is selected or if previously selected language is available here as well
+        if selected_language or 'lang' in self.request.session and self.request.session['lang'] in self.context.get_available_languages():
+            if selected_language:
+                self.request.session['lang'] = selected_language
+
+            participant_uid = self.context.start_survey(self.request)
+            
+            #All good so far, let's redirect to the first section of the survey
+            section_id = self.context.order[0]
+            url = resource_url(self.context[section_id], self.request)
+            url += "do?uid=%s" % participant_uid
+            return HTTPFound(location=url)
+
+        self.response['form'] = form.render()
+        
+        return self.response
 
     def _next_section(self):
         """ Return next section object if there is one.
@@ -264,6 +299,33 @@ class SurveysView(BaseView):
         
         self.response['dummy_form'] = form.render()
         return self.response
+        
+    
+    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt')
+    def translations(self):
+        """ Shows the amount of translations
+        """
+        trans_util = getUtility(IQuestionTranslations)
+        langs = self.context.get_available_languages()
+        sections = []
+        #Loop through all sections and save them in sections
+        #Also add section data with section.__name__ as key
+        for section in self.context.values():
+            sections.append(section)
+
+        def _get_questions(section):
+            questions = []
+            qlangs = {}
+            for name in section.question_ids:
+                question = section.question_object_from_id(name)
+                for lang in langs:
+                    if lang in question.get_question_text().keys():
+                        qlangs[lang] = trans_util.lang_names[lang]
+                questions.append({'question': question, 'langs': qlangs})
+            return questions
+        
+        self.response['sections'] = sections
+        self.response['get_questions_for_section'] = _get_questions
 
     @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
     def survey_admin_view(self):
@@ -284,5 +346,5 @@ class SurveysView(BaseView):
         except SurveyUnavailableError as e:
             msg = self._survey_error_msg(e)
             self.response['survey_state_msg'] = msg
-        
+
         return self.response
