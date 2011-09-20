@@ -59,7 +59,12 @@
 		</div>
 		
 	    <div id="main-area">
-            <div id="flash_messages" tal:content="structure flash_messages()">Flash messages</div>
+	        <div id="flash_messages" tal:define="flash_messages flash_messages()" tal:condition="flash_messages">
+	            <tal:iterate repeat="flash_message flash_messages">
+	                <div>${flash_message}</div>
+	            </tal:iterate>
+            </div>
+
 			<metal:heading define-slot="page_heading">
 				<h1 tal:content="context.get_title()">Title</h1>
 			</metal:heading>

@@ -137,7 +137,7 @@ class SystemView(BaseView):
         #Fetch token from get request
         token = self.request.GET.get('token', None)
         if token is None:
-            self.flash_messages.add(_(u"Invalid security token. Did you click the link in your email?"))
+            self.add_flash_message(_(u"Invalid security token. Did you click the link in your email?"))
             url = resource_url(self.root, self.request)
             return HTTPFound(location=url)
 

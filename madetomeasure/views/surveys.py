@@ -97,7 +97,7 @@ class SurveysView(BaseView):
                     email = self.context.tickets[ticket]
                     self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
                     
-            self.flash_messages.add(_(u"Reminder has been sent"))
+            self.add_flash_message(_(u"Reminder has been sent"))
         
         self.response['form'] = form.render()
         
