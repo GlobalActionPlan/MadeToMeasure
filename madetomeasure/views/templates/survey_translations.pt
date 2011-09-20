@@ -12,7 +12,7 @@
     <tal:languages condition="languages">
         <h3 i18n:translate="">The following languages has untranslated questions</h3>
 
-        <tal:iterate repeat="(code, language) languages.items()">
+        <tal:iterate repeat="language languages.values()">
         	<h4 tal:content="language['name']">Language</h4>
         	<tal:iterate tal:repeat="question language['questions']">
 		        <a tal:define="question_edit_url resource_url(question, request)+'edit'" href="${question_edit_url}" tal:content="question_edit_url"></a>
