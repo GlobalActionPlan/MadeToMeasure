@@ -133,7 +133,7 @@ class SurveysView(BaseView):
             self.context.check_open()
         except SurveyUnavailableError as e:
             msg = self._survey_error_msg(e)
-            self.flash_messages.add(msg)
+            self.add_flash_message(msg)
             url = resource_url(self.context, self.request) + 'unavailable'
             return HTTPFound(location=url)
         
