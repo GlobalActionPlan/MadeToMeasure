@@ -14,15 +14,9 @@
 
         <tal:iterate repeat="(code, language) languages.items()">
         	<h4 tal:content="language['name']">Language</h4>
-        	<ul tal:repeat="question language['questions']">
-        	    <li>
-			        <h5 tal:content="question.get_title()">Question title</h5>
-			        <tal:comment condition="False">
-			            FIXME: check translate permissions
-			        </tal:comment>
-			        <a href="${resource_url(question, request)+'edit'}" i18n:translate="">Translate</a>
-			    </li>
-		    </ul>
+        	<tal:iterate tal:repeat="question language['questions']">
+		        <a tal:define="question_edit_url resource_url(question, request)+'edit'" href="${question_edit_url}" tal:content="question_edit_url"></a>
+		    </tal:iterate>
         </tal:iterate>
     </tal:languages>
 	

@@ -263,6 +263,31 @@ class Survey(BaseFolder):
             raise SurveyUnavailableError(self, msg=msg, ended=True)
         
         return True
+        
+    def untranslated_languages(self):
+        trans_util = getUtility(IQuestionTranslations)
+        
+        # get available for survey
+        available_languages = self.get_available_languages()
+        # remove default language
+        if trans_util.default_locale_name in available_languages:
+            available_languages.remove(trans_util.default_locale_name)
+        
+        languages = {}
+        for language in available_languages:
+            for section in self.values():
+                questions = []
+                for name in section.question_ids:
+                    question = section.question_object_from_id(name)
+                    if not language in question.get_question_text():
+                        questions.append(question)
+            if questions:
+                languages[language] = {
+                        'name': "%s (%s)" % (trans_util.default_lang_names[language], trans_util.lang_names[language]),
+                        'questions': questions,
+                    }
+
+        return languages
 
 class SurveySection(BaseFolder):
     implements(ISurveySection)
