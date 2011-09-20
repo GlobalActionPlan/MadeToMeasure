@@ -32,9 +32,12 @@ class QuestionTranslations(object):
         self.translatable_languages = tuple(translatable_languages)
         
         self.lang_names = {}
+        self.default_lang_names = {}
         for lang in self.available_languages:
-            data = load(lang)                
+            data = load(lang)
             self.lang_names[lang] = data['languages'][lang]
+            data = load(self.default_locale_name)
+            self.default_lang_names[lang] = data['languages'][lang]
 
     def title_for_code(self, lang):
         if lang in self.lang_names:

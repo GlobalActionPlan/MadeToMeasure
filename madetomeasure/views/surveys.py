@@ -304,29 +304,7 @@ class SurveysView(BaseView):
     def translations(self):
         """ Shows the amount of translations
         """
-        trans_util = getUtility(IQuestionTranslations)
-        
-        # get available for survey
-        available_languages = self.context.get_available_languages()
-        # remove default language
-        if trans_util.default_locale_name in available_languages:
-            available_languages.remove(trans_util.default_locale_name)
-        
-        languages = {}
-        for language in available_languages:
-            for section in self.context.values():
-                questions = []
-                for name in section.question_ids:
-                    question = section.question_object_from_id(name)
-                    if not language in question.get_question_text():
-                        questions.append(question)
-            if questions:
-                languages[language] = {
-                        'name': trans_util.lang_names[language],
-                        'questions': questions,
-                    }
-        
-        self.response['languages'] = languages
+        self.response['languages'] = self.context.untranslated_languages()
         return self.response
 
     @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
