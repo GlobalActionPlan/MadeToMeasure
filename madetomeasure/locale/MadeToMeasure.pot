@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-09-20 13:40+0000\n"
+"POT-Creation-Date: 2011-09-20 13:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr ""
 msgid "'${val}' is not valid as date and time"
 msgstr ""
 
-#: ./models/questions.py:77
+#: ./models/questions.py:88
 msgid "(Nothing)"
 msgstr ""
 
@@ -257,6 +257,10 @@ msgstr ""
 
 #: ./models/questions.py:36
 msgid "Question"
+msgstr ""
+
+#: ./schemas/questions.py:42
+msgid "Question translation"
 msgstr ""
 
 #: ./schemas/questions.py:10

@@ -6,7 +6,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2011-09-20 13:40+0000\n"
+"POT-Creation-Date: 2011-09-20 13:44+0000\n"
 "PO-Revision-Date: 2011-09-20 14:16+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr "${count} deltagare avslutade denna sektion"
 msgid "'${val}' is not valid as date and time"
 msgstr "'${val}' är inte giltigt som datum och tid"
 
-#: ./models/questions.py:77
+#: ./models/questions.py:88
 msgid "(Nothing)"
 msgstr "(Inget)"
 
@@ -262,6 +262,10 @@ msgstr "Föregående"
 #: ./models/questions.py:36
 msgid "Question"
 msgstr "Fråga"
+
+#: ./schemas/questions.py:42
+msgid "Question translation"
+msgstr "Frågeöversättning"
 
 #: ./schemas/questions.py:10
 msgid "Question translations"
