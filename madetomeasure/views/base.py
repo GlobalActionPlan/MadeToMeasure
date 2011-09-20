@@ -12,6 +12,7 @@ from colander import Schema
 from deform.exception import ValidationFailure
 from zope.component import createObject
 from pyramid.i18n import get_locale_name
+from pyramid.location import lineage
 
 from madetomeasure.models.app import generate_slug
 from madetomeasure.models.app import get_users_dt_helper
@@ -30,6 +31,8 @@ class BaseView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+        path = [x for x in lineage(self.context)]
+        path.reverse()
         self.response = dict(
             userid = self.userid,
             user = self.user_profile,
@@ -40,7 +43,8 @@ class BaseView(object):
             flash_messages = self.get_flash_messages,
             organisation = self.organisation,
             survey_dt = self.survey_dt,
-            user_dt = None
+            user_dt = None,
+            path = tuple(path),
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)

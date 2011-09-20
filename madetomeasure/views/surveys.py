@@ -309,7 +309,8 @@ class SurveysView(BaseView):
         # get available for survey
         available_languages = self.context.get_available_languages()
         # remove default language
-        available_languages.remove(trans_util.default_locale_name)
+        if trans_util.default_locale_name in available_languages:
+            available_languages.remove(trans_util.default_locale_name)
         
         languages = {}
         for language in available_languages:

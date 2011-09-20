@@ -47,6 +47,7 @@
 			
 			<div id="logo"></div>
 			
+			
 			<div tal:condition="userid" id="system-toolbar">
 				
 				<span i18n:translate="">Your time</span>
@@ -62,7 +63,6 @@
                 <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
                 <a href="${resource_url(root['questions'], request)}" i18n:translate="">Global questions</a> |
                 <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
-				
 			</div>
 		</div>
 		
@@ -71,6 +71,13 @@
 	            <tal:iterate repeat="flash_message flash_messages">
 	                <div>${flash_message}</div>
 	            </tal:iterate>
+            </div>
+
+            <div tal:condition="userid" id="path-bar">
+                <tal:iterate repeat="obj path">
+                    &raquo;
+                    <a href="${resource_url(obj, request)}" tal:content="obj.get_title()">Title</a>
+                </tal:iterate>
             </div>
 
 			<metal:heading define-slot="page_heading">
