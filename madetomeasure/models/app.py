@@ -1,4 +1,10 @@
 from slugify import slugify
+from pyramid.threadlocal import get_current_request
+from pyramid.security import authenticated_userid
+from pyramid.traversal import find_root
+from pyramid.i18n import get_locale_name
+from pyramid.interfaces import ISettings
+from zope.component import createObject
 
 
 def appmaker(zodb_root):
@@ -51,3 +57,19 @@ def generate_slug(context, text, limit=20):
         i += 1
     #If no id was found, don't just continue
     raise KeyError("No unique id could be found")
+
+def get_users_dt_helper(request=None):
+    """ Get authenticated users timezone, lang and return DateTimeHelper for it. """
+    if request is None:
+        request = get_current_request()
+    userid = authenticated_userid(request)
+    root = find_root(request.context)
+    if root is None:
+        tz = request.getUtility(ISettings)['default_timezone']
+    else:
+        user = root['users'].get(userid)
+        tz = user.get_time_zone()
+
+    locale = get_locale_name(request)
+    #FIXME: Default lang settable on user profile too, or in request?
+    return createObject('dt_helper', tz, locale)

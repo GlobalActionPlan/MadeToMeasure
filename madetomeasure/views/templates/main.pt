@@ -49,12 +49,20 @@
 			
 			<div tal:condition="userid" id="system-toolbar">
 				
-                <a href="${resource_url(root['participants'], request)}">Participants</a> |
-                <a href="${resource_url(root['questions'], request)}">Questions</a> |
-                <a href="${resource_url(root['users'], request)}">System users</a> |
+				<span i18n:translate="">Your time</span>
+				<span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
+				|
+				<a href="${resource_url(user, request)}"
+				   title="Click to go to profile. There you can make changes as well."
+				   i18n:attributes="title">${user.get_title()} (${userid})</a>
+				|
+				<a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
+				<br/>
+                <a href="${resource_url(root, request)}" i18n:translate="">Root</a> |
+                <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
+                <a href="${resource_url(root['questions'], request)}" i18n:translate="">Global questions</a> |
+                <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
 				
-				Userid: ${userid}
-				<a href="${resource_url(root, request)+'logout'}">Logout</a>
 			</div>
 		</div>
 		

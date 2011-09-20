@@ -10,8 +10,11 @@ from deform import Button
 from deform import Form
 from colander import Schema
 from deform.exception import ValidationFailure
+from zope.component import createObject
+from pyramid.i18n import get_locale_name
 
 from madetomeasure.models.app import generate_slug
+from madetomeasure.models.app import get_users_dt_helper
 from madetomeasure.interfaces import *
 from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
 from madetomeasure import MadeToMeasureTSF as _
@@ -30,17 +33,28 @@ class BaseView(object):
         self.request = request
         self.response = dict(
             userid = self.userid,
+            user = self.user_profile,
             main_macro = self.main_macro,
             resource_url = resource_url,
             root = self.root,
             addable_types = self.addable_types(),
             flash_messages = self.get_flash_messages,
             organisation = self.organisation,
+            survey_dt = self.survey_dt,
+            user_dt = None
         )
+        if self.userid:
+            self.response['user_dt'] = get_users_dt_helper(request=request)
 
     @reify
     def userid(self):
         return authenticated_userid(self.request)
+
+    @reify
+    def user_profile(self):
+        if self.userid is None:
+            return
+        return self.root['users'].get(self.userid)
 
     @reify
     def root(self):
@@ -60,6 +74,15 @@ class BaseView(object):
     
     def add_flash_message(self, message):
         self.request.session.flash(message)
+
+    @reify
+    def survey_dt(self):
+        survey = find_interface(self.context, ISurvey)
+        if not survey:
+            return
+        tz = survey.get_time_zone()
+        loc = get_locale_name(self.request)
+        return createObject('dt_helper', tz, loc)
 
     def addable_types(self):
         #FIXME: Check permission?
@@ -218,7 +241,9 @@ class BaseView(object):
         for field in schema:
             accessor = getattr(self.context, "get_%s" % field.name, marker)
             if accessor != marker:
-                appstruct[field.name] = accessor()
+                value = accessor()
+                if value is not None:
+                    appstruct[field.name] = accessor()
 
         self.response['form'] = form.render(appstruct)
         return self.response

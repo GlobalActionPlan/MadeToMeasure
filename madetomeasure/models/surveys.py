@@ -5,6 +5,7 @@ import colander
 import deform
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
+from zope.component import getUtility
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.url import resource_url
@@ -12,6 +13,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.renderers import render
+from pyramid.interfaces import ISettings
 
 from madetomeasure.models.base import BaseFolder
 from madetomeasure import MadeToMeasureTSF as _
@@ -61,6 +63,27 @@ class Survey(BaseFolder):
 
     def set_finished_text(self, value):
         self.__finished_text__ = value
+
+    def get_start_time(self):
+        return getattr(self, '__start_time__', None)
+
+    def set_start_time(self, value):
+        self.__start_time__ = value
+
+    def get_end_time(self):
+        return getattr(self, '__end_time__', None)
+
+    def set_end_time(self, value):
+        self.__end_time__ = value
+
+    def get_time_zone(self):
+        tz = getattr(self, '__time_zone__', None)
+        if tz is None:
+            return getUtility(ISettings)['default_timezone']
+        return tz
+
+    def set_time_zone(self, value):
+        self.__time_zone__ = value
 
     def _extract_emails(self):
         results = set()

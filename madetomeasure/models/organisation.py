@@ -43,4 +43,3 @@ class Organisation(BaseFolder):
         response['hex_color'] = self.get_hex_color()
         response['logo_link'] = self.get_logo_link()
         return render('../views/templates/dynamic.css.pt', response, request=request)
-    

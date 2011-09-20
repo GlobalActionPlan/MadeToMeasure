@@ -2,6 +2,8 @@ import colander
 import deform
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.schemas.common import time_zone_node
+
 
 def password_validation(node, value):
     """ check that password is
@@ -29,6 +31,7 @@ class AddUserSchema(colander.Schema):
                                 title=_(u"Email"),
                                 missing=u"",
                                 validator=colander.Email(),)
+    time_zone = time_zone_node()
 
 
 class EditUserSchema(colander.Schema):
@@ -40,6 +43,7 @@ class EditUserSchema(colander.Schema):
                                 title=_(u"Email"),
                                 missing=u"",
                                 validator=colander.Email(),)
+    time_zone = time_zone_node()
 
 
 class ChangePasswordSchema(colander.Schema):
