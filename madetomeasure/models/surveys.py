@@ -19,6 +19,8 @@ from madetomeasure.models.base import BaseFolder
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
 from madetomeasure.models.participants import Participant
+from madetomeasure.models.date_time_helper import utcnow
+from madetomeasure.models.exceptions import SurveyUnavailableError
 
 
 class Surveys(BaseFolder):
@@ -235,7 +237,35 @@ class Survey(BaseFolder):
                                            widget=deform.widget.CheckboxChoiceWidget(values=choices),),
                                            )
 
-
+    def check_open(self):
+        """ Check if survey is open. The following principles apply:
+            Start date:
+            - If it exist, it must be in the past
+            - If none exist, it's assumed to be open
+            End date:
+            - If it exist, must be before end date
+            - If none exist, it's assumed to never close. (You have to add one manually!)
+        """
+        now = utcnow()
+        start_time = self.get_start_time()
+        end_time = self.get_end_time()
+        
+        #Check if it has start time and is started
+        if start_time and start_time > now:
+            #FIXME: Timezones etc...
+            msg = _(u"not_started_error",
+                    default=_(u"Survey has not started yet, it will start at ${start_time}"),
+                    mapping={'start_time':start_time})
+            raise SurveyUnavailableError(self, msg=msg)
+        
+        #Check if it has end time and that it hasn't passed
+        if end_time and end_time < now:
+            msg = _(u"ended_error",
+                    default=_(u"Survey has ended, it closed at ${end_time}"),
+                    mapping={'end_time':end_time})
+            raise SurveyUnavailableError(self, msg=msg)
+        
+        return True
 
 class SurveySection(BaseFolder):
     implements(ISurveySection)
