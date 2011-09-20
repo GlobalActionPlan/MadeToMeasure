@@ -19,7 +19,6 @@ from madetomeasure.interfaces import *
 from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.models import CONTENT_TYPES
-from madetomeasure.views.macros import FlashMessages
 
 
 BASE_VIEW_TEMPLATE = 'templates/view.pt'
