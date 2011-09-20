@@ -9,7 +9,6 @@ from madetomeasure.models.questions import Question
 CONTENT_TYPES = {'User':User,
                  'Survey':Survey,
                  'SurveySection':SurveySection,
-                 'Participant':Participant,
                  'Question':Question,
                  'Organisation':Organisation,
                  }

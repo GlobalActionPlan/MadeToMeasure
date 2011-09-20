@@ -160,17 +160,13 @@ class Survey(BaseFolder):
         
         #Have this person participated before?
         participant_email = self.tickets[participant_uid]
-        result = tuple(participants.participants_by_emails((participant_email,)))
-        if len(result) == 1:
-            #This participant has participated in another survey. Update information
-            obj = result[0]
-        elif not result:
+        obj = participants.participant_by_ids(self.__name__, participant_uid)
+
+        if obj is None:
             #This is a new participant. Add info
             obj = Participant()
             obj.set_email(participant_email) #Fetches email
             participants[unicode(uuid4())] = obj
-        else:
-            raise ValueError("A single email address returned several users. Email was: %s" % participant_email)
         
         #Add survey
         obj.add_survey(self.__name__, participant_uid)

@@ -73,3 +73,17 @@ def get_users_dt_helper(request=None):
     locale = get_locale_name(request)
     #FIXME: Default lang settable on user profile too, or in request?
     return createObject('dt_helper', tz, locale)
+#
+#def find_all_of_iface(context, iface):
+#    """ Traverser that will find all objects from context and below
+#        implementing a specific interface.
+#    """
+#    def _recurse(context, results):
+#        for obj in context.values():
+#            if iface.providedBy(obj):
+#                results.add(obj)
+#            _recurse(obj, results)
+#    
+#    results = set()
+#    _recurse(context, results)
+#    return results
