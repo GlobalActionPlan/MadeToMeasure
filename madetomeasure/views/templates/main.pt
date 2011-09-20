@@ -107,8 +107,10 @@
 			</div>
 		</div>
 	
-		<div id="footer"></div>
     </div>
+	<div id="footer" tal:condition="footer_html" tal:content="structure footer_html">
+        Footer html code
+	</div>
 
 </body>
 </html>

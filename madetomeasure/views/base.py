@@ -40,7 +40,8 @@ class BaseView(object):
             flash_messages = self.get_flash_messages,
             organisation = self.organisation,
             survey_dt = self.survey_dt,
-            user_dt = None
+            user_dt = None,
+            footer_html = self.root.get_footer_html()
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
@@ -195,6 +196,7 @@ class BaseView(object):
         return self.response
 
 
+    @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE)

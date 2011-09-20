@@ -16,3 +16,9 @@ class SiteRoot(BaseFolder):
 
     def set_title(self, value):
         pass
+    
+    def get_footer_html(self):
+        return getattr(self, '__footer_html__', u'')
+    
+    def set_footer_html(self, value):
+        self.__footer_html__ = value
