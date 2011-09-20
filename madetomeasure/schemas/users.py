@@ -17,7 +17,7 @@ def password_validation(node, value):
 
 class AddUserSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
-                                 title=_(u"Userid"),
+                                 title=_(u"UserID"),
                                  validator=colander.Length(min=2, max=10),)
     password = colander.SchemaNode(colander.String(),
                                    title=_('Password'),
