@@ -3,7 +3,7 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       metal:define-macro="master"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="voteit.core">
+      i18n:domain="MadeToMeasure">
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <metal:page_title define-slot="head_title">
@@ -75,7 +75,7 @@
                 |
                 <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
                 <br/>
-                <a href="${resource_url(root, request)}" i18n:translate="">Root</a> |
+                <a href="${resource_url(root, request)}" i18n:translate="">Site root</a> |
                 <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
                 <a href="${resource_url(root['questions'], request)}" i18n:translate="">Global questions</a> |
                 <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
@@ -104,24 +104,27 @@
         
                 <div id="addmenu" tal:condition="addable_types">
                     <tal:iterate repeat="type_id addable_types">
-                        <a href="${resource_url(context, request) + 'add?content_type=' + type_id}">Add ${type_id}</a>
+                        <a href="${resource_url(context, request) + 'add?content_type=' + type_id}">
+                        	<span i18n:translate="">Add</span>
+							${type_id}
+						</a>
                     </tal:iterate>
                 </div>
                 <div id="editmenu">
-                    <a href="${resource_url(context, request) + 'edit'}">Edit</a>
+                    <a href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a>
                 </div>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <div id="invitaions">
-                        <a href="${resource_url(context, request) + 'invitation_emails'}">Invitations</a>
+                        <a href="${resource_url(context, request) + 'invitation_emails'}" i18n:translate="">Invitations</a>
                     </div>
                     <div id="participants">
-                        <a href="${resource_url(context, request) + 'participants'}">Participants</a>
+                        <a href="${resource_url(context, request) + 'participants'}" i18n:translate="">Participants</a>
                     </div>
                     <div id="results">
-                        <a href="${resource_url(context, request) + 'results'}">Results</a>
+                        <a href="${resource_url(context, request) + 'results'}" i18n:translate="">Results</a>
                     </div>
                     <div id="translations">
-                        <a href="${resource_url(context, request) + 'translations'}">Translations</a>
+                        <a href="${resource_url(context, request) + 'translations'}" i18n:translate="">Translations</a>
                     </div>
                 </tal:survey>
             </div>

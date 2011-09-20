@@ -14,14 +14,14 @@
 		<div>
 			<span i18n:translate="">Start time</span> &mdash;
 			<span tal:condition="start_time|False" tal:content="start_time"></span>
-			<span tal:condition="not start_time">Nothing set</span>
+			<span tal:condition="not start_time" i18n:translate="">Nothing set</span>
 		</div>
 		<div>
 			<span i18n:translate="">End time</span> &mdash;
 	        <span tal:condition="end_time|False" tal:content="end_time"></span>
-	        <span tal:condition="not end_time">Nothing set, this survey will never close!</span>
+	        <span tal:condition="not end_time" i18n:translate="">Nothing set, this survey will never close!</span>
 		</div>
-		<div>Timezone is ${context.get_time_zone()}</div>
+		<div><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</div>
    </div>
     
     <tal:iterate repeat="obj context.values()">

@@ -13,7 +13,7 @@
 	<table condition="participants">
 	    <tr>
 	        <th i18n:translate="">Email</th>
-	        <th i18n:translate="">% finished</th>
+	        <th i18n:translate="">percent finished</th>
 	    </tr>
         <tal:iterate repeat="participant participants">
             <tr>
@@ -23,7 +23,7 @@
         </tal:iterate>
     </table>
     
-    <h2 i18n:translate="">Send remainder to participants who haven't done 100% of the survey</h2>
+    <h2 i18n:translate="">Send remainder to participants who haven't done 100 percent of the survey</h2>
     ${form}
 
 </div>
