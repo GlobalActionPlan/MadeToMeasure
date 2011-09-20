@@ -306,7 +306,11 @@ class SurveysView(BaseView):
         """ Shows the amount of translations
         """
         trans_util = getUtility(IQuestionTranslations)
+        
+        # get available for survey
         available_languages = self.context.get_available_languages()
+        # remove default language
+        available_languages.remove(trans_util.default_locale_name)
         
         languages = {}
         for language in available_languages:
