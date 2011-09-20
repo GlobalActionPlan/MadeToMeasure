@@ -1,4 +1,5 @@
 from madetomeasure.schemas.organisation import OrganisationSchema
+from madetomeasure.schemas.participants import EditParticipant
 from madetomeasure.schemas.questions import AddQuestionSchema
 from madetomeasure.schemas.questions import EditQuestionSchema
 from madetomeasure.schemas.surveys import SurveySchema
@@ -24,5 +25,6 @@ CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'AddOrganisation':OrganisationSchema,
                    'EditOrganisation':OrganisationSchema,
                    'SurveyReminder':SurveyReminderSchema,
-                   'SurveyLangugage':SurveyLangugageSchema,}
+                   'SurveyLangugage':SurveyLangugageSchema,
+                   'EditParticipant':EditParticipant,}
 

@@ -109,6 +109,7 @@ class BaseView(object):
     @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE)
+    @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE)
     @view_config(context=IOrganisation, renderer=BASE_VIEW_TEMPLATE)
     def admin_listing_view(self):
@@ -197,6 +198,7 @@ class BaseView(object):
     @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE)
     def edit_view(self):
         """ Generic edit view when accessors and mutators match get_ and set_ methods
             on the model.
