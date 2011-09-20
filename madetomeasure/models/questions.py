@@ -64,7 +64,11 @@ class Question(BaseFolder):
         """ Set translation for specific language
         """
         question_text = self.get_question_text()
-        question_text[lang] = value
+        if value:
+            question_text[lang] = value
+        else:
+            if lang in question_text:
+                del question_text[lang]
         self.__question_text__ = question_text
     
     def get_question_type(self):

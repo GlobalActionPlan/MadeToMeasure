@@ -272,7 +272,7 @@ class Survey(BaseFolder):
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
-        
+            
         languages = {}
         for language in available_languages:
             for section in self.values():
@@ -283,7 +283,7 @@ class Survey(BaseFolder):
                         questions.append(question)
             if questions:
                 languages[language] = {
-                        'name': "%s (%s)" % (trans_util.default_lang_names[language], trans_util.lang_names[language]),
+                        'name': "%s (%s)" % (trans_util.title_for_code_default(language), trans_util.title_for_code(language)),
                         'questions': questions,
                     }
 

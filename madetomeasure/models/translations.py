@@ -43,6 +43,11 @@ class QuestionTranslations(object):
         if lang in self.lang_names:
             return self.lang_names[lang]
         return _(u"Country code: ${country_code}", mapping={'country_code':lang})
+        
+    def title_for_code_default(self, lang):
+        if lang in self.default_lang_names:
+            return self.default_lang_names[lang]
+        return _(u"Country code: ${country_code}", mapping={'country_code':lang})
 
     def add_translations_schema(self, schema):
         """ Fetch all possible translations (according to settings)
