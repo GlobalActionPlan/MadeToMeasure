@@ -1,0 +1,441 @@
+# Swedish translations for PROJECT.
+# Copyright (C) 2011 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# #, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2011-09-20 13:40+0000\n"
+"PO-Revision-Date: 2011-09-20 14:16+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: sv <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: DOMAIN\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"Generated-By: Babel 0.9.6\n"
+
+#: ./views/templates/results.pt:16
+#. Default: "${count} participants completed this section"
+msgid "${count} participants completed this section"
+msgstr "${count} deltagare avslutade denna sektion"
+
+#: ./models/fields.py:28
+msgid "'${val}' is not valid as date and time"
+msgstr "'${val}' är inte giltigt som datum och tid"
+
+#: ./models/questions.py:77
+msgid "(Nothing)"
+msgstr "(Inget)"
+
+#: ./models/question_types.py:25
+msgid "(almost) always"
+msgstr "(nästan) alltid"
+
+#: ./models/question_types.py:23
+msgid "(almost) never"
+msgstr "(nästan) aldrig"
+
+#: ./models/question_types.py:12
+msgid "1 - Not important"
+msgstr "1 - Inte viktigt"
+
+#: ./models/question_types.py:18
+msgid "7 - Very important"
+msgstr "7 - Mycket viktigt"
+
+#: ./views/templates/main.pt:108
+#. Default: "Add"
+msgid "Add"
+msgstr "Lägg till"
+
+#: ./schemas/surveys.py:49
+msgid "Available languages"
+msgstr "Tillgängliga språk"
+
+#: ./views/base.py:111
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: ./views/base.py:113
+msgid "Change"
+msgstr "Ändra"
+
+#: ./schemas/participants.py:9
+msgid "Change email address"
+msgstr "Ändra epostadress"
+
+#: ./schemas/surveys.py:81
+msgid "Chose language"
+msgstr "Välj språk"
+
+#: ./views/templates/survey_invitation_mail.pt:15
+#. Default: "Click the link to access survey:"
+msgid "Click the link to access survey:"
+msgstr "Klicka på länken för att komma till undersökningen:"
+
+#: ./views/templates/main.pt:72
+#. Default: "Click to go to profile. There you can make changes as well."
+msgid "Click to go to profile. There you can make changes as well."
+msgstr "Clicka för att gå till profilen. Där kan du göra ändringar."
+
+#: ./schemas/organisation.py:22
+msgid "Color value"
+msgstr "Färgvärde"
+
+#: ./models/translations.py:45
+msgid "Country code: ${country_code}"
+msgstr "Landskod: ${country_code}"
+
+#: ./views/templates/survey_form.pt:13
+#. Default: "Displaying section form"
+msgid "Displaying section form"
+msgstr "Visar sektionsformulär"
+
+#: ./views/templates/main.pt:114
+#. Default: "Edit"
+msgid "Edit"
+msgstr "Redigera"
+
+#: ./views/templates/survey_participans.pt:15
+#. Default: "Email"
+msgid "Email"
+msgstr "Epost"
+
+#: ./views/templates/survey_admin_view.pt:20
+#. Default: "End time"
+msgid "End time"
+msgstr "Sluttid"
+
+#: ./schemas/surveys.py:35
+msgid "End time for survey"
+msgstr "Sluttid för undersökningen"
+
+#: ./schemas/users.py:27
+msgid "First name"
+msgstr "Förnamn"
+
+#: ./schemas/root.py:9
+msgid "Footer HTML code"
+msgstr "HTML för sidfot"
+
+#: ./schemas/questions.py:11
+msgid "For each language"
+msgstr "För varje språk"
+
+#: ./models/question_types.py:94
+msgid "Free text question"
+msgstr "Fritextfråga"
+
+#: ./models/question_types.py:100
+msgid "Frequency scale question"
+msgstr "Frekvensskala-fråga"
+
+#: ./views/templates/main.pt:80
+#. Default: "Global questions"
+msgid "Global questions"
+msgstr "Globala frågor"
+
+#: ./models/question_types.py:97
+msgid "Importance scale question"
+msgstr "Viktighetsskala-fråga"
+
+#: ./schemas/questions.py:28
+msgid "Initial question text, should be in English"
+msgstr "Initial frågetext, bör vara på engelska"
+
+#: ./views/system.py:140
+msgid "Invalid security token. Did you click the link in your email?"
+msgstr "Ogiltig säkerhetstoken. Klickade du på länken i ditt epostmeddelande?"
+
+#: ./views/templates/main.pt:118
+#. Default: "Invitations"
+msgid "Invitations"
+msgstr "Inbjudningar"
+
+#: ./schemas/users.py:29
+msgid "Last name"
+msgstr "Efternamn"
+
+#: ./schemas/users.py:15
+msgid "Less than 100 chars please."
+msgstr "Mindre än 100 tecken tack."
+
+#: ./views/base.py:106
+msgid "Login"
+msgstr "Login"
+
+#: ./schemas/organisation.py:17
+msgid "Logo link"
+msgstr "Logolänk"
+
+#: ./views/templates/main.pt:76
+#. Default: "Logout"
+msgid "Logout"
+msgstr "Logga ut"
+
+#: ./views/templates/survey_participans.pt:12
+#. Default: "Manage participants"
+msgid "Manage participants"
+msgstr "Hantera deltagare"
+
+#: ./schemas/organisation.py:18
+msgid "Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height: 50/300 px."
+msgstr "Måste vara HTTP-länk till Gif, Jpeg eller Png-fil. Max höjd/bredd 50/300 px."
+
+#: ./schemas/organisation.py:23
+msgid "Must be a hex rgb value, same as all websites. Example: '#FF0000' for red."
+msgstr "Måste vara ett hex rgb-värde, samma som alla webbsidor. Exempel: '#FF0000' för röd."
+
+#: ./views/base.py:109
+msgid "Next"
+msgstr "Nästa"
+
+#: ./views/templates/survey_translations.pt:24
+#. Default: "No language has any untranslated questions"
+msgid "No language has any untranslated questions"
+msgstr "Inget språk har oöversatta frågor"
+
+#: ./views/templates/results.pt:30
+#. Default: "No sections added yet, so there won't be any results either..."
+msgid "No sections added yet, so there won't be any results either..."
+msgstr "Inga sektioner tillagda än, så det finns inget resultat heller..."
+
+#: ./schemas/questions.py:29
+msgid "Note that you can't change the text later, only its translations"
+msgstr "Notera att du inte kan ändra texten senare, bara dess översättning"
+
+#: ./views/templates/survey_admin_view.pt:17
+#. Default: "Nothing set"
+msgid "Nothing set"
+msgstr "Inget inställt"
+
+#: ./views/templates/survey_admin_view.pt:22
+#. Default: "Nothing set, this survey will never close!"
+msgid "Nothing set, this survey will never close!"
+msgstr "Inget inställt, undersökningen kommer aldrig att stänga!"
+
+#: ./views/templates/results.pt:29
+#. Default: "Oh no!"
+msgid "Oh no!"
+msgstr "Åh nej!"
+
+#: ./models/organisation.py:12
+msgid "Organisation"
+msgstr "Organisation"
+
+#: ./schemas/organisation.py:15
+msgid "Organisation name"
+msgstr "Organisationsnamn"
+
+#: ./models/participants.py:47
+msgid "Participant"
+msgstr "Deltagare"
+
+#: ./schemas/surveys.py:59
+msgid "Participant email addresses - add one per row."
+msgstr "Deltagares epostadresser - lägg till en per rad."
+
+#: ./views/templates/main.pt:79
+#. Default: "Participants"
+msgid "Participants"
+msgstr "Deltagare"
+
+#: ./schemas/system.py:17
+msgid "Password"
+msgstr "Lösenord"
+
+#: ./models/users.py:117
+msgid "Password reset request from MadeToMeasure"
+msgstr "Begäran om ändring av lösenord från MadeToMeasure"
+
+#: ./views/base.py:110
+msgid "Previous"
+msgstr "Föregående"
+
+#: ./models/questions.py:36
+msgid "Question"
+msgstr "Fråga"
+
+#: ./schemas/questions.py:10
+msgid "Question translations"
+msgstr "Frågeöversättningar"
+
+#: ./models/questions.py:14
+msgid "Questions"
+msgstr "Frågor"
+
+#: ./schemas/surveys.py:66
+msgid "Remainder message"
+msgstr "Påminnelsemeddelande"
+
+#: ./views/surveys.py:102
+msgid "Reminder has been sent"
+msgstr "Påminnelse har skickats"
+
+#: ./views/base.py:112
+msgid "Request"
+msgstr "Begär"
+
+#: ./views/templates/main.pt:124
+#. Default: "Results"
+msgid "Results"
+msgstr "Resultat"
+
+#: ./views/base.py:107
+msgid "Save"
+msgstr "Spara"
+
+#: ./schemas/surveys.py:54
+msgid "Select participating questions"
+msgstr "Välj deltagande frågors"
+
+#: ./views/base.py:108
+msgid "Send"
+msgstr "Skicka"
+
+#: ./views/templates/survey_participans.pt:26
+#. Default: "Send remainder to participants who haven't done 100 percent of the survey"
+msgid "Send remainder to participants who haven't done 100 percent of the survey"
+msgstr "Skicka påminnelse till deltagare som inte har gjort 100 procent av undersökningen"
+
+#: ./views/templates/main.pt:78
+#. Default: "Site root"
+msgid "Site root"
+msgstr "Site rot"
+
+#: ./views/templates/survey_admin_view.pt:15
+#. Default: "Start time"
+msgid "Start time"
+msgstr "Starttid"
+
+#: ./schemas/surveys.py:28
+msgid "Start time for survey"
+msgstr "Starttid för undersökningen"
+
+#: ./models/surveys.py:42
+msgid "Survey"
+msgstr "Undersökning"
+
+#: ./models/surveys.py:295
+msgid "Survey Section"
+msgstr "Undersökningssektion"
+
+#: ./views/templates/survey_invitation_mail.pt:11
+#. Default: "Survey invitation"
+msgid "Survey invitation"
+msgstr "Undersökningsinbjudan"
+
+#: ./models/surveys.py:29
+msgid "Surveys"
+msgstr "Undersökningar"
+
+#: ./views/templates/main.pt:81
+#. Default: "System users"
+msgid "System users"
+msgstr "Systemanvändare"
+
+#: ./views/templates/participant_finished.pt:12
+#. Default: "Thank you!"
+msgid "Thank you!"
+msgstr "Tack!"
+
+#: ./schemas/surveys.py:45
+msgid "Thanks a lot for filling out the survey."
+msgstr "Tack så mycket för att du har fyllt i undersökningen."
+
+#: ./schemas/validators.py:20
+msgid "The following addresses is invalid: ${emails}"
+msgstr "Foljande adresser är ogiltiga: ${emails}"
+
+#: ./views/templates/survey_translations.pt:13
+#. Default: "The following languages has untranslated questions"
+msgid "The following languages has untranslated questions"
+msgstr "Följande språk har oöversatta frågor"
+
+#: ./views/surveys.py:325
+msgid "The survey is currently open."
+msgstr "Undersökningen är öppen nu."
+
+#: ./views/templates/survey_form.pt:14
+#. Default: "This is how the survey section will appear to participants."
+msgid "This is how the survey section will appear to participants."
+msgstr "Detta är hur undersökningen kommer att se ut för deltagare."
+
+#: ./schemas/common.py:11
+msgid "Timezone"
+msgstr "Tidszon"
+
+#: ./views/templates/survey_admin_view.pt:24
+#. Default: "Timezone is"
+msgid "Timezone is"
+msgstr "Tidszon är"
+
+#: ./schemas/users.py:13
+msgid "Too short. At least 6 chars required."
+msgstr "För kort. Minst 6 tecken krävs."
+
+#: ./views/templates/main.pt:127
+#. Default: "Translations"
+msgid "Translations"
+msgstr "Översättningar"
+
+#: ./schemas/common.py:12
+msgid "Try start typing a timezone"
+msgstr "Prova med att börja skriva en tidszon"
+
+#: ./models/users.py:52
+msgid "User"
+msgstr "Användare"
+
+#: ./schemas/system.py:15
+msgid "UserID"
+msgstr "AnvändarID"
+
+#: ./schemas/system.py:27
+msgid "UserID or email address."
+msgstr "AnvändarID eller epostadress."
+
+#: ./models/users.py:33
+msgid "Users"
+msgstr "Användare"
+
+#: ./views/templates/main.pt:69
+#. Default: "Your time"
+msgid "Your time"
+msgstr "Din tid"
+
+#: ./views/surveys.py:116
+#. Default: "Survey has ended, it closed at ${end_time}"
+msgid "ended_error"
+msgstr "Undersökningen har avslutats, den stängdes ${end_time}"
+
+#: ./models/question_types.py:26
+msgid "not applicable (n.a.)"
+msgstr "ej applicerbart (n.a.)"
+
+#: ./views/surveys.py:111
+#. Default: "Survey has not started yet, it will start at ${start_time}"
+msgid "not_started_error"
+msgstr "Undersökningen har inte startat än, den kommer att starta ${start_time}"
+
+#: ./views/templates/survey_participans.pt:16
+#. Default: "percent finished"
+msgid "percent finished"
+msgstr "procent klart"
+
+#: ./models/users.py:113
+#. Default: "password link: ${pw_link}"
+msgid "request_new_password_text"
+msgstr "lösenordslänk: ${pw_link}"
+
+#: ./models/question_types.py:24
+msgid "sometimes yes / sometimes no"
+msgstr "ibland ja / ibland nej"
+

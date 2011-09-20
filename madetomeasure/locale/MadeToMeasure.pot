@@ -1,0 +1,437 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2011-09-20 13:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: MadeToMeasure\n"
+
+#. Default: "${count} participants completed this section"
+#: ./views/templates/results.pt:16
+msgid "${count} participants completed this section"
+msgstr ""
+
+#: ./models/fields.py:28
+msgid "'${val}' is not valid as date and time"
+msgstr ""
+
+#: ./models/questions.py:77
+msgid "(Nothing)"
+msgstr ""
+
+#: ./models/question_types.py:25
+msgid "(almost) always"
+msgstr ""
+
+#: ./models/question_types.py:23
+msgid "(almost) never"
+msgstr ""
+
+#: ./models/question_types.py:12
+msgid "1 - Not important"
+msgstr ""
+
+#: ./models/question_types.py:18
+msgid "7 - Very important"
+msgstr ""
+
+#. Default: "Add"
+#: ./views/templates/main.pt:108
+msgid "Add"
+msgstr ""
+
+#: ./schemas/surveys.py:49
+msgid "Available languages"
+msgstr ""
+
+#: ./views/base.py:111
+msgid "Cancel"
+msgstr ""
+
+#: ./views/base.py:113
+msgid "Change"
+msgstr ""
+
+#: ./schemas/participants.py:9
+msgid "Change email address"
+msgstr ""
+
+#: ./schemas/surveys.py:81
+msgid "Chose language"
+msgstr ""
+
+#. Default: "Click the link to access survey:"
+#: ./views/templates/survey_invitation_mail.pt:15
+msgid "Click the link to access survey:"
+msgstr ""
+
+#. Default: "Click to go to profile. There you can make changes as well."
+#: ./views/templates/main.pt:72
+msgid "Click to go to profile. There you can make changes as well."
+msgstr ""
+
+#: ./schemas/organisation.py:22
+msgid "Color value"
+msgstr ""
+
+#: ./models/translations.py:45
+msgid "Country code: ${country_code}"
+msgstr ""
+
+#. Default: "Displaying section form"
+#: ./views/templates/survey_form.pt:13
+msgid "Displaying section form"
+msgstr ""
+
+#. Default: "Edit"
+#: ./views/templates/main.pt:114
+msgid "Edit"
+msgstr ""
+
+#. Default: "Email"
+#: ./views/templates/survey_participans.pt:15
+msgid "Email"
+msgstr ""
+
+#. Default: "End time"
+#: ./views/templates/survey_admin_view.pt:20
+msgid "End time"
+msgstr ""
+
+#: ./schemas/surveys.py:35
+msgid "End time for survey"
+msgstr ""
+
+#: ./schemas/users.py:27
+msgid "First name"
+msgstr ""
+
+#: ./schemas/root.py:9
+msgid "Footer HTML code"
+msgstr ""
+
+#: ./schemas/questions.py:11
+msgid "For each language"
+msgstr ""
+
+#: ./models/question_types.py:94
+msgid "Free text question"
+msgstr ""
+
+#: ./models/question_types.py:100
+msgid "Frequency scale question"
+msgstr ""
+
+#. Default: "Global questions"
+#: ./views/templates/main.pt:80
+msgid "Global questions"
+msgstr ""
+
+#: ./models/question_types.py:97
+msgid "Importance scale question"
+msgstr ""
+
+#: ./schemas/questions.py:28
+msgid "Initial question text, should be in English"
+msgstr ""
+
+#: ./views/system.py:140
+msgid "Invalid security token. Did you click the link in your email?"
+msgstr ""
+
+#. Default: "Invitations"
+#: ./views/templates/main.pt:118
+msgid "Invitations"
+msgstr ""
+
+#: ./schemas/users.py:29
+msgid "Last name"
+msgstr ""
+
+#: ./schemas/users.py:15
+msgid "Less than 100 chars please."
+msgstr ""
+
+#: ./views/base.py:106
+msgid "Login"
+msgstr ""
+
+#: ./schemas/organisation.py:17
+msgid "Logo link"
+msgstr ""
+
+#. Default: "Logout"
+#: ./views/templates/main.pt:76
+msgid "Logout"
+msgstr ""
+
+#. Default: "Manage participants"
+#: ./views/templates/survey_participans.pt:12
+msgid "Manage participants"
+msgstr ""
+
+#: ./schemas/organisation.py:18
+msgid "Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height: 50/300 px."
+msgstr ""
+
+#: ./schemas/organisation.py:23
+msgid "Must be a hex rgb value, same as all websites. Example: '#FF0000' for red."
+msgstr ""
+
+#: ./views/base.py:109
+msgid "Next"
+msgstr ""
+
+#. Default: "No language has any untranslated questions"
+#: ./views/templates/survey_translations.pt:24
+msgid "No language has any untranslated questions"
+msgstr ""
+
+#. Default: "No sections added yet, so there won't be any results either..."
+#: ./views/templates/results.pt:30
+msgid "No sections added yet, so there won't be any results either..."
+msgstr ""
+
+#: ./schemas/questions.py:29
+msgid "Note that you can't change the text later, only its translations"
+msgstr ""
+
+#. Default: "Nothing set"
+#: ./views/templates/survey_admin_view.pt:17
+msgid "Nothing set"
+msgstr ""
+
+#. Default: "Nothing set, this survey will never close!"
+#: ./views/templates/survey_admin_view.pt:22
+msgid "Nothing set, this survey will never close!"
+msgstr ""
+
+#. Default: "Oh no!"
+#: ./views/templates/results.pt:29
+msgid "Oh no!"
+msgstr ""
+
+#: ./models/organisation.py:12
+msgid "Organisation"
+msgstr ""
+
+#: ./schemas/organisation.py:15
+msgid "Organisation name"
+msgstr ""
+
+#: ./models/participants.py:47
+msgid "Participant"
+msgstr ""
+
+#: ./schemas/surveys.py:59
+msgid "Participant email addresses - add one per row."
+msgstr ""
+
+#. Default: "Participants"
+#: ./views/templates/main.pt:79
+msgid "Participants"
+msgstr ""
+
+#: ./schemas/system.py:17
+msgid "Password"
+msgstr ""
+
+#: ./models/users.py:117
+msgid "Password reset request from MadeToMeasure"
+msgstr ""
+
+#: ./views/base.py:110
+msgid "Previous"
+msgstr ""
+
+#: ./models/questions.py:36
+msgid "Question"
+msgstr ""
+
+#: ./schemas/questions.py:10
+msgid "Question translations"
+msgstr ""
+
+#: ./models/questions.py:14
+msgid "Questions"
+msgstr ""
+
+#: ./schemas/surveys.py:66
+msgid "Remainder message"
+msgstr ""
+
+#: ./views/surveys.py:102
+msgid "Reminder has been sent"
+msgstr ""
+
+#: ./views/base.py:112
+msgid "Request"
+msgstr ""
+
+#. Default: "Results"
+#: ./views/templates/main.pt:124
+msgid "Results"
+msgstr ""
+
+#: ./views/base.py:107
+msgid "Save"
+msgstr ""
+
+#: ./schemas/surveys.py:54
+msgid "Select participating questions"
+msgstr ""
+
+#: ./views/base.py:108
+msgid "Send"
+msgstr ""
+
+#. Default: "Send remainder to participants who haven't done 100 percent of the survey"
+#: ./views/templates/survey_participans.pt:26
+msgid "Send remainder to participants who haven't done 100 percent of the survey"
+msgstr ""
+
+#. Default: "Site root"
+#: ./views/templates/main.pt:78
+msgid "Site root"
+msgstr ""
+
+#. Default: "Start time"
+#: ./views/templates/survey_admin_view.pt:15
+msgid "Start time"
+msgstr ""
+
+#: ./schemas/surveys.py:28
+msgid "Start time for survey"
+msgstr ""
+
+#: ./models/surveys.py:42
+msgid "Survey"
+msgstr ""
+
+#: ./models/surveys.py:295
+msgid "Survey Section"
+msgstr ""
+
+#. Default: "Survey invitation"
+#: ./views/templates/survey_invitation_mail.pt:11
+msgid "Survey invitation"
+msgstr ""
+
+#: ./models/surveys.py:29
+msgid "Surveys"
+msgstr ""
+
+#. Default: "System users"
+#: ./views/templates/main.pt:81
+msgid "System users"
+msgstr ""
+
+#. Default: "Thank you!"
+#: ./views/templates/participant_finished.pt:12
+msgid "Thank you!"
+msgstr ""
+
+#: ./schemas/surveys.py:45
+msgid "Thanks a lot for filling out the survey."
+msgstr ""
+
+#: ./schemas/validators.py:20
+msgid "The following addresses is invalid: ${emails}"
+msgstr ""
+
+#. Default: "The following languages has untranslated questions"
+#: ./views/templates/survey_translations.pt:13
+msgid "The following languages has untranslated questions"
+msgstr ""
+
+#: ./views/surveys.py:325
+msgid "The survey is currently open."
+msgstr ""
+
+#. Default: "This is how the survey section will appear to participants."
+#: ./views/templates/survey_form.pt:14
+msgid "This is how the survey section will appear to participants."
+msgstr ""
+
+#: ./schemas/common.py:11
+msgid "Timezone"
+msgstr ""
+
+#. Default: "Timezone is"
+#: ./views/templates/survey_admin_view.pt:24
+msgid "Timezone is"
+msgstr ""
+
+#: ./schemas/users.py:13
+msgid "Too short. At least 6 chars required."
+msgstr ""
+
+#. Default: "Translations"
+#: ./views/templates/main.pt:127
+msgid "Translations"
+msgstr ""
+
+#: ./schemas/common.py:12
+msgid "Try start typing a timezone"
+msgstr ""
+
+#: ./models/users.py:52
+msgid "User"
+msgstr ""
+
+#: ./schemas/system.py:15
+msgid "UserID"
+msgstr ""
+
+#: ./schemas/system.py:27
+msgid "UserID or email address."
+msgstr ""
+
+#: ./models/users.py:33
+msgid "Users"
+msgstr ""
+
+#. Default: "Your time"
+#: ./views/templates/main.pt:69
+msgid "Your time"
+msgstr ""
+
+#. Default: "Survey has ended, it closed at ${end_time}"
+#: ./views/surveys.py:116
+msgid "ended_error"
+msgstr ""
+
+#: ./models/question_types.py:26
+msgid "not applicable (n.a.)"
+msgstr ""
+
+#. Default: "Survey has not started yet, it will start at ${start_time}"
+#: ./views/surveys.py:111
+msgid "not_started_error"
+msgstr ""
+
+#. Default: "percent finished"
+#: ./views/templates/survey_participans.pt:16
+msgid "percent finished"
+msgstr ""
+
+#. Default: "password link: ${pw_link}"
+#: ./models/users.py:113
+msgid "request_new_password_text"
+msgstr ""
+
+#: ./models/question_types.py:24
+msgid "sometimes yes / sometimes no"
+msgstr ""
+
