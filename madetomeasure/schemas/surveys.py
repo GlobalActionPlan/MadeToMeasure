@@ -16,7 +16,7 @@ from madetomeasure.interfaces import IOrganisation, IQuestionTranslations
 def deferred_available_languages_widget(node, kw):
     util = getUtility(IQuestionTranslations)
     choices = []
-    for lang in util.translatable_languages:
+    for lang in util.available_languages:
         choices.append((lang, util.lang_names[lang]))
     return deform.widget.CheckboxChoiceWidget(values=choices)
 

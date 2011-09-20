@@ -216,7 +216,7 @@ class SurveysView(BaseView):
             raise Forbidden("Invalid ticket")
 
         schema = colander.Schema()
-        self.context.append_questions_to_schema(schema)
+        self.context.append_questions_to_schema(schema, self.request)
         
         next_section = self._next_section()
         previous_section = self._previous_section()
@@ -292,7 +292,7 @@ class SurveysView(BaseView):
     @view_config(context=ISurveySection, renderer='templates/survey_form.pt')
     def show_dummy_form_view(self):
         schema = colander.Schema()
-        self.context.append_questions_to_schema(schema)
+        self.context.append_questions_to_schema(schema, self.request)
         
         form = Form(schema)
         self.response['form_resources'] = form.get_widget_resources()
@@ -300,32 +300,33 @@ class SurveysView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
         
-    
     @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt')
     def translations(self):
         """ Shows the amount of translations
         """
         trans_util = getUtility(IQuestionTranslations)
-        langs = self.context.get_available_languages()
-        sections = []
-        #Loop through all sections and save them in sections
-        #Also add section data with section.__name__ as key
-        for section in self.context.values():
-            sections.append(section)
-
-        def _get_questions(section):
-            questions = []
-            qlangs = {}
-            for name in section.question_ids:
-                question = section.question_object_from_id(name)
-                for lang in langs:
-                    if lang in question.get_question_text().keys():
-                        qlangs[lang] = trans_util.lang_names[lang]
-                questions.append({'question': question, 'langs': qlangs})
-            return questions
         
-        self.response['sections'] = sections
-        self.response['get_questions_for_section'] = _get_questions
+        # get available for survey
+        available_languages = self.context.get_available_languages()
+        # remove default language
+        available_languages.remove(trans_util.default_locale_name)
+        
+        languages = {}
+        for language in available_languages:
+            for section in self.context.values():
+                questions = []
+                for name in section.question_ids:
+                    question = section.question_object_from_id(name)
+                    if not language in question.get_question_text():
+                        questions.append(question)
+            if questions:
+                languages[language] = {
+                        'name': trans_util.lang_names[language],
+                        'questions': questions,
+                    }
+        
+        self.response['languages'] = languages
+        return self.response
 
     @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
     def survey_admin_view(self):
@@ -347,4 +348,3 @@ class SurveysView(BaseView):
             msg = self._survey_error_msg(e)
             self.response['survey_state_msg'] = msg
 
-        return self.response

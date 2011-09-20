@@ -39,6 +39,13 @@ class Question(BaseFolder):
     def __init__(self):
         self.__question_text__ = OOBTree()
         super(Question, self).__init__()
+        
+    def get_title(self, lang=None):
+        if lang:
+            languages = self.get_question_text()
+            if lang in languages:
+                return languages[lang]
+        return getattr(self, '__title__', '')
     
     def get_question_text(self):
         return getattr(self, '__question_text__', {})
@@ -63,8 +70,7 @@ class Question(BaseFolder):
     def question_schema_node(self, name, lang=None):
         #If the correct question type isn't set, this might raise a ComponentLookupError
         node_util = getUtility(IQuestionNode, name=self.get_question_type())
-        #FIXME: Update with lang
-        return node_util.node(name, title=self.get_title())
+        return node_util.node(name, title=self.get_title(lang))
 
     def render_result(self, request, data):
         if not data:
