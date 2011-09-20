@@ -140,7 +140,8 @@ class SurveysView(BaseView):
         selected_language = None
         
         schema = CONTENT_SCHEMAS["SurveyLangugage"]()
-        schema = schema.bind(languages = self.context.get_available_languages())
+        available_languages = self.context.get_available_languages()
+        schema = schema.bind(languages = available_languages)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         
@@ -158,11 +159,11 @@ class SurveysView(BaseView):
             selected_language = appstruct['selected_language']
                 
         # if no language is selected and survey only has one lanugage available set it as the seletect language
-        if not selected_language and len(self.context.get_available_languages()) == 1:
-            selected_language = self.context.get_available_languages()[0]
+        if not selected_language and len(available_languages) == 1:
+            selected_language = tuple(available_languages)[0]
 
         # redirect to first section if language is selected or if previously selected language is available here as well
-        if selected_language or 'lang' in self.request.session and self.request.session['lang'] in self.context.get_available_languages():
+        if selected_language or 'lang' in self.request.session and self.request.session['lang'] in available_languages:
             if selected_language:
                 self.request.session['lang'] = selected_language
 
