@@ -34,12 +34,3 @@ class Organisation(BaseFolder):
 
     def set_hex_color(self, value):
         self.__hex_color__ = value
-
-    def render_dynamic_css(self, request):
-        """ CSS based on settings in organisation.
-            Should override a few of the basic styles.
-        """
-        response = {}
-        response['hex_color'] = self.get_hex_color()
-        response['logo_link'] = self.get_logo_link()
-        return render('../views/templates/dynamic.css.pt', response, request=request)
