@@ -349,3 +349,4 @@ class SurveysView(BaseView):
             msg = self._survey_error_msg(e)
             self.response['survey_state_msg'] = msg
 
+        return self.response
