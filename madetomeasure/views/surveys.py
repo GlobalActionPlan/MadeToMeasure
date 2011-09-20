@@ -306,24 +306,21 @@ class SurveysView(BaseView):
         """ Shows the amount of translations
         """
         trans_util = getUtility(IQuestionTranslations)
-        langs = self.context.get_available_languages()
-        sections = []
-        #Loop through all sections and save them in sections
-        #Also add section data with section.__name__ as key
-        for section in self.context.values():
-            sections.append(section)
-
-        def _get_questions(section):
-            questions = []
-            qlangs = {}
-            for name in section.question_ids:
-                question = section.question_object_from_id(name)
-                for lang in langs:
-                    if lang in question.get_question_text().keys():
-                        qlangs[lang] = trans_util.lang_names[lang]
-                questions.append({'question': question, 'langs': qlangs})
-            return questions
+        available_languages = self.context.get_available_languages()
         
-        self.response['sections'] = sections
-        self.response['get_questions_for_section'] = _get_questions
+        languages = {}
+        for language in available_languages:
+            for section in self.context.values():
+                questions = []
+                for name in section.question_ids:
+                    question = section.question_object_from_id(name)
+                    if not language in question.get_question_text():
+                        questions.append(question)
+            if questions:
+                languages[language] = {
+                        'name': trans_util.lang_names[language],
+                        'questions': questions,
+                    }
+        
+        self.response['languages'] = languages
         return self.response

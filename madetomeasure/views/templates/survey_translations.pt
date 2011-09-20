@@ -9,23 +9,26 @@
 
 <div metal:fill-slot="content">
 
-    <tal:iterate repeat="section sections">
-    	<h3 tal:content="section.get_title()">Survey section title</h3>
-		
-		<tal:questions repeat="question get_questions_for_section(section)">
-			<h5 tal:content="question['question'].get_title()">Question title</h5>
-			<h5 i18n:translate="">Translations</h5>
-			<tal:iterate condition="question['langs']" repeat="(lang_code, lang_name) question['langs'].items()">
-			    ${lang_name}
-			</tal:iterate>
-		</tal:questions>
-    </tal:iterate>
-	
-	<no_sections tal:condition="not sections">
-		<h3 i18n:translate="">Oh no!</h3>
-		<div i18n:translate="">No sections added yet</div>
-	</no_sections>
+    <tal:languages condition="languages">
+        <h3 i18n:translate="">The following languages has untranslated questions</h3>
 
+        <tal:iterate repeat="(code, language) languages.items()">
+        	<h4 tal:content="language['name']">Language</h4>
+        	<ul tal:repeat="question language['questions']">
+        	    <li>
+			        <h5 tal:content="question.get_title()">Question title</h5>
+			        <tal:comment condition="False">
+			            FIXME: check translate permissions
+			        </tal:comment>
+			        <a href="${resource_url(question, request)+'edit'}" i18n:translate="">Translate</a>
+			    </li>
+		    </ul>
+        </tal:iterate>
+    </tal:languages>
+	
+	<tal:no_languages tal:condition="not languages">
+		<h3 i18n:translate="">No language has any untranslated questions</h3>
+	</tal:no_languages>
 </div>
 </body>
 </html>
