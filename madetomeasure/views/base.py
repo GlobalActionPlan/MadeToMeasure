@@ -49,6 +49,9 @@ class BaseView(object):
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
+        if self.organisation:
+            self.response['hex_color'] = self.organisation.get_hex_color()
+            self.response['logo_link'] = self.organisation.get_logo_link()
 
     @reify
     def userid(self):
