@@ -2,6 +2,7 @@ from madetomeasure.schemas.organisation import OrganisationSchema
 from madetomeasure.schemas.participants import EditParticipant
 from madetomeasure.schemas.questions import AddQuestionSchema
 from madetomeasure.schemas.questions import EditQuestionSchema
+from madetomeasure.schemas.questions import TranslateQuestionSchema
 from madetomeasure.schemas.root import EditSiteRoot
 from madetomeasure.schemas.surveys import SurveySchema
 from madetomeasure.schemas.surveys import SurveySectionSchema
@@ -16,6 +17,7 @@ from madetomeasure.schemas.system import LoginSchema
 
 CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'EditQuestion':EditQuestionSchema,
+                   'TranslateQuestion':TranslateQuestionSchema,
                    'AddSurvey':SurveySchema,
                    'EditSurvey':SurveySchema,
                    'AddSurveySection':SurveySectionSchema,

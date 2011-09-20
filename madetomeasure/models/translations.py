@@ -46,14 +46,18 @@ class QuestionTranslations(object):
 
     def add_translations_schema(self, schema):
         """ Fetch all possible translations (according to settings)
-            and create a shecma with each lang as a node.
+            and create a schema with each lang as a node.
         """
         for lang in self.translatable_languages:
-            schema.add(colander.SchemaNode(colander.String(),
-                                           name=lang,
-                                           title=self.title_for_code(lang),
-                                           missing=u"",))
-    
+            self.add_translation_schema(schema, lang)
+                                           
+    def add_translation_schema(self, schema, lang):
+        """ Sreate a schema with lang as a node.
+        """
+        schema.add(colander.SchemaNode(colander.String(),
+                                       name=lang,
+                                       title=self.title_for_code(lang),
+                                       missing=u"",))
 
 def includeme(config):
     """ Register QuestionTranslations utility. """
