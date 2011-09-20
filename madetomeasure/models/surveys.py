@@ -293,13 +293,16 @@ class SurveySection(BaseFolder):
     def set_structured_question_ids(self, value):
         self.__structured_question_ids__ = value
 
-    def append_questions_to_schema(self, schema):
+    def append_questions_to_schema(self, schema, request):
         """ Append all questions to a schema. """
-        lang = None #FIXME
+        
+        lang = None
+        if 'lang' in request.session:
+            lang = request.session['lang']
  
         for id in self.question_ids:
             question = self.question_object_from_id(id)
-            schema.add(question.question_schema_node(id))
+            schema.add(question.question_schema_node(id, lang=lang))
 
     @property
     def responses(self):

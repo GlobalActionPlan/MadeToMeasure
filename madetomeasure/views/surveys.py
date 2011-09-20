@@ -216,7 +216,7 @@ class SurveysView(BaseView):
             raise Forbidden("Invalid ticket")
 
         schema = colander.Schema()
-        self.context.append_questions_to_schema(schema)
+        self.context.append_questions_to_schema(schema, self.request)
         
         next_section = self._next_section()
         previous_section = self._previous_section()
@@ -292,7 +292,7 @@ class SurveysView(BaseView):
     @view_config(context=ISurveySection, renderer='templates/survey_form.pt')
     def admin_view(self):
         schema = colander.Schema()
-        self.context.append_questions_to_schema(schema)
+        self.context.append_questions_to_schema(schema, self.request)
         
         form = Form(schema)
         self.response['form_resources'] = form.get_widget_resources()
