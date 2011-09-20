@@ -45,6 +45,7 @@ class BaseView(object):
             survey_dt = self.survey_dt,
             user_dt = None,
             path = tuple(path),
+            footer_html = self.root.get_footer_html(),
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
@@ -199,6 +200,7 @@ class BaseView(object):
         return self.response
 
 
+    @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE)
