@@ -9,25 +9,23 @@
 
 <div metal:fill-slot="content">
 
-    <div id="survey-state">
-    	<div tal:content="survey_state_msg"></div>
-		<div>
+    <ul id="survey-state">
+    	<li tal:content="survey_state_msg"></li>
+		<li>
 			<span i18n:translate="">Start time</span> &mdash;
 			<span tal:condition="start_time|False" tal:content="start_time"></span>
 			<span tal:condition="not start_time" i18n:translate="">Nothing set</span>
-		</div>
-		<div>
+		</li>
+		<li>
 			<span i18n:translate="">End time</span> &mdash;
 	        <span tal:condition="end_time|False" tal:content="end_time"></span>
 	        <span tal:condition="not end_time" i18n:translate="">Nothing set, this survey will never close!</span>
-		</div>
-		<div><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</div>
-   </div>
+		</li>
+		<li><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</li>
+   </ul>
     
-    <tal:iterate repeat="obj context.values()">
-        <h3><a tal:content="obj.get_title()"
-               href="${resource_url(obj, request)}">Title</a></h3>
-    </tal:iterate>
+    <tal:listing replace="structure listing_sniplet()"></tal:listing>
+
 
 </div>
 </body>

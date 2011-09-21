@@ -11,9 +11,9 @@
 
     <tal:types repeat="type types.values()">
         <h3 tal:content="type['name']">Type</h3>
-        <tal:questions repeat="question type['questions']">
-            <h4><a href="${resource_url(question, request)}" tal:content="question.get_title()">Title</a></h4>
-        </tal:questions>
+		
+        <tal:listing replace="structure listing_sniplet(type['questions'])"></tal:listing>
+
     </tal:types>
 
 </div>

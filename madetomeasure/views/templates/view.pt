@@ -9,11 +9,8 @@
 
 <div metal:fill-slot="content">
 
-    
-    <tal:iterate repeat="obj context.values()">
-        <h3><a tal:content="obj.get_title()"
-               href="${resource_url(obj, request)}">Title</a></h3>
-    </tal:iterate>
+    <tal:listing replace="structure listing_sniplet()"></tal:listing>
+
 
 </div>
 </body>

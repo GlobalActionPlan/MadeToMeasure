@@ -3,7 +3,7 @@ from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
 from pyramid.url import resource_url
-from pyramid.renderers import get_renderer
+from pyramid.renderers import get_renderer, render
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from deform import Button
@@ -46,6 +46,7 @@ class BaseView(object):
             user_dt = None,
             path = tuple(path),
             footer_html = self.root.get_footer_html(),
+            listing_sniplet = self.listing_sniplet,
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
@@ -99,6 +100,16 @@ class BaseView(object):
             if context_type in klass.allowed_contexts:
                 addable.append(type)
         return addable
+
+    def listing_sniplet(self, contents=None):
+        response = {}
+        response['resource_url'] = resource_url
+        if contents is None:
+            response['contents'] = self.context.values()
+        else:
+            response['contents'] = contents
+            
+        return render('templates/sniplets/listing.pt', response, request=self.request)
 
     @reify
     def buttons(self):
