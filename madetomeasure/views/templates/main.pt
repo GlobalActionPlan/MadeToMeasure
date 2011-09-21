@@ -93,23 +93,23 @@
                            href="${resource_url(context, request) + 'add?content_type=' + type_id}">
                             <span i18n:translate="">Add</span>
                             ${type_id}
-                        </a>
+                        </a> |
                     </tal:iterate>
                 </tal:add>
                 <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a class="button invitaions" 
                        href="${resource_url(context, request) + 'invitation_emails'}"
-                       i18n:translate="">Invitations</a>
+                       i18n:translate="">Invitations</a> |
                     <a class="button participants"
                        href="${resource_url(context, request) + 'participants'}"
-                       i18n:translate="">Participants</a>
+                       i18n:translate="">Participants</a> |
                     <a class="button results"
                        href="${resource_url(context, request) + 'results'}"
-                       i18n:translate="">Results</a>
+                       i18n:translate="">Results</a> |
                     <a class="button translations"
                        href="${resource_url(context, request) + 'translations'}"
-                       i18n:translate="">Translations</a>
+                       i18n:translate="">Translations</a> |
                 </tal:survey>
             </div>
 
