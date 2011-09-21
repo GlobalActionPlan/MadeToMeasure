@@ -63,7 +63,7 @@ class SurveyInvitationSchema(colander.Schema):
 
 class SurveyReminderSchema(colander.Schema):
     message = colander.SchemaNode(colander.String(),
-                                  title = _(u"Remainder message"),
+                                  title = _(u"Reminder message"),
                                   widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
 
 
