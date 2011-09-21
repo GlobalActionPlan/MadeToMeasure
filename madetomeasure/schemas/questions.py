@@ -24,11 +24,12 @@ def deferred_context_title(node, kw):
 
 
 class AddQuestionSchema(colander.Schema):
+    question_type = colander.SchemaNode(colander.String(),
+                                        title = _(u"Question type"),
+                                        widget=deferred_question_type_widget,)
     title = colander.SchemaNode(colander.String(),
                                 title=_(u"Initial question text, should be in English"),
                                 description=_(u"Note that you can't change the text later, only its translations"),)
-    question_type = colander.SchemaNode(colander.String(),
-                                      widget=deferred_question_type_widget,)
     question_text = question_text_node()
 
 
