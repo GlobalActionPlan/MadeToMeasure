@@ -27,8 +27,13 @@ class SurveysView(BaseView):
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """
         #FIXME: Check permissions
+        
+        closed_survey = self._closed_survey(self.context)
+        
         post = self.request.POST
-        if 'cancel' in post:
+        if 'cancel' in post or closed_survey:
+            if closed_survey:
+                self.add_flash_message(_(u"Survey has closed, you can't invite"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
@@ -68,6 +73,14 @@ class SurveysView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
 
+    def _closed_survey(self, obj):
+        if not ISurvey.providedBy(obj):
+            raise TypeError("obj must be a Survey")
+        end_time = obj.get_end_time()
+        if not end_time:
+            return False
+        return self.survey_dt.utcnow() > end_time
+
     @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt')
     def participants_view(self):
         """ Overview of participants. """
@@ -76,6 +89,7 @@ class SurveysView(BaseView):
         self.response['participants'] = participants = self.context.get_participants_data()
         not_finished = [x for x in participants if x['finished']<100]
         self.response['not_finished'] = not_finished
+        self.response['closed_survey'] = self._closed_survey(self.context)
         
         schema = CONTENT_SCHEMAS["SurveyReminder"]()
         schema = schema.bind()

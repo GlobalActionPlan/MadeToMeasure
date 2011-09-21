@@ -30,7 +30,7 @@
 		<a href="./invitation_emails" i18n:translate="">Invitations</a>
 	</div>
     
-	<tal:resend condition="not_finished">
+	<tal:resend condition="not_finished and not closed_survey">
 	    <h2 i18n:translate="">Send remainder</h2>
 		<div i18n:translate="">Will only be sent to participants who haven't done 100 percent of the survey.</div>
 
