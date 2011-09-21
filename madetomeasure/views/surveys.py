@@ -37,13 +37,12 @@ class SurveysView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-
         schema = CONTENT_SCHEMAS["SurveyInvitation"]()
         schema = schema.bind()
-        form = Form(schema, buttons=(self.buttons['save'], self.buttons['send'], self.buttons['cancel']))
+        form = Form(schema, buttons=(self.buttons['send'], self.buttons['cancel']))
         self.response['form_resources'] = form.get_widget_resources()
 
-        if 'save' in post or 'send' in post:
+        if 'send' in post:
             controls = self.request.POST.items()
 
             try:
@@ -57,8 +56,7 @@ class SurveysView(BaseView):
                 mutator = getattr(self.context, 'set_%s' % k)
                 mutator(v)
             
-            if 'send' in post:
-                self.context.send_invitations(self.request)
+            self.context.send_invitations(self.request)
                 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
