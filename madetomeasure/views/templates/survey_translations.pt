@@ -10,7 +10,7 @@
 <div metal:fill-slot="content">
 
     <tal:languages condition="languages">
-        <h3 i18n:translate="">The following languages has untranslated questions</h3>
+        <h3 i18n:translate="">The following languages have untranslated questions</h3>
 
         <tal:iterate repeat="item languages.items()">
         	<h4 tal:content="item[1]['name']">Language</h4>
