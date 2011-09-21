@@ -63,7 +63,6 @@
             
             <div id="logo"></div>
             
-            
             <div tal:condition="userid" id="system-toolbar">
                 
                 <span i18n:translate="">Your time</span>
@@ -81,11 +80,10 @@
                 <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
             </div>
         </div>
-        
 		
         <div id="main-area-wrapper"><div id="main-area">
 
-            <div id="context-toolbar" tal:condition="userid and not form|userid|False">
+            <div id="context-toolbar" tal:condition="userid|False">
         
                 <tal:add tal:condition="addable_types">
                     <tal:iterate repeat="type_id addable_types">
@@ -96,7 +94,7 @@
                         </a> |
                     </tal:iterate>
                 </tal:add>
-                <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a>
+                <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a> |
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a class="button invitaions" 
                        href="${resource_url(context, request) + 'invitation_emails'}"
@@ -113,19 +111,16 @@
                 </tal:survey>
             </div>
 
-
-
-
-            <div id="flash_messages" tal:define="flash_messages flash_messages()">
-                <tal:iterate repeat="flash_message flash_messages">
-                    <div>${flash_message}</div>
-                </tal:iterate>
-            </div>
-
             <div tal:condition="userid" id="path-bar">
                 <tal:iterate repeat="obj path">
                     &raquo;
                     <a href="${resource_url(obj, request)}" tal:content="obj.get_title()">Title</a>
+                </tal:iterate>
+            </div>
+
+            <div id="flash_messages" tal:define="flash_messages flash_messages()">
+                <tal:iterate repeat="flash_message flash_messages">
+                    <div>${flash_message}</div>
                 </tal:iterate>
             </div>
 

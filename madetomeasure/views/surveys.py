@@ -73,7 +73,9 @@ class SurveysView(BaseView):
         """ Overview of participants. """
         #FIXME: Check permissions
         
-        self.response['participants'] = self.context.get_participants_data()
+        self.response['participants'] = participants = self.context.get_participants_data()
+        not_finished = [x for x in participants if x['finished']<100]
+        self.response['not_finished'] = not_finished
         
         schema = CONTENT_SCHEMAS["SurveyReminder"]()
         schema = schema.bind()
@@ -91,13 +93,11 @@ class SurveysView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            participants = self.context.get_participants_data()
-            for participant in participants:
+            for participant in not_finished:
                 # a participant with less then 100% completion will resive the invite ticket again with specified message
-                if participant['finished'] < 100:
-                    ticket = participant['uid']
-                    email = self.context.tickets[ticket]
-                    self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
+                ticket = participant['uid']
+                email = self.context.tickets[ticket]
+                self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
                     
             self.add_flash_message(_(u"Reminder has been sent"))
         

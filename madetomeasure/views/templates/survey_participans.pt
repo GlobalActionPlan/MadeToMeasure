@@ -10,21 +10,32 @@
 <div metal:fill-slot="content">
 	
 	<h1 i18n:translate="">Manage participants</h1>
-	<table condition="participants">
-	    <tr>
-	        <th i18n:translate="">Email</th>
-	        <th i18n:translate="">percent finished</th>
-	    </tr>
-        <tal:iterate repeat="participant participants">
-            <tr>
-                <td>${participant['email']}</td>
-                <td>${participant['finished']}</td>
-            </tr>
-        </tal:iterate>
-    </table>
+	<ul tal:condition="participants">
+		<li>
+	        <span i18n:translate="">Invited</span>:
+            <strong>${len(participants)}</strong>
+		</li>
+        <li>
+            <span i18n:translate="">Finished</span>:
+            <strong>${len(participants) - len(not_finished)}</strong>
+        </li>
+        <li>
+            <span i18n:translate="">Remaining</span>:
+            <strong>${len(not_finished)}</strong>
+        </li>
+    </ul>
+	
+	<div tal:condition="not participants">
+		<span i18n:translate="">There aren't any particpants invited yet. Try clicking the invitations link and invite some.</span>
+		<a href="./invitation_emails" i18n:translate="">Invitations</a>
+	</div>
     
-    <h2 i18n:translate="">Send remainder to participants who haven't done 100 percent of the survey</h2>
-    ${form}
+	<tal:resend condition="not_finished">
+	    <h2 i18n:translate="">Send remainder</h2>
+		<div i18n:translate="">Will only be sent to participants who haven't done 100 percent of the survey.</div>
+
+	    ${form}
+	</tal:resend>
 
 </div>
 </body>
