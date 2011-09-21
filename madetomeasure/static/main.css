@@ -110,8 +110,19 @@ button {
 	z-index: -1;
 
 }
-#context-toolbar {}
+#context-toolbar {
+	display: block;
+	margin-bottom: 10px;
+	border-bottom: 2px solid #ccc;
+	padding: 5px 0;
+}
 
+
+/* Administrative controls */
+#context-toolbar .button {
+}
+#context-toolbar .button:hover {
+}
 
 /* Survey form tweaks */
 #survey ul.deformSet > li {
@@ -136,7 +147,7 @@ button {
 	color: red;
 }
 
-/* Regular form tweaks */
+/* Regular form tweaks and "buttonization" of links. */
 button {
     border: 1px solid #4A9EC6;
 	background: #fff;

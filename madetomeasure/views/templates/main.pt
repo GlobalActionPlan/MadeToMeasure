@@ -83,6 +83,38 @@
         </div>
         
         <div id="main-area">
+
+            <div id="context-toolbar" tal:condition="userid and not form|userid|False">
+        
+                <tal:add tal:condition="addable_types">
+                    <tal:iterate repeat="type_id addable_types">
+                        <a class="button add"
+                           href="${resource_url(context, request) + 'add?content_type=' + type_id}">
+                            <span i18n:translate="">Add</span>
+                            ${type_id}
+                        </a>
+                    </tal:iterate>
+                </tal:add>
+                <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a>
+                <tal:survey condition="context.content_type == 'Survey'">
+                    <a class="button invitaions" 
+                       href="${resource_url(context, request) + 'invitation_emails'}"
+                       i18n:translate="">Invitations</a>
+                    <a class="button participants"
+                       href="${resource_url(context, request) + 'participants'}"
+                       i18n:translate="">Participants</a>
+                    <a class="button results"
+                       href="${resource_url(context, request) + 'results'}"
+                       i18n:translate="">Results</a>
+                    <a class="button translations"
+                       href="${resource_url(context, request) + 'translations'}"
+                       i18n:translate="">Translations</a>
+                </tal:survey>
+            </div>
+
+
+
+
             <div id="flash_messages" tal:define="flash_messages flash_messages()">
                 <tal:iterate repeat="flash_message flash_messages">
                     <div>${flash_message}</div>
@@ -99,35 +131,6 @@
             <metal:heading define-slot="page_heading">
                 <h1 tal:content="context.get_title()">Title</h1>
             </metal:heading>
-        
-            <div id="context-toolbar" tal:condition="userid and not form|userid|False">
-        
-                <div id="addmenu" tal:condition="addable_types">
-                    <tal:iterate repeat="type_id addable_types">
-                        <a href="${resource_url(context, request) + 'add?content_type=' + type_id}">
-                        	<span i18n:translate="">Add</span>
-							${type_id}
-						</a>
-                    </tal:iterate>
-                </div>
-                <div id="editmenu">
-                    <a href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a>
-                </div>
-                <tal:survey condition="context.content_type == 'Survey'">
-                    <div id="invitaions">
-                        <a href="${resource_url(context, request) + 'invitation_emails'}" i18n:translate="">Invitations</a>
-                    </div>
-                    <div id="participants">
-                        <a href="${resource_url(context, request) + 'participants'}" i18n:translate="">Participants</a>
-                    </div>
-                    <div id="results">
-                        <a href="${resource_url(context, request) + 'results'}" i18n:translate="">Results</a>
-                    </div>
-                    <div id="translations">
-                        <a href="${resource_url(context, request) + 'translations'}" i18n:translate="">Translations</a>
-                    </div>
-                </tal:survey>
-            </div>
         
             <div id="content">
                 <metal:main-content define-slot="content">
