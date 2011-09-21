@@ -65,20 +65,32 @@
             
             <div tal:condition="userid" id="system-toolbar">
                 
-                <span i18n:translate="">Your time</span>
-                <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
-                |
-                <a href="${resource_url(user, request)}"
-                   title="Click to go to profile. There you can make changes as well."
-                   i18n:attributes="title">${user.get_title()} (${userid})</a>
-                |
-                <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
-                <br/>
-                <a href="${resource_url(root, request)}" i18n:translate="">Site root</a> |
-                <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
-                <a href="${resource_url(root['questions'], request)}" i18n:translate="">Global questions</a> |
-                <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
+				<div id="your">
+	                <span i18n:translate="">Your time</span>
+	                <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
+	                |
+	                <a href="${resource_url(user, request)}"
+	                   title="Click to go to profile. There you can make changes as well."
+	                   i18n:attributes="title">${user.get_title()} (${userid})</a>
+	                |
+	                <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
+				</div>
+
+				<div id="global">
+	                Global:
+	                <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
+	                <a href="${resource_url(root['questions'], request)}" i18n:translate="">Questions</a> |
+	                <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
+				</div>
+
+				<div tal:condition="organisation|False" id="organisation">
+					<span tal:content="organisation.get_title()">Title</span>:
+	                <a href="${resource_url(organisation['surveys'], request)}" i18n:translate="">Surveys</a> |
+	                <a href="${resource_url(organisation['questions'], request)}" i18n:translate="">Questions</a>
+				</div>
+				
             </div>
+			
         </div>
 		
         <div id="main-area-wrapper"><div id="main-area">
