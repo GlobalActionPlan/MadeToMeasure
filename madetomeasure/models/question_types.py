@@ -27,25 +27,34 @@ frequency_scale = \
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
+yes_no_choices = (('yes', _(u"Yes")), ('no', _(u"No")))
+yes_no_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_choices)
+
+
 text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
 
 class BasicQuestionNode(object):
     """ A question node that simply displays all of its results. """
     implements(IQuestionNode)
     
-    def __init__(self, type_title, widget):
+    def __init__(self, type_title, widget, **kwargs):
         """ Create object.
             Note that type_title is not the colander.SchemaNode's title
+
+            You can pass along keyword arguments that will be accepted
+            by the SchemaNode class.
+            Tip: title, description, missing and validator are common.
         """
         self.type_title = type_title
         self.widget = widget
+        self.default_kwargs = kwargs
     
-    def node(self, name, **kw):
+    def node(self, name, **kwargs):
         """ Return a schema node.
-            You can pass along keyword arguments that will be accepted
-            by the SchemaNode class.
-            Tip: We use title and validator
         """
+        kw = {}
+        kw.update(self.default_kwargs)
+        kw.update(kwargs)
         return colander.SchemaNode(colander.String(),
                                    name=name,
                                    widget=self.widget,
@@ -66,7 +75,6 @@ class BasicQuestionNode(object):
     def render_result(self, request, data):
         response = {'data':data,}
         return render('../views/templates/results/basic.pt', response, request=request)
-
 
 
 class ChoiceQuestionNode(BasicQuestionNode):
@@ -91,7 +99,7 @@ class ChoiceQuestionNode(BasicQuestionNode):
 def includeme(config):
     #FIXME: Make utility registratio configurable?
     
-    free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget)
+    free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget, missing=u"")
     config.registry.registerUtility(free_text, IQuestionNode, 'free_text')
 
     importance_scale = ChoiceQuestionNode(_(u"Importance scale question"), importance_choices_widget)
@@ -99,4 +107,7 @@ def includeme(config):
 
     frequency_scale = ChoiceQuestionNode(_(u"Frequency scale question"), frequency_scale_choices_widget)
     config.registry.registerUtility(frequency_scale, IQuestionNode, 'frequency_scale')
+    
+    yes_no = ChoiceQuestionNode(_(u"Yes / No question"), yes_no_choices_widget)
+    config.registry.registerUtility(yes_no, IQuestionNode, 'yes_no')
 

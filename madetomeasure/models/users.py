@@ -69,8 +69,10 @@ class User(BaseFolder):
         return self.__name__
         
     def get_title(self):
+        """ Return a combo of firstname and lastname or the userid """
         title = "%s %s" % (self.get_first_name(), self.get_last_name())
-        return title.strip()
+        title = title.strip()
+        return title and title or self.userid
 
     def set_title(self, value):
         """ For compatibility, shouldn't be used"""

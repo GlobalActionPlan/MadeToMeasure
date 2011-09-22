@@ -61,16 +61,22 @@ class IOrganisation(Interface):
 class IQuestionNode(Interface):
     """ A utility that will create a question colander.SchemaNode when called. """
 
-    def __init__(type_title, widget):
+    type_title = Attribute("Readable title for this class. Used in question choices for instance.")
+    widget = Attribute("Which widget to use when running the 'node' method")
+    default_kwargs = Attribute("Any kwargs passed along to init will be stored here."
+                               "They will be passed along to the colander.SchemaNode constructed when node is run.")
+
+    def __init__(type_title, widget, **kwargs):
         """ Create instance.
-            widget must be  """
+            widget must be a deform widget.
+            kwargs will be passed along to the colander.SchemaNode when
+            node method is run.
+        """
     
-    def node(name, **kw): 
+    def node(name, **kwargs):
         """ Return a schema node.
             name argument is the nodes name in the schema
-            You can pass along keyword arguments that will be accepted
-            by the SchemaNode class.
-            Tip: We use title and validator
+            kwargs here will override the node_kwargs attribute
         """
     
     def render_result(request, data):

@@ -1,6 +1,7 @@
 from copy import copy
 
 import colander
+from deform.widget import TextInputWidget
 from pyramid.threadlocal import get_current_registry
 from zope.interface import implements
 from pyramid.interfaces import ISettings
@@ -62,7 +63,8 @@ class QuestionTranslations(object):
         schema.add(colander.SchemaNode(colander.String(),
                                        name=lang,
                                        title=self.title_for_code(lang),
-                                       missing=u"",))
+                                       missing=u"",
+                                       widget=TextInputWidget(size=80),))
 
 def includeme(config):
     """ Register QuestionTranslations utility. """
