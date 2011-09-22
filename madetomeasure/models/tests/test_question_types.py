@@ -44,6 +44,22 @@ class BasicQuestionNodeTests(unittest.TestCase):
         result = obj.render_result(request, data)
         self.failUnless('three' in result)
 
+    def test_kwargs_on_init_passed_to_node(self):
+        from madetomeasure.models.question_types import BasicQuestionNode
+        from madetomeasure.models.question_types import text_area_widget
+        obj = BasicQuestionNode('test_node', text_area_widget, title="Hello", missing=u"", description="Test")
+        node = obj.node('test_node')
+        self.assertEqual(node.title, "Hello")
+        self.assertEqual(node.missing, u"")
+        self.assertEqual(node.description, "Test")
+
+    def test_node_kwargs_overrides_default_kwargs(self):
+        from madetomeasure.models.question_types import BasicQuestionNode
+        from madetomeasure.models.question_types import text_area_widget
+        obj = BasicQuestionNode('test_node', text_area_widget, title="Hello")
+        node = obj.node('test_node', title="Goodbye!")
+        self.assertEqual(node.title, "Goodbye!")
+
 
 class ChoiceQuestionNodeTests(unittest.TestCase):
     def setUp(self):

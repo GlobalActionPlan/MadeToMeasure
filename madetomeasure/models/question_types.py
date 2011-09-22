@@ -37,19 +37,24 @@ class BasicQuestionNode(object):
     """ A question node that simply displays all of its results. """
     implements(IQuestionNode)
     
-    def __init__(self, type_title, widget):
+    def __init__(self, type_title, widget, **kwargs):
         """ Create object.
             Note that type_title is not the colander.SchemaNode's title
+
+            You can pass along keyword arguments that will be accepted
+            by the SchemaNode class.
+            Tip: title, description, missing and validator are common.
         """
         self.type_title = type_title
         self.widget = widget
+        self.default_kwargs = kwargs
     
-    def node(self, name, **kw):
+    def node(self, name, **kwargs):
         """ Return a schema node.
-            You can pass along keyword arguments that will be accepted
-            by the SchemaNode class.
-            Tip: We use title and validator
         """
+        kw = {}
+        kw.update(self.default_kwargs)
+        kw.update(kwargs)
         return colander.SchemaNode(colander.String(),
                                    name=name,
                                    widget=self.widget,
@@ -70,7 +75,6 @@ class BasicQuestionNode(object):
     def render_result(self, request, data):
         response = {'data':data,}
         return render('../views/templates/results/basic.pt', response, request=request)
-
 
 
 class ChoiceQuestionNode(BasicQuestionNode):
