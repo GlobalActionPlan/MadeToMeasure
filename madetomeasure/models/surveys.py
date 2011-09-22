@@ -21,6 +21,7 @@ from madetomeasure.interfaces import *
 from madetomeasure.models.participants import Participant
 from madetomeasure.models.date_time_helper import utcnow
 from madetomeasure.models.exceptions import SurveyUnavailableError
+from madetomeasure.models.app import select_language
 
 
 class Surveys(BaseFolder):
@@ -289,11 +290,23 @@ class Survey(BaseFolder):
 
         return languages
 
+
 class SurveySection(BaseFolder):
     implements(ISurveySection)
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)
+    
+    def get_title(self):
+        """ This is a special version of get title, since it might have translations.
+            The regular setter works though, since the translations are stored in heading_translations.
+        """
+        lang = select_language(self)
+        translations = self.get_heading_translations()
+        if lang and lang in translations:
+            return translations[lang]
+        
+        return getattr(self, '__title__', '')
     
     @property
     def question_ids(self):
@@ -307,6 +320,19 @@ class SurveySection(BaseFolder):
     
     def set_question_type(self, value):
         self.__question_type__ = value
+
+    def get_heading_translations(self):
+        return getattr(self, '__heading_translations__', {})
+
+    def set_heading_translations(self, value):
+        """ This is only for the translations of the question, since the title is the base language.
+            value here should be a dict with country codes as keys and questions as values.
+            Any empty value should be removed before saving.
+        """
+        for (k, v) in value.items():
+            if not v.strip():
+                del value[k]
+        self.__heading_translations__ = value
 
     def get_structured_question_ids(self):
         return getattr(self, '__structured_question_ids__', {})

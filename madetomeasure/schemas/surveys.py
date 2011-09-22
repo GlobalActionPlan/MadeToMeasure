@@ -21,6 +21,12 @@ def deferred_available_languages_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=choices)
 
 
+def heading_translations_node():
+    return colander.Schema(title=_("Section heading translations"),
+                           description=_(u"For each language")) #Send this to add_translations_schema
+
+
+
 class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
     start_time = colander.SchemaNode(
@@ -51,6 +57,7 @@ class SurveySchema(colander.Schema):
 
 class SurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
+    heading_translations = heading_translations_node()
     structured_question_ids = colander.Schema(title=_(u"Select participating questions"),)
 
 

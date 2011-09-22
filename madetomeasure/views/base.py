@@ -54,6 +54,8 @@ class BaseView(object):
             self.response['hex_color'] = self.organisation.get_hex_color()
             self.response['logo_link'] = self.organisation.get_logo_link()
 
+        self.trans_util = self.request.registry.getUtility(IQuestionTranslations)
+
     @reify
     def userid(self):
         return authenticated_userid(self.request)
@@ -185,6 +187,7 @@ class BaseView(object):
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
         if type_to_add == 'SurveySection':
             self.context.add_structured_question_choices(schema['structured_question_ids'])
+            self.trans_util.add_translations_schema(schema['heading_translations'])
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -234,7 +237,8 @@ class BaseView(object):
         
         if ISurveySection.providedBy(self.context):
             self.context.__parent__.add_structured_question_choices(schema['structured_question_ids'])
-                
+            self.trans_util.add_translations_schema(schema['heading_translations'])
+
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         

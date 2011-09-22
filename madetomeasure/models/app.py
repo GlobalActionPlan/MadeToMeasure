@@ -1,10 +1,12 @@
 from slugify import slugify
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
+from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.i18n import get_locale_name
 from pyramid.interfaces import ISettings
 from zope.component import createObject
+from madetomeasure.interfaces import ISurvey
 
 
 def appmaker(zodb_root):
@@ -73,7 +75,26 @@ def get_users_dt_helper(request=None):
     locale = get_locale_name(request)
     #FIXME: Default lang settable on user profile too, or in request?
     return createObject('dt_helper', tz, locale)
-#
+
+def select_language(context, request=None):
+    """ Try to pick a language for the current survey participant according to
+        the Survey settings or the lang session variable.
+    """
+    survey = find_interface(context, ISurvey)
+    if survey is None:
+        ValueError("Can't find a Survey object in context traversal path. context was: %s" % context)
+    
+    langs = survey.get_available_languages()
+    #Only one language?
+    if len(langs) == 1:
+        return tuple(langs)[0]
+    
+    if request is None:
+        request = get_current_request()
+    
+    return request.session.get('lang', None)
+
+
 #def find_all_of_iface(context, iface):
 #    """ Traverser that will find all objects from context and below
 #        implementing a specific interface.
