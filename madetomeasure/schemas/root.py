@@ -8,4 +8,4 @@ class EditSiteRoot(colander.Schema):
     footer_html = colander.SchemaNode(colander.String(),
                                  title = _(u"Footer HTML code"),
                                  missing=u"",
-                                 widget=deform.widget.TextAreaWidget(rows=10, cols=50))
+                                 widget=deform.widget.RichTextWidget(rows=10, cols=50))
