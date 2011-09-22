@@ -6,6 +6,7 @@ from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from pyramid.security import has_permission
 from zope.component import getUtility
 from zope.component import getUtilitiesFor
 
@@ -16,6 +17,7 @@ from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
+from madetomeasure import security
 
 
 class QuestionsView(BaseView):
@@ -30,8 +32,13 @@ class QuestionsView(BaseView):
 
     @view_config(name='add', context=IQuestions, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
-        #FIXME: Check permissions
         type_to_add = self.request.GET.get('content_type')
+        
+        #Permission check
+        add_permission = "Add %s" % type_to_add
+        if not has_permission(add_permission, self.context, self.request):
+            raise Forbidden("You're not allowed to add '%s' in this context." % type_to_add)
+            
         if type_to_add not in self.addable_types():
             raise ValueError("No content type called %s" % type_to_add)
 
@@ -67,9 +74,8 @@ class QuestionsView(BaseView):
         return self.response
 
 
-    @view_config(name='edit', context=IQuestion, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='edit', context=IQuestion, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
-        #FIXME: Check permissions
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
         schema = schema.bind(context = self.context,)
@@ -105,7 +111,7 @@ class QuestionsView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
         
-    @view_config(context=IQuestions, renderer='templates/questions.pt')
+    @view_config(context=IQuestions, renderer='templates/questions.pt', permission=security.VIEW)
     def admin_listing_view(self):
         
         types = {}
@@ -119,7 +125,7 @@ class QuestionsView(BaseView):
         
         return self.response
     
-    @view_config(context=IQuestion, renderer='templates/survey_form.pt')
+    @view_config(context=IQuestion, renderer='templates/survey_form.pt', permission=security.VIEW)
     def admin_view(self):
         schema = Schema()
         schema.add(self.context.question_schema_node('dummy'))
@@ -130,10 +136,9 @@ class QuestionsView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
         
-    @view_config(name='translate', context=IQuestion, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='translate', context=IQuestion, renderer=BASE_FORM_TEMPLATE, permission=security.TRANSLATE)
     def translate_view(self):
-        #FIXME: Check permissions
-        
+
         lang = self.request.GET['lang']
 
         schema = CONTENT_SCHEMAS["Translate%s" % self.context.content_type]()

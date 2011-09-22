@@ -19,14 +19,14 @@ from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.exceptions import SurveyUnavailableError
+from madetomeasure import security
 
 
 class SurveysView(BaseView):
 
-    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_SURVEY)
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """
-        #FIXME: Check permissions
         
         closed_survey = self._closed_survey(self.context)
         
@@ -79,10 +79,9 @@ class SurveysView(BaseView):
             return False
         return self.survey_dt.utcnow() > end_time
 
-    @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt')
+    @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt', permission=security.MANAGE_SURVEY)
     def participants_view(self):
         """ Overview of participants. """
-        #FIXME: Check permissions
         
         self.response['participants'] = participants = self.context.get_participants_data()
         not_finished = [x for x in participants if x['finished']<100]
@@ -278,7 +277,7 @@ class SurveysView(BaseView):
         self.response['text'] = self.context.get_finished_text()
         return self.response
 
-    @view_config(name="results", context=ISurvey, renderer='templates/results.pt')
+    @view_config(name="results", context=ISurvey, renderer='templates/results.pt', permission=security.VIEW)
     def results_view(self):
         """ Results screen
         """
@@ -302,7 +301,7 @@ class SurveysView(BaseView):
         self.response['get_questions_for_section'] = _get_questions
         return self.response
         
-    @view_config(context=ISurveySection, renderer='templates/survey_form.pt')
+    @view_config(context=ISurveySection, renderer='templates/survey_form.pt', permission=security.VIEW)
     def show_dummy_form_view(self):
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema, self.request)
@@ -313,14 +312,14 @@ class SurveysView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
         
-    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt')
+    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt', permission=security.VIEW)
     def translations(self):
         """ Shows the amount of translations
         """
         self.response['languages'] = self.context.untranslated_languages()
         return self.response
 
-    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
+    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.VIEW)
     def survey_admin_view(self):
         start_time = self.context.get_start_time()
         end_time = self.context.get_end_time()

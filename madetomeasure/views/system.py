@@ -8,14 +8,17 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from pyramid.traversal import find_root 
 
 from madetomeasure.interfaces import *
 from madetomeasure.schemas.system import LoginSchema
 from madetomeasure.schemas.system import RequestPasswordSchema
 from madetomeasure.schemas.system import TokenPasswordChange
+from madetomeasure.schemas.system import PermissionSchema
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
+from madetomeasure import security
 
 
 class SystemView(BaseView):
@@ -143,5 +146,52 @@ class SystemView(BaseView):
 
         #Everything seems okay. Render form
         appstruct = dict(token = token)
+        self.response['form'] = self.form.render(appstruct=appstruct)
+        return self.response
+        
+    def get_permission_appstruct(self, context):
+        """ Return the current settings in a structure that is usable in a deform form.
+        """
+        root = find_root(context)
+        users = root['users']
+        appstruct = {}
+
+        userids_and_groups = []
+        for userid in context._groups:
+            user = users[userid]
+            userids_and_groups.append({'userid':userid, 'groups':context.get_groups(userid)})
+        appstruct['userids_and_groups'] = userids_and_groups
+
+        return appstruct
+        
+    @view_config(context=ISiteRoot, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(context=IOrganisation, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    def permissions_form(self):
+
+        schema = PermissionSchema(self.context)
+        self.form = deform.Form(schema, buttons=(self.buttons['save'], self.buttons['cancel']))
+        self.response['form_resources'] = self.form.get_widget_resources()
+
+        post = self.request.POST
+        if 'save' in post:
+            controls = post.items()
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = self.form.validate(controls)
+                #FIXME: validate name - it must be unique and url-id-like
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            #Set permissions
+            self.context.update_userids_permissions(appstruct['userids_and_groups'])
+            
+        if 'cancel' in post:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render edit form
+        appstruct = self.get_permission_appstruct(self.context)
+        
         self.response['form'] = self.form.render(appstruct=appstruct)
         return self.response

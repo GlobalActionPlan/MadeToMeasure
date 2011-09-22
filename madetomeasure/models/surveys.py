@@ -275,8 +275,8 @@ class Survey(BaseFolder):
             
         languages = {}
         for language in available_languages:
+            questions = []
             for section in self.values():
-                questions = []
                 for name in section.question_ids:
                     question = section.question_object_from_id(name)
                     if not language in question.get_question_text():

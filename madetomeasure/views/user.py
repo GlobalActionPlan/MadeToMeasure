@@ -4,21 +4,37 @@ from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
+from pyramid.security import has_permission
+from pyramid.exceptions import Forbidden
 
 from madetomeasure.interfaces import *
 from madetomeasure import MadeToMeasureTSF as _
+
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.schemas.users import ChangePasswordSchema
+from madetomeasure import security
 
 
 class UsersView(BaseView):
+    @view_config(context=IUser, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    def admin_view(self):
+        #FIXME: Should probably not exist at all :)
+            
+        return self.response
+
     @view_config(name='add', context=IUsers, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
-        #FIXME: Check permissions
         type_to_add = self.request.GET.get('content_type')
+
+        #Permission check
+        add_permission = "Add %s" % type_to_add
+        if not has_permission(add_permission, self.context, self.request):
+            raise Forbidden("You're not allowed to add '%s' in this context." % type_to_add)
+
         if type_to_add not in self.addable_types():
             raise ValueError("No content type called %s" % type_to_add)
 
@@ -53,9 +69,8 @@ class UsersView(BaseView):
         self.response['form'] = form.render()
         return self.response
         
-    @view_config(name='edit', context=IUser, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='edit', context=IUser, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
-        #FIXME: Check permissions
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
         schema = schema.bind(context = self.context,)
@@ -89,9 +104,8 @@ class UsersView(BaseView):
         self.response['form'] = form.render(appstruct)
         return self.response
         
-    @view_config(name='change_password', context=IUser, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='change_password', context=IUser, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def change_password_view(self):
-        #FIXME: Check permissions
 
         schema = ChangePasswordSchema()
         schema = schema.bind(context = self.context,)
