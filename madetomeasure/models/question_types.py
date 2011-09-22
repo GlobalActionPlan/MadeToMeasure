@@ -99,7 +99,7 @@ class ChoiceQuestionNode(BasicQuestionNode):
 def includeme(config):
     #FIXME: Make utility registratio configurable?
     
-    free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget)
+    free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget, missing=u"")
     config.registry.registerUtility(free_text, IQuestionNode, 'free_text')
 
     importance_scale = ChoiceQuestionNode(_(u"Importance scale question"), importance_choices_widget)
