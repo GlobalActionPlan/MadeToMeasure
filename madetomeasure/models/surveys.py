@@ -42,23 +42,11 @@ class Survey(BaseFolder):
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
     
-    def get_invitation_emails(self):
-        return getattr(self, '__invitation_emails__', '')
-    
-    def set_invitation_emails(self, value):
-        self.__invitation_emails__ = value
-
     def get_from_address(self):
         return getattr(self, '__from_address__', '')
 
     def set_from_address(self, value):
         self.__from_address__ = value
-
-    def get_mail_message(self):
-        return getattr(self, '__mail_message__', '')
-
-    def set_mail_message(self, value):
-        self.__mail_message__ = value
 
     def get_finished_text(self):
         return getattr(self, '__finished_text__', '')
@@ -92,12 +80,6 @@ class Survey(BaseFolder):
 
     def set_time_zone(self, value):
         self.__time_zone__ = value
-
-    def _extract_emails(self):
-        results = set()
-        for email in self.get_invitation_emails().splitlines():
-            results.add(email.strip())
-        return results
     
     @property
     def tickets(self):
@@ -113,18 +95,14 @@ class Survey(BaseFolder):
         self.tickets[ticket_uid] = email
         return ticket_uid
 
-    def send_invitations(self, request, text=None):
+    def send_invitations(self, request, emails=(), message=None):
         """ Send out invitations to any emails stored as invitation_emails.
             Creates a ticket that a survey participant will "claim" to start the survey.
             Also removes emails from invitation pool.
         """
-        for email in self._extract_emails():
+        for email in emails:
             invitation_uid = self.create_ticket(email)
-            
-            message = u"A message" #FIXME
             self.send_invitation_email(request, email, invitation_uid, message)
-            
-        self.set_invitation_emails('') #Blank out emails, since we've already sent them
         
     def send_invitation_email(self, request, email, uid, message):
         mailer = get_mailer(request)

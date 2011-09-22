@@ -38,8 +38,6 @@ class SurveySchema(colander.Schema):
     )
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
-    mail_message = colander.SchemaNode(colander.String(),
-                                       widget=deform.widget.TextAreaWidget(rows=10, cols=50))
     finished_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.TextAreaWidget(rows=10, cols=50),
                                         default=_(u"Thanks a lot for filling out the survey."),)
@@ -55,16 +53,18 @@ class SurveySectionSchema(colander.Schema):
 
 
 class SurveyInvitationSchema(colander.Schema):
-    invitation_emails = colander.SchemaNode(colander.String(),
-                                            title = _(u"Participant email addresses - add one per row."),
-                                            validator = multiple_email_validator,
-                                            widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
+    message = colander.SchemaNode(colander.String(),
+                                  widget=deform.widget.RichTextWidget(rows=10, cols=50))
+    emails = colander.SchemaNode(colander.String(),
+                                 title = _(u"Participant email addresses - add one per row."),
+                                 validator = multiple_email_validator,
+                                 widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
 
 
 class SurveyReminderSchema(colander.Schema):
     message = colander.SchemaNode(colander.String(),
                                   title = _(u"Reminder message"),
-                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
+                                  widget=deform.widget.RichTextWidget(rows=10, cols=50),)
 
 
 @colander.deferred

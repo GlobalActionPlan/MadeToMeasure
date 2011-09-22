@@ -52,23 +52,17 @@ class SurveysView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
+            emails = set()
+            for email in appstruct['emails'].splitlines():
+                emails.add(email.strip())
+            message = appstruct['message']
             
-            self.context.send_invitations(self.request)
+            self.context.send_invitations(self.request, emails, message)
                 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-
-        self.response['form'] = form.render(appstruct)
+        self.response['form'] = form.render()
         return self.response
 
     def _closed_survey(self, obj):

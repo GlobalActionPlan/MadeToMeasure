@@ -10,7 +10,7 @@
 
 <h1 i18n:translate="">Survey invitation</h1>
 
-<div tal:content="message">Message</div>
+<div tal:content="structure message">Message</div>
 
 <h5 i18n:translate="">Click the link to access survey:</h5>
 <a tal:attributes="href access_link"
