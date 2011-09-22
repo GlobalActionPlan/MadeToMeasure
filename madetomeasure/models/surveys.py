@@ -266,6 +266,11 @@ class Survey(BaseFolder):
                     }
 
         return languages
+        
+    def values(self):
+        values = super(BaseFolder,self).values()
+        
+        return sorted(values, key=lambda section: section.get_order())
 
 class SurveySection(BaseFolder):
     implements(ISurveySection)
@@ -291,6 +296,12 @@ class SurveySection(BaseFolder):
 
     def set_structured_question_ids(self, value):
         self.__structured_question_ids__ = value
+
+    def get_order(self):
+        return getattr(self, '__order__', 0)
+        
+    def set_order(self, value):
+        self.__order__ = value
 
     def append_questions_to_schema(self, schema, request):
         """ Append all questions to a schema. """
