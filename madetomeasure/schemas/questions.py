@@ -40,4 +40,4 @@ class EditQuestionSchema(colander.Schema):
 
 
 class TranslateQuestionSchema(colander.Schema):
-    question_text = colander.Schema(title=_("Question translation"),) #Send this to add_translations_schema
+    question_text = question_text_node()
