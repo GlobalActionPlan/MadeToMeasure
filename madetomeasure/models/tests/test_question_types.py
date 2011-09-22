@@ -108,3 +108,6 @@ class QuestionNodeTests(unittest.TestCase):
         
     def test_frequency_scale_registered(self):
         self.failUnless(self.qu(IQuestionNode, name='frequency_scale'))
+
+    def test_yes_no_registered(self):
+        self.failUnless(self.qu(IQuestionNode, name='yes_no'))

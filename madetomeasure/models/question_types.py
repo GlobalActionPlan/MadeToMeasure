@@ -27,6 +27,10 @@ frequency_scale = \
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
+yes_no_choices = (('yes', _(u"Yes")), ('no', _(u"No")))
+yes_no_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_choices)
+
+
 text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
 
 class BasicQuestionNode(object):
@@ -99,4 +103,7 @@ def includeme(config):
 
     frequency_scale = ChoiceQuestionNode(_(u"Frequency scale question"), frequency_scale_choices_widget)
     config.registry.registerUtility(frequency_scale, IQuestionNode, 'frequency_scale')
+    
+    yes_no = ChoiceQuestionNode(_(u"Yes / No question"), yes_no_choices_widget)
+    config.registry.registerUtility(yes_no, IQuestionNode, 'yes_no')
 
