@@ -54,7 +54,8 @@ class SurveySectionSchema(colander.Schema):
 
 class SurveyInvitationSchema(colander.Schema):
     message = colander.SchemaNode(colander.String(),
-                                  widget=deform.widget.RichTextWidget(rows=10, cols=50))
+                                  widget=deform.widget.RichTextWidget(rows=10, cols=50),
+                                  default=_('Please fill in the survey'),)
     emails = colander.SchemaNode(colander.String(),
                                  title = _(u"Participant email addresses - add one per row."),
                                  validator = multiple_email_validator,
