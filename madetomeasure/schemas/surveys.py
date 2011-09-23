@@ -1,7 +1,10 @@
 from pytz import common_timezones
+from operator import itemgetter
+
 import colander
 import deform
 from zope.component import getUtility
+
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.questions import deferred_question_type_widget
@@ -15,9 +18,14 @@ from madetomeasure.interfaces import IOrganisation, IQuestionTranslations
 @colander.deferred
 def deferred_available_languages_widget(node, kw):
     util = getUtility(IQuestionTranslations)
-    choices = []
+    sort = []
     for lang in util.available_languages:
-        choices.append((lang, util.lang_names[lang]))
+        sort.append((lang, util.title_for_code_default(lang).lower()))
+    sort = sorted(sort, key=itemgetter(1))
+    choices = []
+    for (lang, name) in sort:
+        name = "%s - %s (%s)" % (util.title_for_code_default(lang), util.title_for_code(lang), lang)
+        choices.append((lang, name))
     return deform.widget.CheckboxChoiceWidget(values=choices)
 
 
@@ -72,10 +80,16 @@ class SurveyReminderSchema(colander.Schema):
 def deferred_select_language_widget(node, kw):
     langs = kw['languages']
     util = getUtility(IQuestionTranslations)
-    choices = []
+    sort = []
     for lang in langs:
-        choices.append((lang, util.lang_names[lang]))
-    return deform.widget.RadioChoiceWidget(values=choices)
+        sort.append((lang, util.title_for_code_default(lang).lower()))
+    sort = sorted(sort, key=itemgetter(1))
+    choices = []
+    for (lang, name) in sort:
+        name = "%s - %s (%s)" % (util.title_for_code_default(lang), util.title_for_code(lang), lang)
+        choices.append((lang, name))
+    return deform.widget.CheckboxChoiceWidget(values=choices)
+
 
 class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
