@@ -122,6 +122,14 @@
                     <a class="button translations"
                        href="${resource_url(context, request) + 'translations'}"
                        i18n:translate="">Translations</a> |
+                    <a class="button reorder"
+                       href="${resource_url(context, request) + 'reorder'}"
+                       i18n:translate="">Reorder sections</a> |
+                </tal:survey>
+                <tal:survey condition="context.content_type == 'SurveySection'">
+                    <a class="button reorder"
+                       href="${resource_url(context, request) + 'reorder'}"
+                       i18n:translate="">Reorder questions</a>
                 </tal:survey>
             </div>
 

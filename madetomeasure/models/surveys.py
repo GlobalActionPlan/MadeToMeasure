@@ -307,13 +307,13 @@ class SurveySection(BaseFolder):
         return getattr(self, '__question_type__', '')
     
     def set_question_type(self, value):
-        """ value format {'question_type_id': [question_uid, question_uid, question_uid]} """
         self.__question_type__ = value
 
     def get_structured_question_ids(self):
         return getattr(self, '__structured_question_ids__', {})
 
     def set_structured_question_ids(self, value):
+        """ value format {'question_type_id': [question_uid, question_uid]} """
         self.__structured_question_ids__ = value
 
     def append_questions_to_schema(self, schema, request):
