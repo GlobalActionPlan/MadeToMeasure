@@ -336,9 +336,13 @@ class SurveysView(BaseView):
         return self.response
         
     @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_surveysection.pt', permission=security.EDIT)
-    def reorder_values(self):
+    def reorder_surveysection(self):
         post = self.request.POST
-
+        
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+            
         if 'save' in post:
             controls = self.request.POST.items()
             
@@ -348,13 +352,21 @@ class SurveysView(BaseView):
                     sections.append(v)
                         
             self.context.order = sections
+            
+        form = Form(colander.Schema())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render()
 
         return self.response
         
     @view_config(name='reorder', context=ISurveySection, renderer='templates/reorder_questions.pt', permission=security.EDIT)
-    def reorder_values(self):
+    def reorder_questions(self):
         post = self.request.POST
-
+        
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+            
         if 'save' in post:
             controls = self.request.POST.items()
             
@@ -364,5 +376,9 @@ class SurveysView(BaseView):
                     questions.append(v)
                         
             self.context.set_order(questions)
+            
+        form = Form(colander.Schema())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render()
 
         return self.response
