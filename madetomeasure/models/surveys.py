@@ -1,5 +1,6 @@
 from decimal import Decimal
 from uuid import uuid4
+from copy import copy
 
 import colander
 import deform
@@ -246,7 +247,7 @@ class Survey(BaseFolder):
         trans_util = getUtility(IQuestionTranslations)
         
         # get available for survey
-        available_languages = self.get_available_languages()
+        available_languages = copy(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
