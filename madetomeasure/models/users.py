@@ -18,7 +18,6 @@ from pyramid.security import authenticated_userid
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
 from madetomeasure.models.base import BaseFolder
-from madetomeasure import security
 
 
 def get_sha_password(password):
@@ -58,6 +57,7 @@ class User(BaseFolder):
     
     @property
     def __acl__(self):
+        from madetomeasure import security
         request = get_current_request()
         userid = authenticated_userid(request)
         if userid == self.userid:
