@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="main_macro"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="MadeToMeasure">
+<body>
+
+<metal:head fill-slot="head">
+    <script type="text/javascript" src="${request.application_url}/deform/scripts/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#questions').sortable();
+        });
+    </script>
+</metal:head>
+
+<div metal:fill-slot="content">
+    <form method="post">
+        <ul id="questions">
+            <li tal:repeat="question_id context.question_ids">
+                <tal:define define="question context.question_object_from_id(question_id)">
+                    <input type="hidden" name="questions" value="${question.__name__}" />${question.get_title()}
+                </tal:define>
+            </li>
+        </ul>
+        <button name="save" type="submit" class="btnText submit" value="save"><span i18n:translate="">Save</span></button>
+    </form>
+</div>
+</body>
+</html>
+

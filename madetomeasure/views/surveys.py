@@ -335,19 +335,34 @@ class SurveysView(BaseView):
 
         return self.response
         
-    @view_config(name='reorder_surveysection', context=ISurvey, renderer='templates/reorder_surveysection.pt', permission=security.EDIT)
-    def reorder_surveysection(self):
+    @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_surveysection.pt', permission=security.EDIT)
+    def reorder_values(self):
         post = self.request.POST
 
         if 'save' in post:
             controls = self.request.POST.items()
             
-            order = 0
+            sections = []
             for (k, v) in controls:
                 if k == 'sections':
-                    section = self.context[v]
-                    if section:
-                        section.set_order(order)
-                        order = order + 1
+                    sections.append(v)
+                        
+            self.context.order = sections
+
+        return self.response
+        
+    @view_config(name='reorder', context=ISurveySection, renderer='templates/reorder_questions.pt', permission=security.EDIT)
+    def reorder_values(self):
+        post = self.request.POST
+
+        if 'save' in post:
+            controls = self.request.POST.items()
+            
+            questions = []
+            for (k, v) in controls:
+                if k == 'questions':
+                    questions.append(v)
+                        
+            self.context.set_order(questions)
 
         return self.response
