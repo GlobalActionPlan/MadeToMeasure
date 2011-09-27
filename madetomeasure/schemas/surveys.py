@@ -100,5 +100,5 @@ def deferred_select_language_widget(node, kw):
 
 class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
-                                          title=_("Chose language"),
+                                          title=_("Choose language"),
                                           widget=deferred_select_language_widget,)
