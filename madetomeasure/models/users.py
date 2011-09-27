@@ -11,6 +11,9 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
 from pyramid.interfaces import ISettings
+from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS, Authenticated, Everyone
+from pyramid.threadlocal import get_current_request
+from pyramid.security import authenticated_userid
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
@@ -51,6 +54,15 @@ class User(BaseFolder):
     content_type = 'User'
     display_name = _(u"User")
     allowed_contexts = ('Users',)
+    
+    @property
+    def __acl__(self):
+        from madetomeasure import security
+        request = get_current_request()
+        userid = authenticated_userid(request)
+        if userid == self.userid:
+            return [(Allow, Everyone, (security.VIEW, security.EDIT,)),]
+        raise AttributeError("Go fetch parents acl")
     
     @property
     def userid(self):

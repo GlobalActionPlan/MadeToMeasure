@@ -13,6 +13,7 @@ from deform.exception import ValidationFailure
 from zope.component import createObject
 from pyramid.i18n import get_locale_name
 from pyramid.location import lineage
+from pyramid.security import has_permission
 
 from madetomeasure.models.app import generate_slug
 from madetomeasure.models.app import get_users_dt_helper
@@ -20,6 +21,7 @@ from madetomeasure.interfaces import *
 from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.models import CONTENT_TYPES
+from madetomeasure import security
 
 
 BASE_VIEW_TEMPLATE = 'templates/view.pt'
@@ -127,23 +129,17 @@ class BaseView(object):
         
         return buttons
 
-    @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE)
-    @view_config(context=IOrganisation, renderer=BASE_VIEW_TEMPLATE)
+    @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=IOrganisation, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_listing_view(self):
         #FIXME: move when implemented
         return self.response
 
-    @view_config(context=IUser, renderer=BASE_VIEW_TEMPLATE)
-    def admin_view(self):
-        #FIXME: Should probably not exist at all :)
-        return self.response
-
-
-    @view_config(name="delete", renderer="templates/form.pt")
+    @view_config(name="delete", renderer="templates/form.pt", permission=security.DELETE)
     def delete_form(self):
         #FIXME: This is temporary!
         
@@ -171,13 +167,17 @@ class BaseView(object):
         """ Generic add view when accessors and mutators match get_ and set_ methods
             on the model.
         """
-        #FIXME: Check permissions
+        type_to_add = self.request.GET.get('content_type')
+
+        #Permission check
+        add_permission = "Add %s" % type_to_add
+        if not has_permission(add_permission, self.context, self.request):
+            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
 
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
         
-        type_to_add = self.request.GET.get('content_type')
         if type_to_add not in self.addable_types():
             raise ValueError("No content type called %s" % type_to_add)
 
@@ -217,16 +217,15 @@ class BaseView(object):
         return self.response
 
 
-    @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
         """ Generic edit view when accessors and mutators match get_ and set_ methods
             on the model.
         """
-        #FIXME: Check permissions
 
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)

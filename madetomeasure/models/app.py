@@ -25,6 +25,7 @@ def bootstrap_root():
     from madetomeasure.models.surveys import Surveys
     from madetomeasure.models.participants import Participants
     from madetomeasure.models.questions import Questions
+    from madetomeasure import security
 
     root = SiteRoot()
     root['users'] = Users()
@@ -33,9 +34,12 @@ def bootstrap_root():
     admin.set_password('admin')
     admin.set_title('Administrator')
     root['users']['admin'] = admin
+    #Add admin to group managers
+    root.add_groups('admin', [security.ROLE_ADMIN])
     
     root['participants'] = Participants()
     root['questions'] = Questions()
+    
     
     return root
 

@@ -80,13 +80,15 @@
 	                Global:
 	                <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
 	                <a href="${resource_url(root['questions'], request)}" i18n:translate="">Questions</a> |
-	                <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a>
+	                <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a> |
+	                <a href="${resource_url(root, request)}permissions" i18n:translate="">Permissions</a>
 				</div>
 
 				<div tal:condition="organisation|False" id="organisation">
 					<span tal:content="organisation.get_title()">Title</span>:
 	                <a href="${resource_url(organisation['surveys'], request)}" i18n:translate="">Surveys</a> |
-	                <a href="${resource_url(organisation['questions'], request)}" i18n:translate="">Questions</a>
+	                <a href="${resource_url(organisation['questions'], request)}" i18n:translate="">Questions</a> |
+	                <a href="${resource_url(organisation, request)}permissions" i18n:translate="">Permissions</a>
 				</div>
 				
             </div>
@@ -120,6 +122,14 @@
                     <a class="button translations"
                        href="${resource_url(context, request) + 'translations'}"
                        i18n:translate="">Translations</a> |
+                    <a class="button reorder"
+                       href="${resource_url(context, request) + 'reorder'}"
+                       i18n:translate="">Reorder sections</a> |
+                </tal:survey>
+                <tal:survey condition="context.content_type == 'SurveySection'">
+                    <a class="button reorder"
+                       href="${resource_url(context, request) + 'reorder'}"
+                       i18n:translate="">Reorder questions</a>
                 </tal:survey>
             </div>
 

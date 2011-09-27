@@ -1,5 +1,6 @@
 from decimal import Decimal
 from uuid import uuid4
+from copy import copy
 
 import colander
 import deform
@@ -43,23 +44,11 @@ class Survey(BaseFolder):
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
     
-    def get_invitation_emails(self):
-        return getattr(self, '__invitation_emails__', '')
-    
-    def set_invitation_emails(self, value):
-        self.__invitation_emails__ = value
-
     def get_from_address(self):
         return getattr(self, '__from_address__', '')
 
     def set_from_address(self, value):
         self.__from_address__ = value
-
-    def get_mail_message(self):
-        return getattr(self, '__mail_message__', '')
-
-    def set_mail_message(self, value):
-        self.__mail_message__ = value
 
     def get_finished_text(self):
         return getattr(self, '__finished_text__', '')
@@ -93,12 +82,6 @@ class Survey(BaseFolder):
 
     def set_time_zone(self, value):
         self.__time_zone__ = value
-
-    def _extract_emails(self):
-        results = set()
-        for email in self.get_invitation_emails().splitlines():
-            results.add(email.strip())
-        return results
     
     @property
     def tickets(self):
@@ -114,18 +97,14 @@ class Survey(BaseFolder):
         self.tickets[ticket_uid] = email
         return ticket_uid
 
-    def send_invitations(self, request, text=None):
+    def send_invitations(self, request, emails=(), message=None):
         """ Send out invitations to any emails stored as invitation_emails.
             Creates a ticket that a survey participant will "claim" to start the survey.
             Also removes emails from invitation pool.
         """
-        for email in self._extract_emails():
+        for email in emails:
             invitation_uid = self.create_ticket(email)
-            
-            message = u"A message" #FIXME
             self.send_invitation_email(request, email, invitation_uid, message)
-            
-        self.set_invitation_emails('') #Blank out emails, since we've already sent them
         
     def send_invitation_email(self, request, email, uid, message):
         mailer = get_mailer(request)
@@ -269,15 +248,15 @@ class Survey(BaseFolder):
         trans_util = getUtility(IQuestionTranslations)
         
         # get available for survey
-        available_languages = self.get_available_languages()
+        available_languages = copy(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
             
         languages = {}
         for language in available_languages:
+            questions = []
             for section in self.values():
-                questions = []
                 for name in section.question_ids:
                     question = section.question_object_from_id(name)
                     if not language in question.get_question_text():
@@ -310,10 +289,31 @@ class SurveySection(BaseFolder):
     
     @property
     def question_ids(self):
-        results = set()
+        uids = set()
         for v in self.get_structured_question_ids().values():
-            results.update(v)
-        return results
+            uids.update(v)
+        
+        order = self.get_order()
+        for v in uids:
+            if not v in order:
+                order.append(v)
+        
+        return order
+        
+    def get_order(self):
+        return getattr(self, '__order__', [])
+            
+    def set_order(self, value):
+        uids = set()
+        for v in self.get_structured_question_ids().values():
+            uids.update(v)
+            
+        order = []
+        for v in value:
+            if v in uids:
+                order.append(v)
+        
+        self.__order__ = order
 
     def get_question_type(self):
         return getattr(self, '__question_type__', '')
@@ -338,6 +338,7 @@ class SurveySection(BaseFolder):
         return getattr(self, '__structured_question_ids__', {})
 
     def set_structured_question_ids(self, value):
+        """ value format {'question_type_id': [question_uid, question_uid]} """
         self.__structured_question_ids__ = value
 
     def append_questions_to_schema(self, schema, request):

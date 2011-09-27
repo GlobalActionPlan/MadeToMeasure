@@ -15,9 +15,8 @@ def translator(term):
     return get_localizer(get_current_request()).translate(term)
 
 #Activate code below if we override deform widgets in views/templates/widgets
-#CURRENT_PATH = resource_filename('madetomeasure', '')
-#search_path = (os.path.join(CURRENT_PATH, 'views', 'templates', 'widgets'),
-#               resource_filename('deform', 'templates'))
+CURRENT_PATH = resource_filename('madetomeasure', '')
+search_path = (os.path.join(CURRENT_PATH, 'views', 'templates', 'widgets'),
+               resource_filename('deform', 'templates'))
 
-search_path = (resource_filename('deform', 'templates'))
 Form.set_zpt_renderer(search_path, translator=translator)

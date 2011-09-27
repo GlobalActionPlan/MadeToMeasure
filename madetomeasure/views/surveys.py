@@ -19,14 +19,14 @@ from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.exceptions import SurveyUnavailableError
+from madetomeasure import security
 
 
 class SurveysView(BaseView):
 
-    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_SURVEY)
     def invitation_emails_view(self):
         """ Edit email addresses for who should be part of a survey. """
-        #FIXME: Check permissions
         
         closed_survey = self._closed_survey(self.context)
         
@@ -52,23 +52,17 @@ class SurveysView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
+            emails = set()
+            for email in appstruct['emails'].splitlines():
+                emails.add(email.strip())
+            message = appstruct['message']
             
-            self.context.send_invitations(self.request)
+            self.context.send_invitations(self.request, emails, message)
                 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-
-        self.response['form'] = form.render(appstruct)
+        self.response['form'] = form.render()
         return self.response
 
     def _closed_survey(self, obj):
@@ -79,10 +73,9 @@ class SurveysView(BaseView):
             return False
         return self.survey_dt.utcnow() > end_time
 
-    @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt')
+    @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt', permission=security.MANAGE_SURVEY)
     def participants_view(self):
         """ Overview of participants. """
-        #FIXME: Check permissions
         
         self.response['participants'] = participants = self.context.get_participants_data()
         not_finished = [x for x in participants if x['finished']<100]
@@ -278,7 +271,7 @@ class SurveysView(BaseView):
         self.response['text'] = self.context.get_finished_text()
         return self.response
 
-    @view_config(name="results", context=ISurvey, renderer='templates/results.pt')
+    @view_config(name="results", context=ISurvey, renderer='templates/results.pt', permission=security.VIEW)
     def results_view(self):
         """ Results screen
         """
@@ -302,7 +295,7 @@ class SurveysView(BaseView):
         self.response['get_questions_for_section'] = _get_questions
         return self.response
         
-    @view_config(context=ISurveySection, renderer='templates/survey_form.pt')
+    @view_config(context=ISurveySection, renderer='templates/survey_form.pt', permission=security.VIEW)
     def show_dummy_form_view(self):
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema, self.request)
@@ -313,14 +306,14 @@ class SurveysView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
         
-    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt')
+    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt', permission=security.VIEW)
     def translations(self):
         """ Shows the amount of translations
         """
         self.response['languages'] = self.context.untranslated_languages()
         return self.response
 
-    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt')
+    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.VIEW)
     def survey_admin_view(self):
         start_time = self.context.get_start_time()
         end_time = self.context.get_end_time()
@@ -339,5 +332,53 @@ class SurveysView(BaseView):
         except SurveyUnavailableError as e:
             msg = self._survey_error_msg(e)
             self.response['survey_state_msg'] = msg
+
+        return self.response
+        
+    @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_surveysection.pt', permission=security.EDIT)
+    def reorder_surveysection(self):
+        post = self.request.POST
+        
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+            
+        if 'save' in post:
+            controls = self.request.POST.items()
+            
+            sections = []
+            for (k, v) in controls:
+                if k == 'sections':
+                    sections.append(v)
+                        
+            self.context.order = sections
+            
+        form = Form(colander.Schema())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render()
+
+        return self.response
+        
+    @view_config(name='reorder', context=ISurveySection, renderer='templates/reorder_questions.pt', permission=security.EDIT)
+    def reorder_questions(self):
+        post = self.request.POST
+        
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+            
+        if 'save' in post:
+            controls = self.request.POST.items()
+            
+            questions = []
+            for (k, v) in controls:
+                if k == 'questions':
+                    questions.append(v)
+                        
+            self.context.set_order(questions)
+            
+        form = Form(colander.Schema())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render()
 
         return self.response

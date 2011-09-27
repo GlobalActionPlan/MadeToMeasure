@@ -1,9 +1,12 @@
-from zope.interface import implements
 from pyramid.renderers import render
+from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
+from pyramid.security import DENY_ALL
+from zope.interface import implements
 
 from madetomeasure.models.base import BaseFolder
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure import security
 
 
 class Organisation(BaseFolder):
@@ -11,6 +14,11 @@ class Organisation(BaseFolder):
     content_type = 'Organisation'
     display_name = _(u"Organisation")
     allowed_contexts = ('SiteRoot',)
+    
+    __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+               (Allow, security.ROLE_ORGANISATION_MANAGER, ALL_PERMISSIONS),
+               DENY_ALL,
+              ]
     
     def __init__(self):
         """ Bootstrap an organisation """

@@ -2,9 +2,10 @@ from repoze.folder import Folder
 from zope.interface import implements
 
 from madetomeasure.interfaces import IBaseFolder
+from madetomeasure.models.security_aware import SecurityAware
 
 
-class BaseFolder(Folder):
+class BaseFolder(Folder, SecurityAware):
     __doc__ = IBaseFolder.__doc__
     implements(IBaseFolder)
 

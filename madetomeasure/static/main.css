@@ -134,13 +134,13 @@ button {
 }
 
 /* Deform tweaks */
-#deform label {
+.deform label {
     margin: 1em 0 0.5em 0;
 }
-#deform > fieldset > ul > li {
+.deform > fieldset > ul > li {
     border-top: solid 1px #ccc;
 }
-#deform li.buttons {
+.deform li.buttons {
 	padding-top: 1em;
 	text-align: center;
 }
@@ -164,4 +164,11 @@ button:hover {
 textarea,
 input {
 	border: 2px solid #ccc;
+}
+
+/* reorder */
+ul.ui-sortable li {
+    cursor: pointer;
+    border: 1px solid #CCC;
+    background-color: white;
 }
