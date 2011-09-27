@@ -105,7 +105,7 @@ class QuestionsView(BaseView):
     def admin_listing_view(self):
         
         types = {}
-        for (name, util) in self.request.registy.getUtilitiesFor(IQuestionNode):
+        for (name, util) in self.request.registry.getUtilitiesFor(IQuestionNode):
             types[name] = {}
             types[name]['name'] = getattr(util, 'type_title', '')
             #FIXME: Use for local questions too

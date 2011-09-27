@@ -29,6 +29,7 @@ class AddQuestionSchema(colander.Schema):
                                         widget=deferred_question_type_widget,)
     title = colander.SchemaNode(colander.String(),
                                 title=_(u"Initial question text, should be in English"),
+                                widget=deform.widget.TextInputWidget(size=80),
                                 description=_(u"Note that you can't change the text later, only its translations"),)
     question_text = question_text_node()
 
