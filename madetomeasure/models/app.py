@@ -86,7 +86,7 @@ def select_language(context, request=None):
     """
     survey = find_interface(context, ISurvey)
     if survey is None:
-        ValueError("Can't find a Survey object in context traversal path. context was: %s" % context)
+        raise ValueError("Can't find a Survey object in context traversal path. context was: %s" % context)
     
     langs = survey.get_available_languages()
     #Only one language?
