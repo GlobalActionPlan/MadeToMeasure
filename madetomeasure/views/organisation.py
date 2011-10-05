@@ -57,7 +57,9 @@ class OrganisationView(BaseView):
             
             for (lang, value) in appstruct['question_text'].items():
                 if value.strip():
-                    self.context.set_invariant(question_uid, lang, value)
+                    if not (self.trans_util.default_locale_name == lang and question.get_title() == value.strip()):
+                        self.context.set_invariant(question_uid, lang, value)
+            print dict(self.context.invariants)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
@@ -68,14 +70,16 @@ class OrganisationView(BaseView):
             accessor = getattr(question, "get_%s" % field.name, marker)
             if accessor != marker:
                 appstruct[field.name] = accessor()
-        # add default locale
+        # add title for default locale
+        if not appstruct['question_text']:
+            appstruct['question_text'] = {}
         appstruct['question_text'][self.trans_util.default_locale_name] = question.get_title()
 
+
         # load local invariants
-        if 'question_text' in appstruct:
-            for lang in appstruct['question_text']:
-                if question_uid in self.context.invariants and lang in self.context.invariants[question_uid]:
-                    appstruct['question_text'][lang] = self.context.invariants[question_uid][lang]
-                    
+        for lang in self.trans_util.available_languages:
+            if question_uid in self.context.invariants and lang in self.context.invariants[question_uid]:
+                appstruct['question_text'][lang] = self.context.invariants[question_uid][lang]
+        
         self.response['form'] = form.render(appstruct)
         return self.response
