@@ -92,7 +92,7 @@ class QuestionTests(unittest.TestCase):
 
         self.assertEqual(obj.get_title(), u"Hello world")
         self.assertEqual(obj.get_title(lang='en'), u"Hello world")
-        self.assertEqual(obj.get_title(lang='sv'), u'')
+        self.assertEqual(obj.get_title(lang='sv'), u"Hello world")
 
         org.set_invariant(obj.__name__, 'sv', u'Hej världen')
         self.assertNotEqual(obj.get_title(lang='sv', context=org), u"Hello world")
