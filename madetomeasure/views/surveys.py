@@ -171,7 +171,7 @@ class SurveysView(BaseView):
         if selected_language or 'lang' in self.request.session and self.request.session['lang'] in available_languages:
             if selected_language:
                 self.request.session['lang'] = selected_language
-
+                
             participant_uid = self.context.start_survey(self.request)
             
             #All good so far, let's redirect to the first section of the survey

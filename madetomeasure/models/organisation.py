@@ -1,3 +1,4 @@
+from BTrees.OOBTree import OOBTree
 from pyramid.renderers import render
 from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
@@ -42,3 +43,22 @@ class Organisation(BaseFolder):
 
     def set_hex_color(self, value):
         self.__hex_color__ = value
+        
+    @property
+    def invariants(self):
+        if not hasattr(self, '__invariants__'):
+            self.__invariants__ = OOBTree()
+        return self.__invariants__
+        
+    def get_invariant(self, question_uid, lang):
+        """ Returns invariant of question for language if there is one """
+        if question_uid in self.invariants:
+            if lang in self.invariants[question_uid]:
+                return self.invariants[question_uid][lang]
+            
+        return None
+        
+    def set_invariant(self, question_uid, lang, value):
+        if not question_uid in self.invariants:
+            self.invariants[question_uid] = {}
+        self.invariants[question_uid][lang] = value

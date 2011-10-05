@@ -132,8 +132,8 @@ class QuestionsView(BaseView):
         lang = self.request.GET['lang']
 
         schema = CONTENT_SCHEMAS["Translate%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,)
         self.trans_util.add_translation_schema(schema['question_text'], lang)
+        schema = schema.bind(context = self.context,)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()

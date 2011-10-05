@@ -1,6 +1,8 @@
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 from zope.component import getUtility
+from pyramid.threadlocal import get_current_request
+from pyramid.traversal import find_interface
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import *
@@ -40,7 +42,21 @@ class Question(BaseFolder):
         self.__question_text__ = OOBTree()
         super(Question, self).__init__()
         
-    def get_title(self, lang=None):
+    def get_title(self, lang=None, context=None):
+        # if context is supplied find organisation and look if there is 
+        # a invariant for the question for lang
+        if context:
+            if lang:
+                local_lang = lang
+            else:
+                request = get_current_request()
+                trans_util = request.registry.getUtility(IQuestionTranslations)
+                local_lang = trans_util.default_locale_name
+            organisation = find_interface(context, IOrganisation)
+            if organisation:
+                invariant = organisation.get_invariant(self.__name__, local_lang)
+                if invariant:
+                    return invariant
         if lang:
             languages = self.get_question_text()
             if lang in languages:
@@ -78,10 +94,10 @@ class Question(BaseFolder):
     def set_question_type(self, value):
         self.__question_type__ = value
 
-    def question_schema_node(self, name, lang=None):
+    def question_schema_node(self, name, lang=None, context=None):
         #If the correct question type isn't set, this might raise a ComponentLookupError
         node_util = getUtility(IQuestionNode, name=self.get_question_type())
-        return node_util.node(name, title=self.get_title(lang))
+        return node_util.node(name, title=self.get_title(lang, context=context))
 
     def render_result(self, request, data):
         if not data:

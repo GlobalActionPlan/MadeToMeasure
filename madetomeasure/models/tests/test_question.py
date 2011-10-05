@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 
 import colander
@@ -70,3 +72,32 @@ class QuestionTests(unittest.TestCase):
         
         result = obj.render_result(request, data)
         self.assertTrue('I wrote something' in result)
+        
+    def test_question_invariant(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+        
+        from madetomeasure.interfaces import IQuestionTranslations
+        from madetomeasure.models.translations import QuestionTranslations
+        settings = dict(default_locale_name='en',
+                        available_languages='en sv de ru',)
+        trans_util = QuestionTranslations(settings)
+        self.config.registry.registerUtility(trans_util, IQuestionTranslations)
+        
+        from madetomeasure.models.organisation import Organisation
+        org = Organisation()
+
+        obj = self._make_obj()
+        obj.set_title(u"Hello world")
+
+        self.assertEqual(obj.get_title(), u"Hello world")
+        self.assertEqual(obj.get_title(lang='en'), u"Hello world")
+        self.assertEqual(obj.get_title(lang='sv'), u'')
+
+        org.set_invariant(obj.__name__, 'sv', u'Hej världen')
+        self.assertNotEqual(obj.get_title(lang='sv', context=org), u"Hello world")
+        self.assertEqual(obj.get_title(lang='sv', context=org), u"Hej världen")
+        
+        org.set_invariant(obj.__name__, 'en', u'Gday world')
+        self.assertNotEqual(obj.get_title(context=org), u"Hello world")
+        self.assertEqual(obj.get_title(context=org), u"Gday world")

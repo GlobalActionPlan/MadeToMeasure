@@ -95,7 +95,7 @@ def deferred_select_language_widget(node, kw):
     for (lang, name) in sort:
         name = "%s - %s (%s)" % (util.title_for_code_default(lang), util.title_for_code(lang), lang)
         choices.append((lang, name))
-    return deform.widget.CheckboxChoiceWidget(values=choices)
+    return deform.widget.RadioChoiceWidget(values=choices)
 
 
 class SurveyLangugageSchema(colander.Schema):

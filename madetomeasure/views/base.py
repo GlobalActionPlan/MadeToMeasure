@@ -207,7 +207,7 @@ class BaseView(object):
                 mutator = getattr(obj, 'set_%s' % k)
                 mutator(v)
             
-            name = generate_slug(self.context, obj.get_title())
+            name = generate_slug(self.context, appstruct['title'])
             self.context[name] = obj
     
             url = resource_url(self.context, self.request)

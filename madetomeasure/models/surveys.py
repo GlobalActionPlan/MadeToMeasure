@@ -350,7 +350,7 @@ class SurveySection(BaseFolder):
  
         for id in self.question_ids:
             question = self.question_object_from_id(id)
-            schema.add(question.question_schema_node(id, lang=lang))
+            schema.add(question.question_schema_node(id, lang=lang, context=self))
 
     @property
     def responses(self):
