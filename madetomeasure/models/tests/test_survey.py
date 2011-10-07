@@ -39,6 +39,12 @@ class SurveyTests(unittest.TestCase):
         email_field = "noreply@betahaus.net"
         obj.set_from_address(email_field)
         self.assertEqual(obj.get_from_address(), email_field)
+
+    def test_welcome_text(self):
+        obj = self._make_obj()
+        value = "Let's start, mmmkey?"
+        obj.set_welcome_text(value)
+        self.assertEqual(obj.get_welcome_text(), value)
     
     def test_finished_text(self):
         obj = self._make_obj()

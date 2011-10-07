@@ -171,18 +171,43 @@ class SurveysView(BaseView):
         if selected_language or 'lang' in self.request.session and self.request.session['lang'] in available_languages:
             if selected_language:
                 self.request.session['lang'] = selected_language
-                
+            
             participant_uid = self.context.start_survey(self.request)
             
-            #All good so far, let's redirect to the first section of the survey
+            #All good so far, let's redirect to welcome screen of the survey
+            url = resource_url(self.context, self.request)
+            url += "welcome?uid=%s" % participant_uid
+            return HTTPFound(location=url)
+            
+        self.response['form'] = form.render()
+        
+        return self.response
+            
+    @view_config(name="welcome", context=ISurvey, renderer='templates/participant_welcome.pt')
+    def welcome(self):
+        self.context.check_open()
+
+        participant_uid = self.request.params.get('uid')
+        if not participant_uid in self.context.tickets:
+            raise Forbidden("Invalid ticket")
+
+        # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
+        welcome_text = self.context.get_welcome_text()
+        post = self.request.POST
+        if not welcome_text or 'next' in post:
+            # url for the first section
             section_id = self.context.order[0]
             url = resource_url(self.context[section_id], self.request)
             url += "do?uid=%s" % participant_uid
             return HTTPFound(location=url)
-
+        
+        form = Form(colander.Schema(), buttons=(self.buttons['next'],))
+        self.response['form_resources'] = form.get_widget_resources()
         self.response['form'] = form.render()
+        self.response['text'] = welcome_text
         
         return self.response
+
 
     def _next_section(self):
         """ Return next section object if there is one.
@@ -353,6 +378,8 @@ class SurveysView(BaseView):
                         
             self.context.order = sections
             
+            self.add_flash_message(_('Order updated'))
+            
         form = Form(colander.Schema())
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()
@@ -376,6 +403,8 @@ class SurveysView(BaseView):
                     questions.append(v)
                         
             self.context.set_order(questions)
+            
+            self.add_flash_message(_('Order updated'))
             
         form = Form(colander.Schema())
         self.response['form_resources'] = form.get_widget_resources()

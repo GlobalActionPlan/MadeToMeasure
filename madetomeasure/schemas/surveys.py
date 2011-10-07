@@ -52,6 +52,10 @@ class SurveySchema(colander.Schema):
     )
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
+    welcome_text = colander.SchemaNode(colander.String(),
+                                        widget=deform.widget.RichTextWidget(),
+                                        default="",
+                                        missing="",)
     finished_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.RichTextWidget(),
                                         default=_(u"Thanks a lot for filling out the survey."),)
