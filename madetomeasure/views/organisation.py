@@ -24,6 +24,15 @@ from madetomeasure import security
 
 class OrganisationView(BaseView):
 
+    @view_config(name='invariants', context=IOrganisation, renderer='templates/organisation_invariant.pt', permission=security.EDIT)
+    def invariants(self):
+        root = find_root(self.context)
+        
+        self.response['url'] = resource_url(self.context, self.request) + 'invariant?question_uid='
+        self.response['questions'] = root['questions']
+        
+        return self.response
+
     @view_config(name='invariant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def invariant(self):
         root = find_root(self.context)

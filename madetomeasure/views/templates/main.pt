@@ -109,6 +109,11 @@
                     </tal:iterate>
                 </tal:add>
                 <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a> |
+                <tal:organisation condition="context.content_type == 'Organisation'">
+                   <a class="button invariants"
+                       href="${resource_url(context, request) + 'invariants'}"
+                       i18n:translate="">Invariants</a> |
+                </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a class="button invitaions" 
                        href="${resource_url(context, request) + 'invitation_emails'}"
