@@ -191,9 +191,14 @@ class SurveysView(BaseView):
         if not participant_uid in self.context.tickets:
             raise Forbidden("Invalid ticket")
 
-        # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
-        welcome_text = self.context.get_welcome_text()
+        lang = None
+        if 'lang' in self.request.session:
+            lang = self.request.session['lang']
+
+        welcome_text = self.context.get_welcome_text(lang=lang)
         post = self.request.POST
+
+        # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
         if not welcome_text or 'next' in post:
             # url for the first section
             section_id = self.context.order[0]
@@ -293,7 +298,12 @@ class SurveysView(BaseView):
     def finished_survey_view(self):
         """ The thank-you screen
         """
-        self.response['text'] = self.context.get_finished_text()
+
+        lang = None
+        if 'lang' in self.request.session:
+            lang = self.request.session['lang']
+
+        self.response['text'] = self.context.get_finished_text(lang=lang)
         return self.response
 
     @view_config(name="results", context=ISurvey, renderer='templates/results.pt', permission=security.VIEW)
@@ -410,4 +420,42 @@ class SurveysView(BaseView):
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()
 
+        return self.response
+        
+    @view_config(name='translate', context=ISurvey, renderer='templates/survey_translate.pt', permission=security.TRANSLATE)
+    def translate_view(self):
+
+        lang = self.request.GET['lang']
+
+        schema = CONTENT_SCHEMAS["Translate%s" % self.context.content_type]()
+        schema = schema.bind(context = self.context,)
+        
+        form = Form(schema, buttons=(self.buttons['cancel'], self.buttons['save'],))
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        if 'save' in self.request.POST:
+            controls = self.request.POST.items()
+
+            try:
+                #appstruct is deforms convention. It will be the submitted data in a dict.
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            self.context.set_welcome_text(appstruct['welcome_text'], lang)
+            self.context.set_finished_text(appstruct['finished_text'], lang)
+            
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        appstruct = {}
+        appstruct['welcome_text'] = self.context.get_welcome_text(lang=lang, default=False)
+        appstruct['finished_text'] = self.context.get_finished_text(lang=lang, default=False)
+
+        self.response['form'] = form.render(appstruct)
+        
+        self.response['welcome_text'] = self.context.get_welcome_text()
+        self.response['finished_text'] = self.context.get_finished_text()
+        
         return self.response

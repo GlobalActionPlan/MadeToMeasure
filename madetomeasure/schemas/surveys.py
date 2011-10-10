@@ -106,3 +106,15 @@ class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
                                           title=_("Choose language"),
                                           widget=deferred_select_language_widget,)
+                                          
+
+
+class SurveyTranslate(colander.Schema):
+    welcome_text = colander.SchemaNode(colander.String(),
+                                        widget=deform.widget.RichTextWidget(),
+                                        default="",
+                                        missing="",)
+    finished_text = colander.SchemaNode(colander.String(),
+                                        widget=deform.widget.RichTextWidget(),
+                                        default="",
+                                        missing="",)

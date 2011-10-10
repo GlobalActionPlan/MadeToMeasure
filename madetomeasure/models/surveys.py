@@ -44,6 +44,25 @@ class Survey(BaseFolder):
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
     
+    @property
+    def translations(self):
+        if not hasattr(self, '__translations__'):
+            self.__translations__ = OOBTree()
+        return self.__translations__
+        
+    def set_translation(self, type, lang, value):
+        if type not in self.translations:
+            self.translations[type] = OOBTree()
+            
+        self.translations[type][lang] = value
+        
+    def get_translation(self, type, lang):
+        if type not in self.translations:
+            return ""
+        if lang not in self.translations[type]:
+            return ""
+        return self.translations[type][lang]
+
     def get_from_address(self):
         return getattr(self, '__from_address__', '')
 
@@ -56,16 +75,42 @@ class Survey(BaseFolder):
     def get_available_languages(self):
         return getattr(self, '__available_languages__', ())
 
-    def get_welcome_text(self):
+    def get_welcome_text(self, lang=None, default=True):
+        text = None
+        if lang:
+            text = self.get_translation('__welcome_text__', lang)
+        
+        if text:
+            return text
+            
+        if not default:
+            return ""
+            
         return getattr(self, '__welcome_text__', '')
 
-    def set_welcome_text(self, value):
+    def set_welcome_text(self, value, lang=None):
+        if lang:
+            self.set_translation('__welcome_text__', lang, value)
+        
         self.__welcome_text__ = value
 
-    def get_finished_text(self):
+    def get_finished_text(self, lang=None, default=False):
+        text = None
+        if lang:
+            text = self.get_translation('__finished_text__', lang)
+        
+        if text:
+            return text
+            
+        if not default:
+            return ""
+            
         return getattr(self, '__finished_text__', '')
         
-    def set_finished_text(self, value):
+    def set_finished_text(self, value, lang=None):
+        if lang:
+            self.set_translation('__finished_text__', lang, value)
+        
         self.__finished_text__ = value
 
     def get_start_time(self):
