@@ -345,6 +345,8 @@ class SurveysView(BaseView):
     def translations(self):
         """ Shows the amount of translations
         """
+        self.response['context'] = self.context
+        self.response['texts'] = self.context.untranslated_texts()
         self.response['languages'] = self.context.untranslated_languages()
         return self.response
 

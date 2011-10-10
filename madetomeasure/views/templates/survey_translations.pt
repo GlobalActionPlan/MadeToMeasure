@@ -9,9 +9,17 @@
 
 <div metal:fill-slot="content">
 
+    <tal:texts condition="texts">
+        <h3 i18n:translate="">The following languages have untranslated welcome and/or finished message</h3>
+        
+        <tal:iterate repeat="item texts.items()">
+        	<h4 tal:content="item[1]">Language</h4>
+	        <a tal:define="text_translate_url resource_url(context, request)+'translate?lang='+item[0]" href="${text_translate_url}" tal:content="text_translate_url"></a>
+        </tal:iterate>
+    </tal:texts>
+
     <tal:languages condition="languages">
         <h3 i18n:translate="">The following languages have untranslated questions</h3>
-
         <tal:iterate repeat="item languages.items()">
         	<h4 tal:content="item[1]['name']">Language</h4>
 			<ul>
