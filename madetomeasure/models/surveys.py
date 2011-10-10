@@ -94,7 +94,7 @@ class Survey(BaseFolder):
         
         self.__welcome_text__ = value
 
-    def get_finished_text(self, lang=None, default=False):
+    def get_finished_text(self, lang=None, default=True):
         text = None
         if lang:
             text = self.get_translation('__finished_text__', lang)
