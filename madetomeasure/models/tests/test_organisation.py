@@ -71,3 +71,17 @@ class OrganisationPermissionTests(unittest.TestCase):
         # ADD_SURVEY_SECTION
         self.assertEqual(self.pap(obj, security.ADD_SURVEY_SECTION), admin | organisation_manager)
 
+    def test_invariants(self):
+        obj = self._make_obj()
+        self.assertEqual(len(obj.invariants), 0)
+        
+        question_uid = 'q1'
+        lang = 'sv'
+        value = 'Testing invariants'
+        
+        obj.set_invariant(question_uid, lang, value)
+        self.assertEqual(obj.get_invariant(question_uid, lang), value)
+        
+        self.assertEqual(obj.get_invariant('q2', lang), None)
+        self.assertEqual(obj.get_invariant(question_uid, 'ru'), None)
+        self.assertEqual(obj.get_invariant('q2', 'ru'), None)
