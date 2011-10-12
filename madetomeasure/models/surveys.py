@@ -457,4 +457,3 @@ class SurveySection(BaseFolder):
                     results[k] = []
                 results[k].append(v)
         return results
-

@@ -1,3 +1,5 @@
+import csv
+import StringIO
 from uuid import uuid4
 
 from deform import Form
@@ -9,6 +11,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from pyramid.traversal import find_root
 from pyramid.exceptions import Forbidden
+from pyramid.response import Response
 from zope.component import getUtility
 
 from madetomeasure.interfaces import *
@@ -461,3 +464,47 @@ class SurveysView(BaseView):
         self.response['finished_text'] = self.context.get_finished_text()
         
         return self.response
+        
+    @view_config(name='export.csv', context=ISurvey, permission=security.VIEW)
+    def export(self):
+        """ Results screen
+        """
+        output = StringIO.StringIO()
+        writer = csv.writer(output)
+
+        writer.writerow([self.context.get_title()])
+
+        def _get_questions(section):
+            results = {}
+            for name in section.question_ids:
+                question = section.question_object_from_id(name)
+                if question.get_question_type() not in results:
+                    results[question.get_question_type()] = {}
+                    results[question.get_question_type()]['obj'] = getUtility(IQuestionNode, name=question.get_question_type())
+                    results[question.get_question_type()]['questions'] = []
+
+                results[question.get_question_type()]['questions'].append(question)
+
+            return results
+
+        for section in self.context.values():
+            writer.writerow(['Section: %s' % section.get_title()])
+
+            for qtype in _get_questions(section).values():
+                writer.writerow(qtype['obj'].csv_header())
+                
+                for question in qtype['questions']:
+                    title = question.get_title()
+                    for qresult in question.csv_export(section.question_format_results().get(question.__name__)):
+                        qrow = [title]
+                        qrow.extend(qresult)
+                        writer.writerow(qrow)
+                        title = ""
+                    
+        contents = output.getvalue()
+
+        output.close()
+        
+        response = Response(content_type='text/csv',
+                            body=contents)
+        return response

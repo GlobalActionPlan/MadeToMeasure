@@ -75,6 +75,16 @@ class BasicQuestionNode(object):
     def render_result(self, request, data):
         response = {'data':data,}
         return render('../views/templates/results/basic.pt', response, request=request)
+        
+    def csv_header(self):
+        return [self.type_title]
+        
+    def csv_export(self, data):
+        response = []
+        for reply in data:
+            response.append(['', reply.encode('utf-8')])
+        
+        return response
 
 
 class ChoiceQuestionNode(BasicQuestionNode):
@@ -94,6 +104,32 @@ class ChoiceQuestionNode(BasicQuestionNode):
         response['occurences'] = self.count_occurences(data)
         response['choices'] = self.choice_values()
         return render('../views/templates/results/choice.pt', response, request=request)
+        
+    def csv_header(self):
+        response = []
+        response.append(self.type_title)
+        response.append(_(u"Total"))
+        for choice in self.widget.values:
+            response.append(choice[1])
+        
+        return response
+        
+    def csv_export(self, data):
+        response = []
+        choices = self.choice_values()
+        occurences = []
+        if data:
+            occurences = self.count_occurences(data)
+        result = []
+        for choice in choices:
+            if choice in occurences:
+                result.append(occurences[choice])
+            else:
+                result.append(0)
+        response.append(sum(result))
+        response.extend(result)
+
+        return [response]
 
 
 def includeme(config):
