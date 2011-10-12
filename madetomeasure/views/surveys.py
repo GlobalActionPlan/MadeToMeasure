@@ -267,7 +267,7 @@ class SurveysView(BaseView):
         self.response['form_resources'] = form.get_widget_resources()
 
         post = self.request.POST
-        if 'next' in post or 'previous' in post:
+        if 'next' in post:
             controls = self.request.POST.items()
 
             try:
@@ -278,17 +278,18 @@ class SurveysView(BaseView):
                 return self.response
             
             self.context.update_question_responses(participant_uid, appstruct)
-            
-            if 'next' in post:
-                if next_section:
-                    url = resource_url(next_section, self.request)
-                    url += "do?uid=%s" % participant_uid
-                else:
-                    url = resource_url(self.context.__parent__, self.request)
-                    url += "finished"
-            if 'previous' in post:
-                url = resource_url(previous_section, self.request)
+        
+            if next_section:
+                url = resource_url(next_section, self.request)
                 url += "do?uid=%s" % participant_uid
+            else:
+                url = resource_url(self.context.__parent__, self.request)
+                url += "finished"
+            return HTTPFound(location=url)
+
+        if 'previous' in post:
+            url = resource_url(previous_section, self.request)
+            url += "do?uid=%s" % participant_uid
             return HTTPFound(location=url)
             
         appstruct = self.context.response_for_uid(participant_uid)

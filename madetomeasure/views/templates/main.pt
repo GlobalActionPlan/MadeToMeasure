@@ -47,7 +47,16 @@
                 tal:attributes="src string:/deform/${js_file}"></script>
         </tal:js>
         <script type="text/javascript">
-            deform.load()
+            deform.load();
+        </script>
+        <script type="text/javascript">
+            /* warn when user click previous */
+            $(document).ready(function() {
+                $("#deformprevious").live('click', function(event) {
+                    if(!confirm("${confirm_previous}"))
+                        event.preventDefault();
+                });
+            });
         </script>
     </tal:deform>
 
