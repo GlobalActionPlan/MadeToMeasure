@@ -472,7 +472,7 @@ class SurveysView(BaseView):
         output = StringIO.StringIO()
         writer = csv.writer(output)
 
-        writer.writerow([self.context.get_title()])
+        writer.writerow([self.context.get_title().encode('utf-8')])
 
         def _get_questions(section):
             results = {}
@@ -488,13 +488,13 @@ class SurveysView(BaseView):
             return results
 
         for section in self.context.values():
-            writer.writerow(['Section: %s' % section.get_title()])
+            writer.writerow(['Section: %s' % section.get_title().encode('utf-8')])
 
             for qtype in _get_questions(section).values():
                 writer.writerow(qtype['obj'].csv_header())
                 
                 for question in qtype['questions']:
-                    title = question.get_title()
+                    title = question.get_title().encode('utf-8')
                     for qresult in question.csv_export(section.question_format_results().get(question.__name__)):
                         qrow = [title]
                         qrow.extend(qresult)

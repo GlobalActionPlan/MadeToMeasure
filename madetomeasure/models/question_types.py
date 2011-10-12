@@ -77,7 +77,7 @@ class BasicQuestionNode(object):
         return render('../views/templates/results/basic.pt', response, request=request)
         
     def csv_header(self):
-        return [self.type_title]
+        return [self.type_title.encode('utf-8')]
         
     def csv_export(self, data):
         response = []
@@ -107,10 +107,10 @@ class ChoiceQuestionNode(BasicQuestionNode):
         
     def csv_header(self):
         response = []
-        response.append(self.type_title)
+        response.append(self.type_title.encode('utf-8'))
         response.append(_(u"Total"))
         for choice in self.widget.values:
-            response.append(choice[1])
+            response.append(choice[1].encode('utf-8'))
         
         return response
         
