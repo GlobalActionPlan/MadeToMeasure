@@ -21,9 +21,9 @@ importance_choices_widget = deform.widget.RadioChoiceWidget(values=importance_ch
 
 frequency_scale = \
     (('never', _(u'(almost) never')),
-     ('sometimes', _(u'sometimes yes / sometimes no')),
+     ('sometimes', _(u'sometimes')),
      ('always', _(u'(almost) always')),
-     ('n_a', _(u'not applicable (n.a.)')),)
+     ('n_a', _(u'not applicable')),)
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
