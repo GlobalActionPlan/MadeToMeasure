@@ -27,11 +27,20 @@ frequency_scale = \
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
-yes_no_choices = (('yes', _(u"Yes")), ('no', _(u"No")))
+yes_no_choices = (('yes', _(u"Yes")), ('no', _(u"No")) )
 yes_no_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_choices)
 
 
+yes_no_maybe_choices = (('yes', _(u"Yes")), ('no', _(u"No")), ('maybe', _(u"Maybe")) )
+yes_no_maybe_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_maybe_choices)
+
+
+gender_choices = (('female', _(u"Female")), ('male', _(u"Female")) )
+gender_choices_widget = deform.widget.RadioChoiceWidget(values=gender_choices)
+
+
 text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
+string_widget = deform.widget.TextInputWidget(size = 20)
 
 class BasicQuestionNode(object):
     """ A question node that simply displays all of its results. """
@@ -138,6 +147,9 @@ def includeme(config):
     free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget, missing=u"")
     config.registry.registerUtility(free_text, IQuestionNode, 'free_text')
 
+    string_text = BasicQuestionNode(_(u"Small text input question"), string_widget, missing=u"")
+    config.registry.registerUtility(string_text, IQuestionNode, 'string_text')
+
     importance_scale = ChoiceQuestionNode(_(u"Importance scale question"), importance_choices_widget)
     config.registry.registerUtility(importance_scale, IQuestionNode, 'importance_scale')
 
@@ -147,3 +159,8 @@ def includeme(config):
     yes_no = ChoiceQuestionNode(_(u"Yes / No question"), yes_no_choices_widget)
     config.registry.registerUtility(yes_no, IQuestionNode, 'yes_no')
 
+    yes_no_maybe = ChoiceQuestionNode(_(u"Yes / No / Maybe question"), yes_no_maybe_choices_widget)
+    config.registry.registerUtility(yes_no_maybe, IQuestionNode, 'yes_no_maybe')
+
+    gender = ChoiceQuestionNode(_(u"Gender question"), gender_choices_widget)
+    config.registry.registerUtility(gender, IQuestionNode, 'gender')
