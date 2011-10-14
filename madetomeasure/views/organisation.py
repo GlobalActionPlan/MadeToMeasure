@@ -24,17 +24,25 @@ from madetomeasure import security
 
 class OrganisationView(BaseView):
 
-    @view_config(name='invariants', context=IOrganisation, renderer='templates/organisation_invariant.pt', permission=security.EDIT)
-    def invariants(self):
+    @view_config(name='variants', context=IOrganisation, renderer='templates/organisation_variants.pt', permission=security.EDIT)
+    def variants(self):
         root = find_root(self.context)
         
-        self.response['url'] = resource_url(self.context, self.request) + 'invariant?question_uid='
+        def _get_variants(question):
+            variants = []
+            for lang in self.context.variants[question.__name__]:
+                variants.append(self.trans_util.title_for_code(lang))
+            variants = sorted(variants)
+            return ", ".join(variants)
+        
+        self.response['get_variants'] = _get_variants
+        self.response['url'] = resource_url(self.context, self.request) + 'variant?question_uid='
         self.response['questions'] = root['questions']
         
         return self.response
 
-    @view_config(name='invariant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    def invariant(self):
+    @view_config(name='variant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    def variant(self):
         root = find_root(self.context)
         question_uid = self.request.GET.get('question_uid', None)
 
@@ -67,8 +75,8 @@ class OrganisationView(BaseView):
             for (lang, value) in appstruct['question_text'].items():
                 if value.strip():
                     if not (self.trans_util.default_locale_name == lang and question.get_title() == value.strip()):
-                        self.context.set_invariant(question_uid, lang, value)
-            print dict(self.context.invariants)
+                        self.context.set_variant(question_uid, lang, value)
+            print dict(self.context.variants)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
@@ -85,10 +93,10 @@ class OrganisationView(BaseView):
         appstruct['question_text'][self.trans_util.default_locale_name] = question.get_title()
 
 
-        # load local invariants
+        # load local variants
         for lang in self.trans_util.available_languages:
-            if question_uid in self.context.invariants and lang in self.context.invariants[question_uid]:
-                appstruct['question_text'][lang] = self.context.invariants[question_uid][lang]
+            if question_uid in self.context.variants and lang in self.context.variants[question_uid]:
+                appstruct['question_text'][lang] = self.context.variants[question_uid][lang]
         
         self.response['form'] = form.render(appstruct)
         return self.response

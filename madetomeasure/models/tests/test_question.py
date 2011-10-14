@@ -73,7 +73,7 @@ class QuestionTests(unittest.TestCase):
         result = obj.render_result(request, data)
         self.assertTrue('I wrote something' in result)
         
-    def test_question_invariant(self):
+    def test_question_variant(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
         
@@ -94,10 +94,10 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(obj.get_title(lang='en'), u"Hello world")
         self.assertEqual(obj.get_title(lang='sv'), u"Hello world")
 
-        org.set_invariant(obj.__name__, 'sv', u'Hej världen')
+        org.set_variant(obj.__name__, 'sv', u'Hej världen')
         self.assertNotEqual(obj.get_title(lang='sv', context=org), u"Hello world")
         self.assertEqual(obj.get_title(lang='sv', context=org), u"Hej världen")
         
-        org.set_invariant(obj.__name__, 'en', u'Gday world')
+        org.set_variant(obj.__name__, 'en', u'Gday world')
         self.assertNotEqual(obj.get_title(context=org), u"Hello world")
         self.assertEqual(obj.get_title(context=org), u"Gday world")

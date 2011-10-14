@@ -96,7 +96,8 @@
                 <div tal:condition="organisation|False" id="organisation">
                     <span tal:content="organisation.get_title()">Title</span>:
                     <a href="${resource_url(organisation['surveys'], request)}" i18n:translate="">Surveys</a> |
-                    <a href="${resource_url(organisation, request)}permissions" i18n:translate="">Permissions</a>
+                    <a href="${resource_url(organisation, request)}permissions" i18n:translate="">Permissions</a> |
+                    <a href="${resource_url(organisation, request)}variants" i18n:translate="">Variants</a>
                 </div>
                 
             </div>
@@ -118,9 +119,9 @@
                 </tal:add>
                 <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a> |
                 <tal:organisation condition="context.content_type == 'Organisation'">
-                   <a class="button invariants"
-                       href="${resource_url(context, request) + 'invariants'}"
-                       i18n:translate="">Invariants</a> |
+                   <a class="button variants"
+                       href="${resource_url(context, request) + 'variants'}"
+                       i18n:translate="">Variants</a> |
                 </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a class="button invitaions" 

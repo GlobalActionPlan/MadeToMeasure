@@ -44,7 +44,7 @@ class Question(BaseFolder):
         
     def get_title(self, lang=None, context=None):
         # if context is supplied find organisation and look if there is 
-        # a invariant for the question for lang
+        # a variant for the question for lang
         if context:
             if lang:
                 local_lang = lang
@@ -54,9 +54,9 @@ class Question(BaseFolder):
                 local_lang = trans_util.default_locale_name
             organisation = find_interface(context, IOrganisation)
             if organisation:
-                invariant = organisation.get_invariant(self.__name__, local_lang)
-                if invariant:
-                    return invariant
+                variant = organisation.get_variant(self.__name__, local_lang)
+                if variant:
+                    return variant
         if lang:
             languages = self.get_question_text()
             if lang in languages:

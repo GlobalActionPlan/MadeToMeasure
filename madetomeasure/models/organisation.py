@@ -42,20 +42,20 @@ class Organisation(BaseFolder):
         self.__hex_color__ = value
         
     @property
-    def invariants(self):
-        if not hasattr(self, '__invariants__'):
-            self.__invariants__ = OOBTree()
-        return self.__invariants__
+    def variants(self):
+        if not hasattr(self, '__variants__'):
+            self.__variants__ = OOBTree()
+        return self.__variants__
         
-    def get_invariant(self, question_uid, lang):
-        """ Returns invariant of question for language if there is one """
-        if question_uid in self.invariants:
-            if lang in self.invariants[question_uid]:
-                return self.invariants[question_uid][lang]
+    def get_variant(self, question_uid, lang):
+        """ Returns variant of question for language if there is one """
+        if question_uid in self.variants:
+            if lang in self.variants[question_uid]:
+                return self.variants[question_uid][lang]
             
         return None
         
-    def set_invariant(self, question_uid, lang, value):
-        if not question_uid in self.invariants:
-            self.invariants[question_uid] = {}
-        self.invariants[question_uid][lang] = value
+    def set_variant(self, question_uid, lang, value):
+        if not question_uid in self.variants:
+            self.variants[question_uid] = {}
+        self.variants[question_uid][lang] = value

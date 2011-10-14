@@ -290,7 +290,7 @@ class Survey(BaseFolder):
             available_languages.remove(trans_util.default_locale_name)
             
         organisation = find_interface(self, IOrganisation)
-        invariants = organisation.invariants
+        variants = organisation.variants
             
         languages = {}
         for language in available_languages:
@@ -298,7 +298,7 @@ class Survey(BaseFolder):
             for section in self.values():
                 for name in section.question_ids:
                     question = section.question_object_from_id(name)
-                    if not language in question.get_question_text() or (name in invariants and not language in invariants[name]):
+                    if not language in question.get_question_text() or (name in variants and not language in variants[name]):
                         questions.append(question)
             if questions:
                 languages[language] = {
