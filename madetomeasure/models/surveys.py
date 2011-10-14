@@ -230,20 +230,6 @@ class Survey(BaseFolder):
         
         return participants
 
-
-    def structured_local_question_objects(self):
-        org = find_interface(self, IOrganisation)
-        questions = org['questions']
-        results = {}
-        for question in questions.values():
-            if not IQuestion.providedBy(question):
-                continue
-            type = question.get_question_type()
-            if type not in results:
-                results[type] = []
-            results[type].append(question)
-        return results
-    
     def structured_global_question_objects(self):
         root = find_root(self)
         questions = root['questions']
@@ -261,7 +247,6 @@ class Survey(BaseFolder):
         """ Append all selectable questions to a schema.
         """
         questions = self.structured_global_question_objects()
-        questions.update(self.structured_local_question_objects())
 
         for (type, questions) in questions.items():
             choices = [(x.__name__, x.get_title()) for x in questions]

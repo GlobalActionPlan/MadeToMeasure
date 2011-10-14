@@ -28,9 +28,6 @@ class Organisation(BaseFolder):
         #FIXME: Should be done by factories instead
         from madetomeasure.models.surveys import Surveys
         self['surveys'] = Surveys()
-        
-        from madetomeasure.models.questions import Questions
-        self['questions'] = Questions()
     
     def get_logo_link(self):
         return getattr(self, '__logo_link__', '')
