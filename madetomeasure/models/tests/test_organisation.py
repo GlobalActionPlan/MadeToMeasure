@@ -4,8 +4,10 @@ from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
 from zope.interface.verify import verifyObject
+from zope.interface.verify import verifyClass
 
 from madetomeasure import security
+from madetomeasure.interfaces import IOrganisation
 
 
 admin = set([security.ROLE_ADMIN])
@@ -19,14 +21,33 @@ class OrganisationTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from madetomeasure.models.organisation import Organisation
-        return Organisation()
-    
-    def test_interface(self):
-        from madetomeasure.interfaces import IOrganisation
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(IOrganisation, obj))
+        return Organisation
+
+    def test_verify_class(self):
+        self.failUnless(verifyClass(IOrganisation, self._cut))
+
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(IOrganisation, self._cut()))
+
+    def test_variants(self):
+        obj = self._cut()
+        self.assertEqual(len(obj.variants), 0)
+        
+        question_uid = 'q1'
+        lang = 'sv'
+        value = 'Testing variants'
+        
+        obj.set_variant(question_uid, lang, value)
+        self.assertEqual(obj.get_variant(question_uid, lang), value)
+        
+        self.assertEqual(obj.get_variant('q2', lang), None)
+        self.assertEqual(obj.get_variant(question_uid, 'ru'), None)
+        self.assertEqual(obj.get_variant('q2', 'ru'), None)
+
+#Test schema and expected usage
 
 
 class OrganisationPermissionTests(unittest.TestCase):
@@ -71,17 +92,3 @@ class OrganisationPermissionTests(unittest.TestCase):
         # ADD_SURVEY_SECTION
         self.assertEqual(self.pap(obj, security.ADD_SURVEY_SECTION), admin | organisation_manager)
 
-    def test_variants(self):
-        obj = self._make_obj()
-        self.assertEqual(len(obj.variants), 0)
-        
-        question_uid = 'q1'
-        lang = 'sv'
-        value = 'Testing variants'
-        
-        obj.set_variant(question_uid, lang, value)
-        self.assertEqual(obj.get_variant(question_uid, lang), value)
-        
-        self.assertEqual(obj.get_variant('q2', lang), None)
-        self.assertEqual(obj.get_variant(question_uid, 'ru'), None)
-        self.assertEqual(obj.get_variant('q2', 'ru'), None)

@@ -22,6 +22,7 @@ requires = [
     'lingua',
     'webhelpers',
     'pytz',
+    'betahaus.pyracont',
     ]
 
 setup(name='MadeToMeasure',

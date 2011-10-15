@@ -88,7 +88,7 @@
                     |
                     <a href="${resource_url(user, request)}"
                        title="Click to go to profile. There you can make changes as well."
-                       i18n:attributes="title">${user.get_title()} (${userid})</a>
+                       i18n:attributes="title">${user.title} (${userid})</a>
                     |
                     <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
                 </div>
@@ -102,7 +102,7 @@
                 </div>
 
                 <div tal:condition="organisation|False" id="organisation">
-                    <span tal:content="organisation.get_title()">Title</span>:
+                    <span tal:content="organisation.title">Title</span>:
                     <a href="${resource_url(organisation['surveys'], request)}" i18n:translate="">Surveys</a> |
                     <a href="${resource_url(organisation, request)}permissions" i18n:translate="">Permissions</a> |
                     <a href="${resource_url(organisation, request)}variants" i18n:translate="">Variants</a>
@@ -161,7 +161,7 @@
             <div tal:condition="userid" id="path-bar">
                 <tal:iterate repeat="obj path">
                     &raquo;
-                    <a href="${resource_url(obj, request)}" tal:content="obj.get_title()">Title</a>
+                    <a href="${resource_url(obj, request)}" tal:content="obj.title">Title</a>
                 </tal:iterate>
             </div>
 
@@ -172,7 +172,7 @@
             </div>
 
             <metal:heading define-slot="page_heading">
-                <h1 tal:content="context.get_title()">Title</h1>
+                <h1 tal:content="context.title">Title</h1>
             </metal:heading>
         
             <div id="content">

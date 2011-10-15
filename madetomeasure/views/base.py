@@ -47,15 +47,15 @@ class BaseView(object):
             survey_dt = self.survey_dt,
             user_dt = None,
             path = tuple(path),
-            footer_html = self.root.get_footer_html(),
+            footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
             confirm_previous = _("If you go back, the changes made here will be permanently lost."),
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
         if self.organisation:
-            self.response['hex_color'] = self.organisation.get_hex_color()
-            self.response['logo_link'] = self.organisation.get_logo_link()
+            self.response['hex_color'] = self.organisation.get_field_value('hex_color')
+            self.response['logo_link'] = self.organisation.get_field_value('logo_link')
 
         self.trans_util = self.request.registry.getUtility(IQuestionTranslations)
 
@@ -165,8 +165,7 @@ class BaseView(object):
     @view_config(name='add', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='add', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE)
     def add_view(self):
-        """ Generic add view when accessors and mutators match get_ and set_ methods
-            on the model.
+        """ Generic add view.
         """
         type_to_add = self.request.GET.get('content_type')
 
@@ -183,7 +182,7 @@ class BaseView(object):
             raise ValueError("No content type called %s" % type_to_add)
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
-        schema = schema.bind()
+        schema = schema.bind(context=self.context, request=self.request)
 
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
         if type_to_add == 'SurveySection':
@@ -195,20 +194,15 @@ class BaseView(object):
         
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = CONTENT_TYPES[type_to_add]()
-            for (k, v) in appstruct.items():
-                mutator = getattr(obj, 'set_%s' % k)
-                mutator(v)
-            
-            name = generate_slug(self.context, appstruct['title'])
+            appstruct['creators'] = [self.userid]
+            obj = CONTENT_TYPES[type_to_add](**appstruct)
+            name = obj.suggest_name(self.context)            
             self.context[name] = obj
     
             url = resource_url(self.context, self.request)
@@ -217,23 +211,20 @@ class BaseView(object):
         self.response['form'] = form.render()
         return self.response
 
-
     @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
-        """ Generic edit view when accessors and mutators match get_ and set_ methods
-            on the model.
+        """ Generic edit view
         """
-
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context, request = self.request)
         
         if ISurveySection.providedBy(self.context):
             self.context.__parent__.add_structured_question_choices(schema['structured_question_ids'])
@@ -244,30 +235,18 @@ class BaseView(object):
         
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
+            self.context.set_field_appstruct(appstruct)
                 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                value = accessor()
-                if value is not None:
-                    appstruct[field.name] = accessor()
+        appstruct = self.context.get_field_appstruct(schema)
 
         self.response['form'] = form.render(appstruct)
         return self.response
-    

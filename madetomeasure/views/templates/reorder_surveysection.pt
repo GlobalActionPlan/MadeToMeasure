@@ -23,7 +23,7 @@
                 <li>
                     <ul id="sections">
                         <li tal:repeat="section context.values()">
-                            <input type="hidden" name="sections" value="${section.__name__}" />${section.get_title()}
+                            <input type="hidden" name="sections" value="${section.__name__}" />${section.title}
                         </li>
                     </ul>
                 </li>

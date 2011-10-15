@@ -50,12 +50,8 @@ class QuestionsView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             
-            obj = CONTENT_TYPES[type_to_add]()
-            for (k, v) in appstruct.items():
-                mutator = getattr(obj, 'set_%s' % k)
-                mutator(v)
-            
-            self.context[str(uuid4())] = obj
+            obj = CONTENT_TYPES[type_to_add](**appstruct)
+            self.context[obj.uid] = obj
     
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
@@ -68,7 +64,7 @@ class QuestionsView(BaseView):
     def edit_view(self):
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context, request = self.request)
         self.trans_util.add_translations_schema(schema['question_text'])
         
         form = Form(schema, buttons=(self.buttons['save'],))
@@ -78,26 +74,17 @@ class QuestionsView(BaseView):
             controls = self.request.POST.items()
 
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
+
+            self.context.set_field_appstruct(appstruct)
                 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-
+        appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
         
@@ -133,16 +120,14 @@ class QuestionsView(BaseView):
 
         schema = CONTENT_SCHEMAS["Translate%s" % self.context.content_type]()
         self.trans_util.add_translation_schema(schema['question_text'], lang)
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context, request = self.request)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
-        
+
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
@@ -154,12 +139,6 @@ class QuestionsView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-
+        appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response

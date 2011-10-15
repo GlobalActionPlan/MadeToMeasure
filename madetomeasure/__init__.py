@@ -43,6 +43,8 @@ def main(global_config, **settings):
     config.include('madetomeasure.models.translations')
     config.include('madetomeasure.models.date_time_helper')
     
+    config.scan('betahaus.pyracont.fields.password')
+    
     config.add_translation_dirs('deform:locale/',
                                 'colander:locale/',
                                 'madetomeasure:locale/',)

@@ -39,7 +39,7 @@ class UsersView(BaseView):
             raise ValueError("No content type called %s" % type_to_add)
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
-        schema = schema.bind()
+        schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         
@@ -47,85 +47,63 @@ class UsersView(BaseView):
             controls = self.request.POST.items()
 
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
+
             name = appstruct['userid']
             del appstruct['userid']
-
-            obj = CONTENT_TYPES[type_to_add]()
-            for (k, v) in appstruct.items():
-                mutator = getattr(obj, 'set_%s' % k)
-                mutator(v)
-            
+            obj = CONTENT_TYPES[type_to_add](**appstruct)
             self.context[name] = obj
-    
+
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
         self.response['form'] = form.render()
         return self.response
-        
+
     @view_config(name='edit', context=IUser, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
-
+        """ Edit user form """
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-            
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
             
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
-                
+            self.context.set_field_appstruct(appstruct)
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(self.context, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
-                
+        appstruct = self.context.get_field_appstruct(schema)                
         self.response['form'] = form.render(appstruct)
         return self.response
         
     @view_config(name='change_password', context=IUser, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def change_password_view(self):
-
+        """ Change password view. """
         schema = ChangePasswordSchema()
-        schema = schema.bind(context = self.context,)
+        schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
         
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-            
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
-            for (k, v) in appstruct.items():
-                mutator = getattr(self.context, 'set_%s' % k)
-                mutator(v)
-                
+
+            self.context.set_field_appstruct(appstruct)
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 

@@ -3,9 +3,7 @@ import iso8601
 
 from colander import DateTime, Invalid, null, _
 
-from madetomeasure.interfaces import IDateTimeHelper
 from madetomeasure.models.app import get_users_dt_helper
-
 
 
 class TZDateTime(DateTime):

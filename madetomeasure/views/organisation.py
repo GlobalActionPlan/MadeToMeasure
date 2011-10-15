@@ -54,7 +54,7 @@ class OrganisationView(BaseView):
         question = root['questions'][question_uid]
 
         schema = CONTENT_SCHEMAS["Translate%s" % question.content_type]()
-        schema = schema.bind(context = question,)
+        schema = schema.bind(context = question, request = self.request)
         # add default locale
         self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name)
         self.trans_util.add_translations_schema(schema['question_text'])
@@ -64,9 +64,7 @@ class OrganisationView(BaseView):
         
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
-
             try:
-                #appstruct is deforms convention. It will be the submitted data in a dict.
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
@@ -74,24 +72,18 @@ class OrganisationView(BaseView):
             
             for (lang, value) in appstruct['question_text'].items():
                 if value.strip():
-                    if not (self.trans_util.default_locale_name == lang and question.get_title() == value.strip()):
+                    if not (self.trans_util.default_locale_name == lang and question.title == value.strip()):
                         self.context.set_variant(question_uid, lang, value)
             print dict(self.context.variants)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        marker = object()
-        appstruct = {}
-        for field in schema:
-            accessor = getattr(question, "get_%s" % field.name, marker)
-            if accessor != marker:
-                appstruct[field.name] = accessor()
+        appstruct = question.get_field_appstruct(schema)
         # add title for default locale
         if not appstruct['question_text']:
             appstruct['question_text'] = {}
-        appstruct['question_text'][self.trans_util.default_locale_name] = question.get_title()
-
+        appstruct['question_text'][self.trans_util.default_locale_name] = question.title
 
         # load local variants
         for lang in self.trans_util.available_languages:

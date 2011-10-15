@@ -11,7 +11,7 @@
 
     <h3 i18n:translate="">Questions</h3>
     <tal:questions repeat="question questions.values()">
-        <h4><a href="${url}${question.__name__}">${question.get_title()}</a></h4>
+        <h4><a href="${url}${question.__name__}">${question.title}</a></h4>
         <p>${get_variants(question)}</p>
     </tal:questions>
 

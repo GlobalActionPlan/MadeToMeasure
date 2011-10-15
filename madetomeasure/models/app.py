@@ -6,7 +6,9 @@ from pyramid.traversal import find_root
 from pyramid.i18n import get_locale_name
 from pyramid.interfaces import ISettings
 from zope.component import createObject
+
 from madetomeasure.interfaces import ISurvey
+from madetomeasure import MadeToMeasureTSF as _
 
 
 def appmaker(zodb_root):
@@ -27,18 +29,16 @@ def bootstrap_root():
     from madetomeasure.models.questions import Questions
     from madetomeasure import security
 
-    root = SiteRoot()
-    root['users'] = Users()
+    root = SiteRoot(creators=['admin'], title=_(u"Made To Measure"))
+    root['users'] = Users(title = _(u"Users"))
     #Create admin user with password admin as standard
-    admin = User()
-    admin.set_password('admin')
-    admin.set_title('Administrator')
+    admin = User(password='admin', first_name="M2M", last_name="Administrator")
     root['users']['admin'] = admin
     #Add admin to group managers
     root.add_groups('admin', [security.ROLE_ADMIN])
     
-    root['participants'] = Participants()
-    root['questions'] = Questions()
+    root['participants'] = Participants(title=_(u"Participants"))
+    root['questions'] = Questions(title=_(u"Questions"))
     
     
     return root
@@ -71,7 +71,7 @@ def get_users_dt_helper(request=None):
     userid = authenticated_userid(request)
     root = find_root(request.context)
     if root is None:
-        tz = request.getUtility(ISettings)['default_timezone']
+        tz = request.registry.getUtility(ISettings)['default_timezone']
     else:
         user = root['users'].get(userid)
         tz = user.get_time_zone()

@@ -6,10 +6,12 @@ from datetime import datetime
 import pytz
 import colander
 from pyramid import testing
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOBTree
 
 from madetomeasure.models.exceptions import SurveyUnavailableError
+from madetomeasure.interfaces import ISurvey
 
 
 class SurveyTests(unittest.TestCase):
@@ -19,9 +21,10 @@ class SurveyTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from madetomeasure.models import Survey
-        return Survey()
+        return Survey
     
     def _utcnow(self):
         from madetomeasure.models.date_time_helper import utcnow
@@ -31,19 +34,14 @@ class SurveyTests(unittest.TestCase):
         dt = datetime.strptime(date_string, "%Y-%m-%d")
         return pytz.utc.localize(dt)
     
-    def test_interface(self):
-        from madetomeasure.interfaces import ISurvey
-        obj = self._make_obj()
-        self.assertTrue(verifyObject(ISurvey, obj))
+    def test_verify_class(self):
+        self.failUnless(verifyClass(ISurvey, self._cut))
 
-    def test_from_address(self):
-        obj = self._make_obj()
-        email_field = "noreply@betahaus.net"
-        obj.set_from_address(email_field)
-        self.assertEqual(obj.get_from_address(), email_field)
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(ISurvey, self._cut()))
 
     def test_welcome_text(self):
-        obj = self._make_obj()
+        obj = self._cut()
         value = "Let's start, mmmkey?"
         obj.set_welcome_text(value)
         self.assertEqual(obj.get_welcome_text(), value)
@@ -52,7 +50,7 @@ class SurveyTests(unittest.TestCase):
         self.assertEqual(obj.get_welcome_text(lang='sv'), value)
     
     def test_finished_text(self):
-        obj = self._make_obj()
+        obj = self._cut()
         value = "We so happy now, okay?"
         obj.set_finished_text(value)
         self.assertEqual(obj.get_finished_text(), value)
@@ -61,34 +59,31 @@ class SurveyTests(unittest.TestCase):
         self.assertEqual(obj.get_finished_text(lang='sv'), value)
 
     def test_check_open_no_date_set(self):
-        obj = self._make_obj()
+        obj = self._cut()
         self.assertTrue(obj.check_open(), True)
 
     def test_check_open_start_time_passed(self):
         now = self._utcnow()
-        obj = self._make_obj()
-        obj.set_start_time(now)
+        obj = self._cut(start_time = now)
         self.assertEqual(obj.check_open(), True)
 
     def test_check_open_start_time_not_passed(self):
         future_date = self._create_date('2199-12-13')
-        obj = self._make_obj()
-        obj.set_start_time(future_date)
+        obj = self._cut(start_time = future_date)
         self.assertRaises(SurveyUnavailableError, obj.check_open)
 
     def test_check_open_end_time_passed(self):
         past_date = self._create_date('1999-12-13')
-        obj = self._make_obj()
-        obj.set_end_time(past_date)
+        obj = self._cut(end_time = past_date)
         self.assertRaises(SurveyUnavailableError, obj.check_open)
         
     def test_check_open_end_time_not_passed(self):
         future_date = self._create_date('2199-12-13')
-        obj = self._make_obj()
-        obj.set_end_time(future_date)
+        obj = self._cut(end_time = future_date)
         self.assertEqual(obj.check_open(), True)
         
     def test_untranslated_languages(self):
+        self.config.scan('betahaus.pyracont.fields.password')
         from pyramid.interfaces import ISettings
         settings = self.config.registry.getUtility(ISettings)
         settings['default_locale_name'] = 'en'
@@ -108,14 +103,15 @@ class SurveyTests(unittest.TestCase):
         o1 = Organisation()
         self.root['questions']['o1'] = o1
         
-        from madetomeasure.models.surveys import Survey, SurveySection
+        from madetomeasure.models.surveys import Survey
+        from madetomeasure.models import SurveySection
         s1 = Survey()
         s1.set_available_languages(['sv', 'de'])
         o1['surveys']['s1'] = s1
 
         ss1 = SurveySection()
         s1['ss1'] = ss1
-        ss1.set_structured_question_ids({'dummy': ['q1', 'q2']})
+        ss1.set_field_value('structured_question_ids', {'dummy': ['q1', 'q2']})
         
         langs = s1.untranslated_languages()
         self.assertEqual(len(langs.keys()), 2)
@@ -130,7 +126,7 @@ class SurveyTests(unittest.TestCase):
         self.assertEqual(len(langs['sv']['questions']), 1)
         
     def test_translations(self):
-        obj = self._make_obj()
+        obj = self._cut()
         self.assertEqual(len(obj.translations), 0)
         
         obj.set_translation('__welcome_text__', 'en', 'Welcome to the survey')

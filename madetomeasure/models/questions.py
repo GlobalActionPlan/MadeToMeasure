@@ -3,24 +3,23 @@ from BTrees.OOBTree import OOBTree
 from zope.component import getUtility
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
+from betahaus.pyracont import BaseFolder
 
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.interfaces import *
-from madetomeasure.models.base import BaseFolder
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestion
+from madetomeasure.interfaces import IQuestions
+from madetomeasure.interfaces import IQuestionNode
+from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.models.security_aware import SecurityAware
 
 
-
-class Questions(BaseFolder):
+class Questions(BaseFolder, SecurityAware):
+    """ Question container """
     implements(IQuestions)
     content_type = 'Questions'
     display_name = _(u"Questions")
     allowed_contexts = ()
-    
-    def get_title(self):
-        return self.display_name
-
-    def set_title(self, value):
-        pass
 
     def questions_by_type(self, question_type):
         """ Return available question objects according to a specific type. """
@@ -32,17 +31,22 @@ class Questions(BaseFolder):
                 results.add(obj)
         return results
 
-class Question(BaseFolder):
+
+class Question(BaseFolder, SecurityAware):
+    """ Question model """
     implements(IQuestion)
     content_type = 'Question'
     display_name = _(u"Question")
     allowed_contexts = ('Questions', )
+    custom_accessors = {'title': 'get_title',
+                        'question_text': 'get_question_text'}
+    custom_mutators = {'question_text': 'set_question_text'}
 
-    def __init__(self):
+    def __init__(self, data = None, **kwargs):
         self.__question_text__ = OOBTree()
-        super(Question, self).__init__()
+        super(Question, self).__init__(data = data, **kwargs)
         
-    def get_title(self, lang=None, context=None):
+    def get_title(self, lang=None, context=None, default=u"", **kwargs):
         # if context is supplied find organisation and look if there is 
         # a variant for the question for lang
         if context:
@@ -61,12 +65,12 @@ class Question(BaseFolder):
             languages = self.get_question_text()
             if lang in languages:
                 return languages[lang]
-        return getattr(self, '__title__', '')
-    
-    def get_question_text(self):
-        return getattr(self, '__question_text__', {})
+        return self._field_storage.get('title', default)
 
-    def set_question_text(self, value):
+    def get_question_text(self, **kw):
+        return self.__question_text__
+
+    def set_question_text(self, value, **kw):
         """ This is only for the translations of the question, since the title is the base language.
             value here should be a dict with country codes as keys and questions as values.
             Any empty value should be removed before saving.
@@ -75,7 +79,7 @@ class Question(BaseFolder):
             if not v.strip():
                 del value[k]
         self.__question_text__ = value
-        
+
     def set_question_text_lang(self, value, lang):
         """ Set translation for specific language
         """
@@ -86,13 +90,15 @@ class Question(BaseFolder):
             if lang in question_text:
                 del question_text[lang]
         self.__question_text__ = question_text
-    
+
     def get_question_type(self):
         """ Return a dict with country codes as key and question translations as value. """
-        return getattr(self, '__question_type__', '')
-    
+        #b/c compat
+        return self.get_field_value('question_type', default = "")
+
     def set_question_type(self, value):
-        self.__question_type__ = value
+        #b/c compat
+        self.set_field_value('question_type', value)
 
     def question_schema_node(self, name, lang=None, context=None):
         #If the correct question type isn't set, this might raise a ComponentLookupError
@@ -104,8 +110,7 @@ class Question(BaseFolder):
             return _(u"(Nothing)")
         node_util = getUtility(IQuestionNode, name=self.get_question_type())
         return node_util.render_result(request, data)
-        
+
     def csv_export(self, data):
         node_util = getUtility(IQuestionNode, name=self.get_question_type())
         return node_util.csv_export(data)
-        

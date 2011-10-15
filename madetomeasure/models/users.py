@@ -11,23 +11,18 @@ from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
 from pyramid.i18n import get_localizer
 from pyramid.interfaces import ISettings
-from pyramid.security import Allow, DENY_ALL, ALL_PERMISSIONS, Authenticated, Everyone
+from pyramid.security import Allow, Everyone
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
+from betahaus.pyracont import BaseFolder
 
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.interfaces import *
-from madetomeasure.models.base import BaseFolder
+from madetomeasure.interfaces import IUser
+from madetomeasure.interfaces import IUsers
+from madetomeasure.models.security_aware import SecurityAware
 
 
-def get_sha_password(password):
-    """ Encode a plaintext password to sha1. """
-    if isinstance(password, unicode):
-        password = password.encode('UTF-8')
-    return 'SHA1:' + sha1(password).hexdigest()
-
-
-class Users(BaseFolder):
+class Users(BaseFolder, SecurityAware):
     """ Container for system users. These are translators, managers
         or any other folks that need to login.
     """
@@ -35,25 +30,23 @@ class Users(BaseFolder):
     content_type = 'Users'
     display_name = _(u"Users")
     allowed_contexts = () #Not manually addable
-    
-    def get_title(self):
-        return self.display_name
-
-    def set_title(self, value):
-        pass
 
     def get_user_by_email(self, email):
         for user in self.values():
-            if user.get_email() == email:
+            if user.get_field_value('email') == email:
                 return user
 
 
-class User(BaseFolder):
+class User(BaseFolder, SecurityAware):
     """ A system user """
     implements(IUser)
     content_type = 'User'
     display_name = _(u"User")
     allowed_contexts = ('Users',)
+    custom_fields = {'password': 'PasswordField'}
+    custom_accessors = {'title': 'get_title',
+                        'time_zone': 'get_time_zone'}
+    custom_mutators = {'title': 'set_title'}
     
     @property
     def __acl__(self):
@@ -68,54 +61,32 @@ class User(BaseFolder):
     def userid(self):
         return self.__name__
         
-    def get_title(self):
-        """ Return a combo of firstname and lastname or the userid """
-        title = "%s %s" % (self.get_first_name(), self.get_last_name())
+    def get_title(self, **kw):
+        """ Return a combo of firstname and lastname or the userid.
+            default kw isn't used here.
+        """
+        title = "%s %s" % (self.get_field_value('first_name', u''), self.get_field_value('last_name', u''))
         title = title.strip()
         return title and title or self.userid
 
-    def set_title(self, value):
+    def set_title(self, value, key=None):
         """ For compatibility, shouldn't be used"""
         pass
 
-    def set_email(self, value):
-        self.__email__ = value
-    
-    def get_email(self):
-        return getattr(self, '__email__', '')
-
-    def set_first_name(self, value):
-        self.__first_name__ = value
-    
-    def get_first_name(self):
-        return getattr(self, '__first_name__', '')
-
-    def set_last_name(self, value):
-        self.__last_name__ = value
-
-    def get_last_name(self):
-        return getattr(self, '__last_name__', '')
-
-    def get_time_zone(self):
-        tz = getattr(self, '__time_zone__', None)
-        if tz is None:
+    def get_time_zone(self, default=None, **kwargs):
+        """ custom accessor that uses default_timezone from settings as standard value, unless overridden. """
+        marker = object()
+        #To avoid loop...
+        tz = self._field_storage.get('time_zone', marker)
+        if tz is marker:
             return getUtility(ISettings)['default_timezone']
         return tz
-
-    def set_time_zone(self, value):
-        self.__time_zone__ = value
-
-    def set_password(self, value):
-        self.__password__ = get_sha_password(value)
     
     def check_password(self, value):
         """ Check a plaintext password against stored encrypted password. """
-        hash = get_sha_password(value)
-        return hash == self.get_password()
+        field = self.get_custom_field('password')
+        return field.check_input(value)
 
-    def get_password(self):
-        return self.__password__
-        
     def new_request_password_token(self, request):
         """ Set a new request password token and email user. """
         locale = get_localizer(request)
@@ -128,8 +99,9 @@ class User(BaseFolder):
                  default=u"password link: ${pw_link}",
                  mapping={'pw_link':pw_link},))
         
+        #FIXME: What if email is empty...?
         msg = Message(subject=_(u"Password reset request from MadeToMeasure"),
-                       recipients=[self.get_email()],
+                       recipients=[self.get_field_value('email')()],
                        body=body)
 
         mailer = get_mailer(request)

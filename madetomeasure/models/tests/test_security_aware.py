@@ -13,7 +13,7 @@ class SecurityAwareTests(unittest.TestCase):
     def _make_obj(self):
         """ Security aware is a mixin class, so we need to add BaseFolder too"""
         from madetomeasure.models.security_aware import SecurityAware
-        from madetomeasure.models.base import BaseFolder
+        from betahaus.pyracont import BaseFolder
         
         class DummyContent(BaseFolder, SecurityAware):
             pass

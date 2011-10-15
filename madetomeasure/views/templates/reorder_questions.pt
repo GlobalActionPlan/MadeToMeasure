@@ -25,7 +25,7 @@
                     <ul id="questions">
                         <li tal:repeat="question_id context.question_ids">
                             <tal:define define="question context.question_object_from_id(question_id)">
-                                <input type="hidden" name="questions" value="${question.__name__}" />${question.get_title()}
+                                <input type="hidden" name="questions" value="${question.__name__}" />${question.title}
                             </tal:define>
                         </li>
                     </ul>

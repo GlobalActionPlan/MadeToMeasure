@@ -1,62 +1,58 @@
 from zope.interface import Interface
 from zope.interface import Attribute
+from betahaus.pyracont.interfaces import IBaseFolder
 
 
-class IBaseFolder(Interface):
-    """ Most other persistent objects inherit fron this class."""
-    content_type = Attribute("Works like an id for this content type. Must be implemented by subclass.")
-    display_name = Attribute("Name that will be used in the UI. Must be implemented by subclass.")
-    allowed_contexts = Attribute("List of content types where this content type is allowed to be added. Must be implemented by subclass.")
-
-    def get_title():
-        """ Return title of object. Usually used as heading. """
-    
-    def set_title(value):
-        """ Set title. """
-
-class ISiteRoot(Interface):
+class ISiteRoot(IBaseFolder):
     """ SiteRoot model. """
 
 
-class IUsers(Interface):
+class IUsers(IBaseFolder):
     """ Users model. """
 
 
-class IUser(Interface):
+class IUser(IBaseFolder):
     """ User model. """
 
 
-class ISurveys(Interface):
+class ISurveys(IBaseFolder):
     """ Surveys model. """
 
 
-class ISurvey(Interface):
+class ISurvey(IBaseFolder):
     """ Survey model. """
 
 
-class ISurveySection(Interface):
+class ISurveySection(IBaseFolder):
     """ Survey Section model. """
 
 
-class IParticipants(Interface):
+class IParticipants(IBaseFolder):
     """ Participants model. """
 
 
-class IParticipant(Interface):
+class IParticipant(IBaseFolder):
     """ Participant model. """
 
 
-class IQuestions(Interface):
+class IQuestions(IBaseFolder):
     """ A questions model - contains question objects. """
 
 
-class IQuestion(Interface):
+class IQuestion(IBaseFolder):
     """ A question model. """
 
 
-class IOrganisation(Interface):
+class IOrganisation(IBaseFolder):
     """ An organisation model. """
-    
+    variants = Attribute("Question variants storage")
+        
+    def get_variant(question_uid, lang):
+        """ Returns variant of question for language if there is one """
+        
+    def set_variant(question_uid, lang, value):
+        """ Sets variants """
+
 
 class IQuestionNode(Interface):
     """ A utility that will create a question colander.SchemaNode when called. """
