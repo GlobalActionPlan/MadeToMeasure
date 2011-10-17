@@ -57,8 +57,10 @@ class OrganisationView(BaseView):
         schema = CONTENT_SCHEMAS["Translate%s" % question.content_type]()
         schema = schema.bind(context = question, request = self.request)
         # add default locale
-        self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name)
-        self.trans_util.add_translations_schema(schema['question_text'])
+        description = question.get_title()
+        descriptions = question.get_question_text()
+        self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name, description=description)
+        self.trans_util.add_translations_schema(schema['question_text'], descriptions=descriptions)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()

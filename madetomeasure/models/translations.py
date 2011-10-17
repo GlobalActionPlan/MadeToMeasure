@@ -50,19 +50,23 @@ class QuestionTranslations(object):
             return self.default_lang_names[lang]
         return _(u"Country code: ${country_code}", mapping={'country_code':lang})
 
-    def add_translations_schema(self, schema):
+    def add_translations_schema(self, schema, descriptions={}):
         """ Fetch all possible translations (according to settings)
             and create a schema with each lang as a node.
         """
         for lang in self.translatable_languages:
-            self.add_translation_schema(schema, lang)
+            description = u""
+            if lang in descriptions:
+                description = descriptions[lang]
+            self.add_translation_schema(schema, lang, description=description)
                                            
-    def add_translation_schema(self, schema, lang):
+    def add_translation_schema(self, schema, lang, description=u""):
         """ Sreate a schema with lang as a node.
         """
         schema.add(colander.SchemaNode(colander.String(),
                                        name=lang,
                                        title=self.title_for_code(lang),
+                                       description=description,
                                        missing=u"",
                                        widget=TextInputWidget(size=80),))
 
