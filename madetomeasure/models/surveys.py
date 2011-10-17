@@ -272,7 +272,7 @@ class Survey(BaseFolder, SecurityAware):
         trans_util = getUtility(IQuestionTranslations)
         
         # get available for survey
-        available_languages = copy(self.get_available_languages())
+        available_languages = list(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
@@ -300,7 +300,7 @@ class Survey(BaseFolder, SecurityAware):
         trans_util = getUtility(IQuestionTranslations)
         
         # get available for survey
-        available_languages = copy(self.get_available_languages())
+        available_languages = list(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)

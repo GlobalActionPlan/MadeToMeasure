@@ -30,8 +30,9 @@ class OrganisationView(BaseView):
         
         def _get_variants(question):
             variants = []
-            for lang in self.context.variants[question.__name__]:
-                variants.append(self.trans_util.title_for_code(lang))
+            if question.__name__ in self.context.variants:
+                for lang in self.context.variants[question.__name__]:
+                    variants.append(self.trans_util.title_for_code(lang))
             variants = sorted(variants)
             return ", ".join(variants)
         
