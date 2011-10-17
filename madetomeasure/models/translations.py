@@ -2,6 +2,7 @@ from copy import copy
 
 import colander
 from deform.widget import TextInputWidget
+from deform.widget import RichTextWidget
 from pyramid.threadlocal import get_current_registry
 from zope.interface import implements
 from pyramid.interfaces import ISettings
@@ -50,21 +51,27 @@ class QuestionTranslations(object):
             return self.default_lang_names[lang]
         return _(u"Country code: ${country_code}", mapping={'country_code':lang})
 
-    def add_translations_schema(self, schema):
+    def add_translations_schema(self, schema, richtext=False):
         """ Fetch all possible translations (according to settings)
             and create a schema with each lang as a node.
         """
         for lang in self.translatable_languages:
-            self.add_translation_schema(schema, lang)
+            self.add_translation_schema(schema, lang, richtext=richtext)
                                            
-    def add_translation_schema(self, schema, lang):
+    def add_translation_schema(self, schema, lang, richtext=False):
         """ Sreate a schema with lang as a node.
         """
+        if richtext == True:
+            widget = RichTextWidget()
+        else:
+            widget = TextInputWidget(size=80)
+        
         schema.add(colander.SchemaNode(colander.String(),
                                        name=lang,
                                        title=self.title_for_code(lang),
                                        missing=u"",
-                                       widget=TextInputWidget(size=80),))
+                                       widget=widget,))
+
 
 def includeme(config):
     """ Register QuestionTranslations utility. """

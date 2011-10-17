@@ -33,6 +33,9 @@ def heading_translations_node():
     return colander.Schema(title=_("Section heading translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
 
+def description_translations_node():
+    return colander.Schema(title=_("Section description translations"),
+                           description=_(u"For each language")) #Send this to add_translations_schema
 
 
 class SurveySchema(colander.Schema):
@@ -54,8 +57,7 @@ class SurveySchema(colander.Schema):
                                        validator=colander.Email(),)
     welcome_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.RichTextWidget(),
-                                        default="",
-                                        missing="",)
+                                        missing=u"",)
     finished_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.RichTextWidget(),
                                         default=_(u"Thanks a lot for filling out the survey."),)
@@ -66,8 +68,13 @@ class SurveySchema(colander.Schema):
 
 
 class SurveySectionSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),)
+    title = colander.SchemaNode(colander.String(),
+                                widget=deform.widget.TextInputWidget(size=80))
     heading_translations = heading_translations_node()
+    description = colander.SchemaNode(colander.String(),
+                                      widget=deform.widget.RichTextWidget(),
+                                      missing=u"",)
+    description_translations = description_translations_node()
     structured_question_ids = colander.Schema(title=_(u"Select participating questions"),)
 
 
@@ -106,7 +113,6 @@ class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
                                           title=_("Choose language"),
                                           widget=deferred_select_language_widget,)
-                                          
 
 
 class SurveyTranslate(colander.Schema):

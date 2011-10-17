@@ -7,7 +7,16 @@
       i18n:domain="MadeToMeasure">
 <body>
 
+<tal:translatable_heading_section condition="context.content_type == 'SurveySection'">
+    <metal:heading fill-slot="page_heading">
+        <h1 tal:content="context.get_translated_title()">Title</h1>
+        <div tal:content="structure context.get_translated_description()">Description</div>
+    </metal:heading>
+</tal:translatable_heading_section>
+
 <div metal:fill-slot="content">
+
+	
     <!-- Keep css id to allow overrides of default deform behaviour -->
 	<tal:dummy condition="dummy_form|False">
 		<h3 i18n:translate="">Displaying section form</h3>
