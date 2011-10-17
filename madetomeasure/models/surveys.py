@@ -46,6 +46,10 @@ class Survey(BaseFolder, SecurityAware):
     custom_mutators = {'time_zone': 'get_time_zone'}
     custom_mutators = {'available_languages': 'set_available_languages'}
     
+    def __init__(self, data=None, **kwargs):
+        """  Init Survey """
+        super(Survey, self).__init__(data=data, **kwargs)
+    
     @property
     def translations(self):
         if not hasattr(self, '__translations__'):
@@ -311,3 +315,25 @@ class Survey(BaseFolder, SecurityAware):
                 languages[language] = "%s (%s)" % (trans_util.title_for_code_default(language), trans_util.title_for_code(language))
 
         return languages
+        
+    @property
+    def participant_language(self):
+        if not hasattr(self, '__participant_language__'):
+            self.__participant_language__ = OOBTree()
+        return self.__participant_language__
+        
+    @property
+    def get_language_participants(self):
+        languages = {}
+        for key in self.participant_language:
+            if self.participant_language[key] not in languages:
+                languages[self.participant_language[key]] = []
+            languages[self.participant_language[key]].append(key)
+        
+        return languages
+    
+    def set_participant_language(self, participant_uid, language):
+        self.participant_language[participant_uid] = language
+
+    def get_participant_language(self, participant_uid):
+        return self.participant_language.get(participant_uid, None)

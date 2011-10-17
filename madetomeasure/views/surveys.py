@@ -166,6 +166,7 @@ class SurveysView(BaseView):
                 self.request.response.set_cookie('_LOCALE_', value=selected_language)
 
             participant_uid = self.context.start_survey(self.request)
+            self.context.set_participant_language(participant_uid, selected_language)
 
             #All good so far, let's redirect to welcome screen of the survey
             url = resource_url(self.context, self.request)
@@ -432,6 +433,22 @@ class SurveysView(BaseView):
         output = StringIO.StringIO()
         writer = csv.writer(output)
         writer.writerow([self.context.title.encode('utf-8')])
+        languages = self.context.get_language_participants
+        lrow = [_(u"Languages").encode('utf-8'), _(u"Total").encode('utf-8')]
+        langs = set(languages.keys()) | set(self.context.get_available_languages())
+        for lang in langs:
+            lrow.append(u"%s (%s)" % (self.trans_util.title_for_code(lang).encode('utf-8'), 
+                                      self.trans_util.title_for_code_default(lang).encode('utf-8')))
+        writer.writerow(lrow)
+        lrow = [""]
+        for lang in langs:
+            if lang in languages:
+                lrow.append(len(languages[lang]))
+            else:
+                lrow.append(0)
+        lrow.insert(1, sum(lrow[1:]))
+        writer.writerow(lrow)
+        writer.writerow([])
 
         def _get_questions(section):
             results = {}
@@ -447,12 +464,19 @@ class SurveysView(BaseView):
 
         for section in self.context.values():
             writer.writerow(['Section: %s' % section.title.encode('utf-8')])
+            writer.writerow([])
 
             for qtype in _get_questions(section).values():
                 writer.writerow(qtype['obj'].csv_header())
 
                 for question in qtype['questions']:
-                    title = question.title.encode('utf-8')
+                    titles = []
+                    for lang in self.context.get_available_languages():
+                        title = question.get_title(lang=lang).encode('utf-8')
+                        if title:
+                            titles.append(title)
+                    title = ", ".join(titles)
+
                     for qresult in question.csv_export(section.question_format_results().get(question.__name__)):
                         qrow = [title]
                         qrow.extend(qresult)
