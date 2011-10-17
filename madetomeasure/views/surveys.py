@@ -161,16 +161,17 @@ class SurveysView(BaseView):
             selected_language = tuple(available_languages)[0]
 
         # redirect to first section if language is selected or if previously selected language is available here as well
-        if selected_language or 'lang' in self.request.session and self.request.session['lang'] in available_languages:
+        if selected_language or '_LOCALE_' in self.request.cookies and self.request.cookies['_LOCALE_'] in available_languages:
             if selected_language:
-                self.request.session['lang'] = selected_language
+                self.request.response.set_cookie('_LOCALE_', value=selected_language)
 
             participant_uid = self.context.start_survey(self.request)
 
             #All good so far, let's redirect to welcome screen of the survey
             url = resource_url(self.context, self.request)
             url += "welcome?uid=%s" % participant_uid
-            return HTTPFound(location=url)
+            # adding header so cookie is set
+            return HTTPFound(location=url, headers=self.request.response.headers)
             
         self.response['form'] = form.render()
         return self.response
@@ -183,8 +184,8 @@ class SurveysView(BaseView):
             raise Forbidden("Invalid ticket")
 
         lang = None
-        if 'lang' in self.request.session:
-            lang = self.request.session['lang']
+        if '_LOCALE_' in self.request.cookies:
+            lang = self.request.cookies['_LOCALE_']
 
         welcome_text = self.context.get_welcome_text(lang=lang)
         post = self.request.POST
@@ -282,8 +283,8 @@ class SurveysView(BaseView):
         """ The thank-you screen
         """
         lang = None
-        if 'lang' in self.request.session:
-            lang = self.request.session['lang']
+        if '_LOCALE_' in self.request.cookies:
+            lang = self.request.cookies['_LOCALE_']
         self.response['text'] = self.context.get_finished_text(lang=lang)
         return self.response
 
