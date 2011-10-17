@@ -69,14 +69,15 @@ def PermissionSchema(context):
             )
         groups = colander.SchemaNode(
             deform.Set(allow_empty=True),
+            title = _(u"Role"),
             widget=deform.widget.CheckboxChoiceWidget(values=group_choices,
                                                       missing=colander.null,)
             )
 
     class UserIDsAndGroupsSequenceSchema(colander.SequenceSchema):
-        userid_and_groups = UserIDAndGroupsSchema(title=_(u'Groups for user'),)
+        userid_and_groups = UserIDAndGroupsSchema(title=_(u'Roles for user'),)
         
     class Schema(colander.Schema):
-        userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Group settings for users'))
+        userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
     
     return Schema()
