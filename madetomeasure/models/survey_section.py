@@ -16,20 +16,20 @@ class SurveySection(BaseFolder, SecurityAware):
     content_type = 'SurveySection'
     display_name = _(u"Survey Section")
     allowed_contexts = ('Survey',)
-    custom_accessors = {'title': 'get_title'}
+    custom_accessors = {}
     custom_mutators = {'order': 'set_order',
-                       'heading_translations': 'set_heading_translations'}
+                       'heading_translations': 'set_heading_translations',
+                       'description_translations': 'set_description_translations',}
 
     def __init__(self, data=None, **kwargs):
         """  Init Survey section """
         super(SurveySection, self).__init__(data=data, **kwargs)
         self.__responses__ = OOBTree()
 
-    def get_title(self, key=None, default=u""):
-        """ This is a special version of get title, since it might have translations.
+    def get_translated_title(self, key=None, default=u""):
+        """ This is a special version of title, since it might have translations.
             The regular setter works though, since the translations are stored in heading_translations.
         """
-        #FIXME: Mame this a separate method, it does too compaired to regular title
         try:
             lang = select_language(self)
         except ValueError:
@@ -38,9 +38,21 @@ class SurveySection(BaseFolder, SecurityAware):
         if lang and lang in translations:
             return translations[lang]
         
-        #FIXME: betahaus.pyracont is missing override option for custom getters
         return self._field_storage.get('title', default)
-    
+
+    def get_translated_description(self, key=None, default=u""):
+        """ This is a special version of description, since it might have translations.
+            The regular setter works though, since the translations are stored in description_translations.
+        """
+        try:
+            lang = select_language(self)
+        except ValueError:
+            lang = 'en'
+        translations = self.get_field_value('description_translations', {})
+        if lang and lang in translations:
+            return translations[lang]
+        return self._field_storage.get('description', default)
+
     @property
     def question_ids(self):
         uids = set()
@@ -91,6 +103,13 @@ class SurveySection(BaseFolder, SecurityAware):
             if not v.strip():
                 del value[k]
         self.set_field_value('heading_translations', value, override=True)
+
+    def set_description_translations(self, value, key=None):
+        """ Set description translations. """
+        for (k, v) in value.items():
+            if not v.strip():
+                del value[k]
+        self.set_field_value('description_translations', value, override=True)
 
     def get_structured_question_ids(self):
         #b/c compat

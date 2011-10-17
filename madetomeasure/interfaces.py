@@ -91,9 +91,10 @@ class IQuestionTranslations(Interface):
     def title_for_code(lang):
         """ Return readable name from a country code. """
     
-    def add_translations_schema(schema):
+    def add_translations_schema(schema, richtext=False):
         """ Fetch all possible translations (according to settings)
             and create a shecma with each lang as a node.
+            If richtext is true, a richtextfield will be used instead.
         """
 
 
