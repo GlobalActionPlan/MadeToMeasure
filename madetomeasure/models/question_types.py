@@ -35,7 +35,7 @@ yes_no_maybe_choices = (('yes', _(u"Yes")), ('no', _(u"No")), ('maybe', _(u"Mayb
 yes_no_maybe_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_maybe_choices)
 
 
-gender_choices = (('female', _(u"Female")), ('male', _(u"Female")) )
+gender_choices = (('female', _(u"Female")), ('male', _(u"Male")) )
 gender_choices_widget = deform.widget.RadioChoiceWidget(values=gender_choices)
 
 
