@@ -1,5 +1,6 @@
 import csv
 import StringIO
+from datetime import datetime
 from uuid import uuid4
 
 from deform import Form
@@ -10,6 +11,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from pyramid.traversal import find_root
+from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.response import Response
 from zope.component import getUtility
@@ -488,3 +490,37 @@ class SurveysView(BaseView):
         response = Response(content_type='text/csv',
                             body=contents)
         return response
+        
+    @view_config(name='clone', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    def clone(self):
+        """ Cloning survey
+        """
+        
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
+
+        schema = CONTENT_SCHEMAS["Clone%s" % self.context.content_type]()
+        schema = schema.bind(context = self.context, request = self.request)
+        
+        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
+        self.response['form_resources'] = form.get_widget_resources()
+        
+        if 'save' in self.request.POST:
+            controls = self.request.POST.items()
+            try:
+                appstruct = form.validate(controls)
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            new_survey = self.context.clone(appstruct['title'], appstruct['destination'])
+            
+            url = resource_url(new_survey, self.request)
+            return HTTPFound(location = url)
+
+        appstruct = {}
+        appstruct['title'] = "%s_clone_%s" % (self.context.title, datetime.now())
+
+        self.response['form'] = form.render(appstruct)
+        return self.response

@@ -10,6 +10,7 @@ from madetomeasure.schemas.surveys import SurveyInvitationSchema
 from madetomeasure.schemas.surveys import SurveyReminderSchema
 from madetomeasure.schemas.surveys import SurveyLangugageSchema
 from madetomeasure.schemas.surveys import SurveyTranslate
+from madetomeasure.schemas.surveys import SurveyClone
 from madetomeasure.schemas.users import AddUserSchema
 from madetomeasure.schemas.users import EditUserSchema
 
@@ -32,5 +33,6 @@ CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'SurveyLangugage':SurveyLangugageSchema,
                    'EditParticipant':EditParticipant,
                    'EditSiteRoot':EditSiteRoot,
-                   'TranslateSurvey':SurveyTranslate, }
+                   'TranslateSurvey':SurveyTranslate, 
+                   'CloneSurvey':SurveyClone,}
 

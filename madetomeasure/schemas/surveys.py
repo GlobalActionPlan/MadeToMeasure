@@ -3,6 +3,8 @@ from operator import itemgetter
 
 import colander
 import deform
+from pyramid.security import has_permission
+from pyramid.traversal import find_root
 from zope.component import getUtility
 
 
@@ -13,6 +15,7 @@ from madetomeasure.interfaces import IOrganisation
 from madetomeasure.models.fields import TZDateTime
 from madetomeasure.schemas.common import time_zone_node
 from madetomeasure.interfaces import IOrganisation, IQuestionTranslations
+from madetomeasure.security import EDIT
 
 
 @colander.deferred
@@ -124,3 +127,54 @@ class SurveyTranslate(colander.Schema):
                                         widget=deform.widget.RichTextWidget(),
                                         default="",
                                         missing="",)
+
+
+class OrganisationValidator(object):
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+    
+    def __call__(self, node, value):
+        root = find_root(self.context)
+        destination = value
+
+        invalid = False
+
+        try:
+            organisation = root[destination]
+        except KeyError:
+            invalid = True
+        else:
+            if not (IOrganisation.providedBy(organisation) and has_permission(EDIT, organisation, self.request)):
+                invalid = True
+
+        if invalid:
+            raise colander.Invalid(node, 'Not a valid organisation')
+
+
+@colander.deferred
+def survey_clone_destination_validator(form, kw):
+    context = kw['context']
+    request = kw['request']
+    return OrganisationValidator(context, request)
+
+
+@colander.deferred
+def survey_clone_destination_widget(node, kw):
+    context = kw['context']
+    request = kw['request']
+    
+    root = find_root(context)
+    choices=set()
+    for organisation in root.values():
+        if IOrganisation.providedBy(organisation) and has_permission(EDIT, organisation, request):
+            choices.add((organisation.__name__, organisation.get_field_value('title')))
+
+    return deform.widget.SelectWidget(values=choices)
+
+
+class SurveyClone(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    destination = colander.SchemaNode(colander.String(),
+                                      widget=survey_clone_destination_widget,
+                                      validator=survey_clone_destination_validator,)

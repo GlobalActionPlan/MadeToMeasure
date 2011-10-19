@@ -1,6 +1,6 @@
 from decimal import Decimal
 from uuid import uuid4
-from copy import copy
+from copy import deepcopy
 
 import colander
 import deform
@@ -337,3 +337,26 @@ class Survey(BaseFolder, SecurityAware):
 
     def get_participant_language(self, participant_uid):
         return self.participant_language.get(participant_uid, None)
+        
+    # clone survey
+    def clone(self, title, destination):
+        new_survey = deepcopy(self)
+
+        new_survey.set_field_value('title', title)
+
+        # remove participant languages
+        del new_survey.__participant_language__
+        new_survey.__participant_language__ = OOBTree()
+
+        # remove participant responses
+        for section in new_survey.values():
+            del section.__responses__
+            section.__responses__ = OOBTree()
+
+        # place survey in destination
+        root = find_root(self)
+        if destination not in root:
+            raise ValueError('No organisation with that name')
+        root[destination]['surveys'][title] = new_survey
+            
+        return new_survey
