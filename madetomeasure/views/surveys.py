@@ -196,9 +196,13 @@ class SurveysView(BaseView):
         # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
         if not welcome_text or 'next' in post:
             # url for the first section
-            section_id = self.context.order[0]
-            url = resource_url(self.context[section_id], self.request)
-            url += "do?uid=%s" % participant_uid
+            if len(self.context.order) > 0:
+                section_id = self.context.order[0]
+                url = resource_url(self.context[section_id], self.request)
+                url += "do?uid=%s" % participant_uid
+            else:
+                url = resource_url(self.context, self.request)
+                url += "finished"
             return HTTPFound(location=url)
 
         form = Form(colander.Schema(), buttons=(self.buttons['next'],))
