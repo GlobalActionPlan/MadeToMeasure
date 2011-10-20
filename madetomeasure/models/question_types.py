@@ -19,6 +19,24 @@ importance_choices = \
 importance_choices_widget = deform.widget.RadioChoiceWidget(values=importance_choices)
 
 
+importance_text_choices = \
+    (('very_important', _(u"very important")),
+     ('fairly_important', _(u"fairly important")),
+     ('not_very_important', _(u"not very important")),
+     ('unimportant', _(u"unimportant")),
+     )
+importance_text_choices_widget = deform.widget.RadioChoiceWidget(values=importance_text_choices)
+
+
+agree_text_choices = \
+    (('fully_agree', _(u"fully agree")),
+     ('somewhat_agree', _(u"somewhat agree")),
+     ('somewhat_disagree', _(u"somewhat disagree")),
+     ('disagree', _(u"disagree")),
+     )
+agree_text_choices_widget = deform.widget.RadioChoiceWidget(values=agree_text_choices)
+
+
 frequency_scale = \
     (('never', _(u'(almost) never')),
      ('sometimes', _(u'sometimes')),
@@ -31,8 +49,8 @@ yes_no_choices = (('yes', _(u"Yes")), ('no', _(u"No")) )
 yes_no_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_choices)
 
 
-yes_no_maybe_choices = (('yes', _(u"Yes")), ('no', _(u"No")), ('maybe', _(u"Maybe")) )
-yes_no_maybe_choices_widget = deform.widget.RadioChoiceWidget(values=yes_no_maybe_choices)
+yes_maybe_no_choices = (('yes', _(u"Yes")), ('maybe', _(u"Maybe")), ('no', _(u"No")), )
+yes_maybe_no_choices_widget = deform.widget.RadioChoiceWidget(values=yes_maybe_no_choices)
 
 
 gender_choices = (('female', _(u"Female")), ('male', _(u"Male")) )
@@ -41,6 +59,7 @@ gender_choices_widget = deform.widget.RadioChoiceWidget(values=gender_choices)
 
 text_area_widget = deform.widget.TextAreaWidget(cols=60, rows=10)
 string_widget = deform.widget.TextInputWidget(size = 20)
+
 
 class BasicQuestionNode(object):
     """ A question node that simply displays all of its results. """
@@ -142,7 +161,7 @@ class ChoiceQuestionNode(BasicQuestionNode):
 
 
 def includeme(config):
-    #FIXME: Make utility registratio configurable?
+    #FIXME: Make utility registration configurable?
     
     free_text = BasicQuestionNode(_(u"Free text question"), text_area_widget, missing=u"")
     config.registry.registerUtility(free_text, IQuestionNode, 'free_text')
@@ -150,8 +169,14 @@ def includeme(config):
     string_text = BasicQuestionNode(_(u"Small text input question"), string_widget, missing=u"")
     config.registry.registerUtility(string_text, IQuestionNode, 'string_text')
 
-    importance_scale = ChoiceQuestionNode(_(u"Importance scale question"), importance_choices_widget)
+    importance_scale = ChoiceQuestionNode(_(u"Importance scale question 1-7"), importance_choices_widget)
     config.registry.registerUtility(importance_scale, IQuestionNode, 'importance_scale')
+
+    importance_text_scale = ChoiceQuestionNode(_(u"Importance text question"), importance_text_choices_widget)
+    config.registry.registerUtility(importance_text_scale, IQuestionNode, 'importance_text_scale')
+
+    agree_text_choices = ChoiceQuestionNode(_(u"Agree text question"), agree_text_choices_widget)
+    config.registry.registerUtility(agree_text_choices, IQuestionNode, 'agree_text_choices')
 
     frequency_scale = ChoiceQuestionNode(_(u"Frequency scale question"), frequency_scale_choices_widget)
     config.registry.registerUtility(frequency_scale, IQuestionNode, 'frequency_scale')
@@ -159,8 +184,8 @@ def includeme(config):
     yes_no = ChoiceQuestionNode(_(u"Yes / No question"), yes_no_choices_widget)
     config.registry.registerUtility(yes_no, IQuestionNode, 'yes_no')
 
-    yes_no_maybe = ChoiceQuestionNode(_(u"Yes / No / Maybe question"), yes_no_maybe_choices_widget)
-    config.registry.registerUtility(yes_no_maybe, IQuestionNode, 'yes_no_maybe')
+    yes_maybe_no = ChoiceQuestionNode(_(u"Yes / Maybe question / No"), yes_maybe_no_choices_widget)
+    config.registry.registerUtility(yes_maybe_no, IQuestionNode, 'yes_maybe_no')
 
     gender = ChoiceQuestionNode(_(u"Gender question"), gender_choices_widget)
     config.registry.registerUtility(gender, IQuestionNode, 'gender')
