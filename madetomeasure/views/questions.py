@@ -96,7 +96,7 @@ class QuestionsView(BaseView):
             types[name] = {}
             types[name]['name'] = getattr(util, 'type_title', '')
             #FIXME: Use for local questions too
-            types[name]['questions'] = self.context.questions_by_type(name)
+            types[name]['questions'] = sorted(self.context.questions_by_type(name), key = lambda question: question.get_field_value('title'))
             
         self.response['types'] = types
         
