@@ -119,8 +119,8 @@ class SurveySection(BaseFolder, SecurityAware):
         """ Append all questions to a schema. """
         
         lang = None
-        if 'lang' in request.session:
-            lang = request.session['lang']
+        if '_LOCALE_' in request.cookies:
+            lang = request.cookies['_LOCALE_']
  
         for id in self.question_ids:
             question = self.question_object_from_id(id)
