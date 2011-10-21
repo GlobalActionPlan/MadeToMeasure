@@ -43,8 +43,8 @@ class Survey(BaseFolder, SecurityAware):
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
-    custom_mutators = {'time_zone': 'get_time_zone'}
-    custom_mutators = {'available_languages': 'set_available_languages'}
+    custom_accessors = {'time_zone': 'get_time_zone', 'welcome_text': 'get_welcome_text', 'finished_text': 'get_finished_text'}
+    custom_mutators = {'available_languages': 'set_available_languages', 'welcome_text': 'set_welcome_text', 'finished_text': 'set_finished_text'}
     
     def __init__(self, data=None, **kwargs):
         """  Init Survey """
@@ -78,7 +78,7 @@ class Survey(BaseFolder, SecurityAware):
         #b/c compat
         return self.get_field_value('available_languages', default=())
 
-    def get_welcome_text(self, lang=None, default=True):
+    def get_welcome_text(self, lang=None, default=True, **kwargs):
         text = None
         if lang:
             text = self.get_translation('__welcome_text__', lang)
@@ -91,13 +91,13 @@ class Survey(BaseFolder, SecurityAware):
             
         return getattr(self, '__welcome_text__', '')
 
-    def set_welcome_text(self, value, lang=None):
+    def set_welcome_text(self, value, lang=None, **kwargs):
         if lang:
             self.set_translation('__welcome_text__', lang, value)
-        
-        self.__welcome_text__ = value
+        else:
+            self.__welcome_text__ = value
 
-    def get_finished_text(self, lang=None, default=True):
+    def get_finished_text(self, lang=None, default=True, **kwargs):
         #FIXME: Usage of default is broken here!
         text = None
         if lang:
@@ -111,17 +111,17 @@ class Survey(BaseFolder, SecurityAware):
 
         return getattr(self, '__finished_text__', '')
         
-    def set_finished_text(self, value, lang=None):
+    def set_finished_text(self, value, lang=None, **kwargs):
         #FIXME: This method sets both translation and default. Is that correct?
         if lang:
             self.set_translation('__finished_text__', lang, value)
-        
-        self.__finished_text__ = value
+        else:
+            self.__finished_text__ = value
 
     def get_time_zone(self, default=None, **kwargs):
         """ custom accessor that uses default_timezone from settings as standard value, unless overridden. """
         marker = object()
-        tz = self.get_field_value('time_zone', marker)
+        tz = self._field_storage.get('time_zone', marker)
         if tz is marker:
             return getUtility(ISettings)['default_timezone']
         return tz
