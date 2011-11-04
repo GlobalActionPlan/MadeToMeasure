@@ -143,11 +143,7 @@ class SurveySection(BaseFolder, SecurityAware):
             anyway so that's probably not a concern
         """
         root = find_root(self)
-        try:
-            return root['questions'][id]
-        except KeyError:
-            org = find_interface(self, IOrganisation)
-            return org['questions'][id]
+        return root['questions'][id]
 
     def question_format_results(self):
         """ Return a structure suitable for looking up responses for each question.
