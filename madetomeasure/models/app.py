@@ -96,7 +96,7 @@ def select_language(context, request=None):
     if request is None:
         request = get_current_request()
     
-    return request.cookies.get('lang', None)
+    return request.cookies.get('_LOCALE_', None)
 
 
 #def find_all_of_iface(context, iface):
