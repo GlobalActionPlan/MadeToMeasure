@@ -42,13 +42,11 @@ class SelectLanguageTests(unittest.TestCase):
 
         self.assertEqual(self._fut(survey, request), None)
 
-    # FIXME: this test will faile because the cookie is not in request.cookies
     def test_lang_set_in_session(self):
         survey = self._survey()
         available_langs = set(['en', 'sv'])
         survey.set_available_languages(available_langs)
 
-        request = testing.DummyRequest()
-        request.response.set_cookie('_LOCALE_', 'sv')
+        request = testing.DummyRequest(cookies={'_LOCALE_': 'sv'})
 
         self.assertEqual(self._fut(survey, request), 'sv')
