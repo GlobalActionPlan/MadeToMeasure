@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "POT-Creation-Date: 2011-11-04 08:51+0000\n"
-"PO-Revision-Date: 2011-11-04 10:43+0100\n"
+"PO-Revision-Date: 2011-11-04 13:02+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -587,9 +587,8 @@ msgid "Your time"
 msgstr "Din tid"
 
 #: ./models/question_types.py:51
-#, fuzzy
 msgid "around half the time"
-msgstr "ungefär hälften av tiden"
+msgstr "ungefär till hälften"
 
 #: ./models/question_types.py:35
 msgid "disagree"
@@ -609,18 +608,16 @@ msgid "fully agree"
 msgstr "instämmer helt"
 
 #: ./models/question_types.py:50
-#, fuzzy
 msgid "less than half the time"
-msgstr "mindre än halva tiden"
+msgstr "till mindre än hälften"
 
 #: ./models/question_types.py:52
-#, fuzzy
 msgid "more than half the time"
-msgstr "mer än hälften av tiden"
+msgstr "till mer än hälten"
 
 #: ./models/question_types.py:44
 msgid "not applicable"
-msgstr "inte tillämpliga"
+msgstr "inte tillämpligt"
 
 #: ./models/question_types.py:25
 msgid "not very important"
