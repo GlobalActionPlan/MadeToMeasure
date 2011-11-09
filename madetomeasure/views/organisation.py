@@ -76,7 +76,7 @@ class OrganisationView(BaseView):
             for (lang, value) in appstruct['question_text'].items():
                 self.context.set_variant(question_uid, lang, value)
 
-            url = resource_url(self.context, self.request)
+            url = "%svariants" % resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
         appstruct = question.get_field_appstruct(schema)
