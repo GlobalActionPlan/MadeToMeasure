@@ -166,7 +166,7 @@ class SystemView(BaseView):
         self.response['form_resources'] = form.get_widget_resources()
 
         if 'save' in self.request.POST:
-            controls = post.items()
+            controls = self.request.POST.items()
             try:
                 appstruct = form.validate(controls)
                 #FIXME: validate name - it must be unique and url-id-like
