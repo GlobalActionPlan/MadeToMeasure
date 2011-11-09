@@ -162,10 +162,9 @@ class SurveysView(BaseView):
         if not selected_language and len(available_languages) == 1:
             selected_language = tuple(available_languages)[0]
 
-        # redirect to first section if language is selected or if previously selected language is available here as well
-        if selected_language or '_LOCALE_' in self.request.cookies and self.request.cookies['_LOCALE_'] in available_languages:
-            if selected_language:
-                self.request.response.set_cookie('_LOCALE_', value=selected_language)
+        # redirect to first section if language is selected
+        if selected_language:
+            self.request.response.set_cookie('_LOCALE_', value=selected_language)
 
             participant_uid = self.context.start_survey(self.request)
             self.context.set_participant_language(participant_uid, selected_language)
