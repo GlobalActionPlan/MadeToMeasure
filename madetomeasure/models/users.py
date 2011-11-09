@@ -14,6 +14,7 @@ from pyramid.interfaces import ISettings
 from pyramid.security import Allow, Everyone
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
+from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont import BaseFolder
 
 from madetomeasure import MadeToMeasureTSF as _
@@ -99,9 +100,11 @@ class User(BaseFolder, SecurityAware):
                  default=u"password link: ${pw_link}",
                  mapping={'pw_link':pw_link},))
         
-        #FIXME: What if email is empty...?
+        email = self.get_field_value('email')
+        if not email:
+            raise HTTPForbidden("No email set")
         msg = Message(subject=_(u"Password reset request from MadeToMeasure"),
-                       recipients=[self.get_field_value('email')()],
+                       recipients=[email],
                        body=body)
 
         mailer = get_mailer(request)

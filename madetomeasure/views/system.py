@@ -38,6 +38,7 @@ class SystemView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
 
+            #FIXME: We should validate pw as part of the schema
             userid = appstruct['userid']
             password = appstruct['password']
             came_from = urllib.unquote(appstruct['came_from'])
@@ -92,6 +93,7 @@ class SystemView(BaseView):
             else:
                 user = self.context['users'].get(userid_or_email)
 
+            #FIXME: This should be handled by validation instead
             if IUser.providedBy(user):
                 user.new_request_password_token(self.request)
                 url = resource_url(self.context, self.request)
@@ -113,7 +115,7 @@ class SystemView(BaseView):
         self.response['form_resources'] = form.get_widget_resources()
 
         if 'change' in self.request.POST:
-            controls = post.items()
+            controls = self.request.POST.items()
             try:
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
