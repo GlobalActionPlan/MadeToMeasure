@@ -15,6 +15,7 @@ EDIT = 'Edit'
 DELETE = 'Delete'
 TRANSLATE = 'Translate'
 MANAGE_SURVEY = 'Manage survey'
+MANAGE_SERVER = 'Manage server'
 
 #Add permissions
 #Note: For add permissions, check each content types class
