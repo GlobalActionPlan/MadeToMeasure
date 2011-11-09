@@ -92,12 +92,12 @@ class Survey(BaseFolder, SecurityAware):
     def set_available_languages(self, value, key=None):
         #b/c compat + custom mutator to make value a tuple
         value = tuple(value)
-        self.set_field_value('available_languages', value, override=True)
-        
+        self.field_storage['available_languages'] = value
+
     def get_available_languages(self):
         #b/c compat
         return self.get_field_value('available_languages', default=())
-        
+
     def set_heading_translations(self, value, key=None):
         """ This is only for the translations of the question, since the title is the base language.
             value here should be a dict with country codes as keys and questions as values.
@@ -107,7 +107,7 @@ class Survey(BaseFolder, SecurityAware):
         for (k, v) in value.items():
             if not v.strip():
                 del value[k]
-        self.set_field_value('heading_translations', value, override=True)
+        self.field_storage['heading_translations'] = value
 
     def get_welcome_text(self, lang=None, default=True, **kwargs):
         text = None
