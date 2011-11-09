@@ -8,11 +8,14 @@
 <body>
 
 <metal:heading fill-slot="page_heading">
+	<tal:translatable_heading_section condition="context.content_type == 'Survey'">
+        <h1 tal:content="context.get_translated_title()">Title</h1>
+	</tal:translatable_heading_section>
 	<tal:translatable_heading_section condition="context.content_type == 'SurveySection'">
         <h1 tal:content="context.get_translated_title()">Title</h1>
         <div tal:content="structure context.get_translated_description()">Description</div>
 	</tal:translatable_heading_section>
-	<tal:regular condition="context.content_type != 'SurveySection'">
+	<tal:regular condition="context.content_type != 'Survey' and context.content_type != 'SurveySection'">
         <h1 tal:content="context.title">Title</h1>
 	</tal:regular>
 </metal:heading>

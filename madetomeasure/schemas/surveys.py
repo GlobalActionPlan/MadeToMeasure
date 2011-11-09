@@ -32,17 +32,30 @@ def deferred_available_languages_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values=choices)
 
 
-def heading_translations_node():
+def survey_heading_translations_node():
+    return colander.Schema(title=_("Survey heading translations"),
+                           description=_(u"For each language")) #Send this to add_translations_schema
+
+def survey_welcome_translations_node():
+    return colander.Schema(title=_("Survey welcome translations"),
+                           description=_(u"For each language")) #Send this to add_translations_schema
+                           
+def survey_finished_translations_node():
+    return colander.Schema(title=_("Survey finished translations"),
+                           description=_(u"For each language")) #Send this to add_translations_schema
+
+def section_heading_translations_node():
     return colander.Schema(title=_("Section heading translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
 
-def description_translations_node():
+def section_description_translations_node():
     return colander.Schema(title=_("Section description translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
 
 
 class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
+    heading_translations = survey_heading_translations_node()
     start_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"Start time for survey"),
@@ -73,11 +86,11 @@ class SurveySchema(colander.Schema):
 class SurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 widget=deform.widget.TextInputWidget(size=80))
-    heading_translations = heading_translations_node()
+    heading_translations = section_heading_translations_node()
     description = colander.SchemaNode(colander.String(),
                                       widget=deform.widget.RichTextWidget(),
                                       missing=u"",)
-    description_translations = description_translations_node()
+    description_translations = section_description_translations_node()
     structured_question_ids = colander.Schema(title=_(u"Select participating questions"),)
 
 

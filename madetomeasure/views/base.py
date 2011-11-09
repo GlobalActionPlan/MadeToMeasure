@@ -226,6 +226,9 @@ class BaseView(object):
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
         schema = schema.bind(context = self.context, request = self.request)
+
+        if ISurvey.providedBy(self.context):
+            self.trans_util.add_translations_schema(schema['heading_translations'])
         
         if ISurveySection.providedBy(self.context):
             self.context.__parent__.add_structured_question_choices(schema['structured_question_ids'])

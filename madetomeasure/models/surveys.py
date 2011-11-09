@@ -27,6 +27,7 @@ from madetomeasure.models.participants import Participant
 from madetomeasure.models.date_time_helper import utcnow
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.models.security_aware import SecurityAware
+from madetomeasure.models.app import select_language
 
 
 class Surveys(BaseFolder, SecurityAware):
@@ -43,12 +44,31 @@ class Survey(BaseFolder, SecurityAware):
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
-    custom_accessors = {'time_zone': 'get_time_zone', 'welcome_text': 'get_welcome_text', 'finished_text': 'get_finished_text'}
-    custom_mutators = {'available_languages': 'set_available_languages', 'welcome_text': 'set_welcome_text', 'finished_text': 'set_finished_text'}
+    custom_accessors = {'time_zone': 'get_time_zone', 
+                        'welcome_text': 'get_welcome_text', 
+                        'finished_text': 'get_finished_text'}
+    custom_mutators = {'available_languages': 'set_available_languages', 
+                       'heading_translations': 'set_heading_translations',
+                       'welcome_text': 'set_welcome_text', 
+                       'finished_text': 'set_finished_text',}
     
     def __init__(self, data=None, **kwargs):
         """  Init Survey """
         super(Survey, self).__init__(data=data, **kwargs)
+
+    def get_translated_title(self, key=None, default=u""):
+        """ This is a special version of title, since it might have translations.
+            The regular setter works though, since the translations are stored in heading_translations.
+        """
+        try:
+            lang = select_language(self)
+        except ValueError:
+            lang = 'en'
+        translations = self.get_field_value('heading_translations', {})
+        if lang and lang in translations:
+            return translations[lang]
+        
+        return self._field_storage.get('title', default)
     
     @property
     def translations(self):
@@ -77,6 +97,17 @@ class Survey(BaseFolder, SecurityAware):
     def get_available_languages(self):
         #b/c compat
         return self.get_field_value('available_languages', default=())
+        
+    def set_heading_translations(self, value, key=None):
+        """ This is only for the translations of the question, since the title is the base language.
+            value here should be a dict with country codes as keys and questions as values.
+            Any empty value should be removed before saving.
+        """
+        #b/c compat + clean input value
+        for (k, v) in value.items():
+            if not v.strip():
+                del value[k]
+        self.set_field_value('heading_translations', value, override=True)
 
     def get_welcome_text(self, lang=None, default=True, **kwargs):
         text = None
