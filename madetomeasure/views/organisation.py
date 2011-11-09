@@ -79,12 +79,7 @@ class OrganisationView(BaseView):
             url = "%svariants" % resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        appstruct = question.get_field_appstruct(schema)
-        # add title for default locale
-        if not appstruct['question_text']:
-            appstruct['question_text'] = {}
-        appstruct['question_text'][self.trans_util.default_locale_name] = question.title
-
+        appstruct = {'question_text': {}}
         # load local variants
         for lang in self.trans_util.available_languages:
             if question_uid in self.context.variants and lang in self.context.variants[question_uid]:
