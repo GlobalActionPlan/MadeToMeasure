@@ -74,9 +74,7 @@ class OrganisationView(BaseView):
                 return self.response
             
             for (lang, value) in appstruct['question_text'].items():
-                if value.strip():
-                    if not (self.trans_util.default_locale_name == lang and question.title == value.strip()):
-                        self.context.set_variant(question_uid, lang, value)
+                self.context.set_variant(question_uid, lang, value)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
