@@ -87,7 +87,7 @@ class SurveySection(BaseFolder, SecurityAware):
                 order.append(v)
         
         order = tuple(order)
-        self.set_field_value('order', order, override=True)
+        self.field_storage['order'] = order
 
     def get_question_type(self):
         #FIXME: Isn't this obsolete?
@@ -102,14 +102,14 @@ class SurveySection(BaseFolder, SecurityAware):
         for (k, v) in value.items():
             if not v.strip():
                 del value[k]
-        self.set_field_value('heading_translations', value, override=True)
+        self.field_storage['heading_translations'] = value
 
     def set_description_translations(self, value, key=None):
         """ Set description translations. """
         for (k, v) in value.items():
             if not v.strip():
                 del value[k]
-        self.set_field_value('description_translations', value, override=True)
+        self.field_storage['description_translations'] = value
 
     def get_structured_question_ids(self):
         #b/c compat

@@ -81,3 +81,10 @@ def PermissionSchema(context):
         userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
     
     return Schema()
+
+
+class RenameSchema(colander.Schema):
+    """ Rename object schema """
+    #FIXME: Needs validation etc
+    name = colander.SchemaNode(colander.String(),
+                               title = _(u"New name, must be unique in this context and can only contain 'a-z' and '-'."),)

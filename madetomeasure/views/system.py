@@ -1,4 +1,5 @@
 import urllib
+from copy import deepcopy
 
 import deform
 from deform.exception import ValidationFailure
@@ -8,10 +9,14 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
-from pyramid.traversal import find_root 
+from pyramid.exceptions import Forbidden
 
-from madetomeasure.interfaces import *
+from madetomeasure.interfaces import ISiteRoot
+from madetomeasure.interfaces import ISurvey
+from madetomeasure.interfaces import IUser
+from madetomeasure.interfaces import IOrganisation
 from madetomeasure.schemas.system import LoginSchema
+from madetomeasure.schemas.system import RenameSchema
 from madetomeasure.schemas.system import RequestPasswordSchema
 from madetomeasure.schemas.system import TokenPasswordChange
 from madetomeasure.schemas.system import PermissionSchema
@@ -19,6 +24,7 @@ from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure import security
+from madetomeasure.security import MANAGE_SERVER
 
 
 class SystemView(BaseView):
@@ -142,7 +148,7 @@ class SystemView(BaseView):
     def get_permission_appstruct(self, context):
         """ Return the current settings in a structure that is usable in a deform form.
         """
-        root = find_root(context)
+        root = self.root
         users = root['users']
         appstruct = {}
 
@@ -181,4 +187,38 @@ class SystemView(BaseView):
         appstruct = self.get_permission_appstruct(self.context)
         
         self.response['form'] = form.render(appstruct=appstruct)
+        return self.response
+
+    @view_config(context=ISurvey, name="rename", renderer=BASE_FORM_TEMPLATE, permission=MANAGE_SERVER)
+    def rename_form(self):
+        if 'cancel' in self.request.POST:
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location=url)
+
+        if self.root == self.context:
+            raise Forbidden("Can't change name of root")
+
+        schema = RenameSchema().bind(context = self.context, request = self.request)
+        form = deform.Form(schema, buttons=(self.buttons['save'], self.buttons['cancel']))
+        self.response['form_resources'] = form.get_widget_resources()
+
+        if 'save' in self.request.POST:
+            controls = self.request.POST.items()
+            try:
+                appstruct = form.validate(controls)
+                #FIXME: validate name - it must be unique and url-id-like
+            except ValidationFailure, e:
+                self.response['form'] = e.render()
+                return self.response
+            
+            parent = self.context.__parent__
+            parent[appstruct['name']] = deepcopy(self.context)
+            del parent[self.context.__name__]
+            
+            new_context = parent[appstruct['name']]
+            url = resource_url(new_context, self.request)
+            return HTTPFound(location=url)
+
+        #No action - Render edit form
+        self.response['form'] = form.render(appstruct = {'name': self.context.__name__})
         return self.response
