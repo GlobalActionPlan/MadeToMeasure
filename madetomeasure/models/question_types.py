@@ -41,9 +41,9 @@ frequency_scale = \
     (('never', _(u'(almost) never')),
      ('lesshalf', _(u'less than half the time')),
      ('halv', _(u'around half the time')),
-     ('morehalf', _(u'more than half the time')),
+     ('morehalf', _(u'more than half')),
      ('always', _(u'(almost) always')),
-     ('n_a', _(u'not applicable')),)
+     ('n_a', _(u'N/A')),)
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
 
