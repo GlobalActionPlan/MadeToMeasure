@@ -47,22 +47,11 @@
             deform.load();
         </script>
         <script type="text/javascript">
-            /* warn when user click previous */
-            $(document).ready(function() {
-                $("#deformprevious").live('click', function(event) {
-                    if(!confirm("${confirm_previous}"))
-                        event.preventDefault();
-                });
-            });
-            /* descriptions */
-            $(document).ready(function() {
-                $('label.desc').each(function() {
-                    var desc = $(this).attr('title');
-                    if(desc != '')
-                        $(this).after('<p>'+desc+'</p>');
-                });
-            });
+            var m2m = {};
+            m2m.trans = {};
+            m2m.trans['confirm_back'] = '<tal:trans i18n:translate="">If you go back, the changes made here will be permanently lost.</tal:trans>';
         </script>
+        <script type="text/javascript" src="${request.application_url}/static/main.js"></script>
     </tal:deform>
 
     <metal:head define-slot="head"></metal:head>

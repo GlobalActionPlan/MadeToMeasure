@@ -49,7 +49,6 @@ class BaseView(object):
             path = tuple(path),
             footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
-            confirm_previous = _("If you go back, the changes made here will be permanently lost."),
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
