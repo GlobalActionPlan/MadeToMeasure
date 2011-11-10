@@ -33,7 +33,6 @@
             background-image: url(${logo_link});
         }
     </style>
-
     <tal:deform tal:condition="form_resources|False">
         <tal:css repeat="css_file form_resources['css']|[]">
         <link rel="stylesheet"
@@ -45,11 +44,6 @@
         </tal:js>
         <script type="text/javascript">
             deform.load();
-        </script>
-        <script type="text/javascript">
-            var m2m = {};
-            m2m.trans = {};
-            m2m.trans['confirm_back'] = '<tal:trans i18n:translate="">If you go back, the changes made here will be permanently lost.</tal:trans>';
         </script>
         <script type="text/javascript" src="${request.application_url}/static/main.js"></script>
     </tal:deform>
@@ -174,6 +168,10 @@
     </div>
     <div id="footer" tal:condition="footer_html" tal:content="structure footer_html">
         Footer html code
+    </div>
+
+    <div class="js_translation" style="display: none !important;">
+       <pre class="js_trans_confirm_back" i18n:translate="">If you go back, the changes made here will be permanently lost.</pre>
     </div>
 
 </body>
