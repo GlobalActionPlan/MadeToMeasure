@@ -46,7 +46,7 @@ class Organisation(BaseFolder, SecurityAware):
     def set_variant(self, question_uid, lang, value):
         # with an empty value remove the variant
         if not value.strip():
-            if lang in self.variants[question_uid]:
+            if question_uid in self.variants and lang in self.variants[question_uid]:
                 del self.variants[question_uid][lang]
         else:
             if not question_uid in self.variants:
