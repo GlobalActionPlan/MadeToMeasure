@@ -8,10 +8,7 @@
 <body>
 
 <div metal:fill-slot="content">
-	
-	<h1 i18n:translate="">Thank you!</h1>
     <div tal:content="structure text" tal:condition="text|False">Text</div>
-
 </div>
 </body>
 </html>
