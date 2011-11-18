@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-11 17:06+0000\n"
+"POT-Creation-Date: 2011-11-18 10:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,6 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: MadeToMeasure\n"
 
-#. Default: "${count} participants completed this section"
 #: ./views/templates/results.pt:16
 msgid "${count} participants completed this section"
 msgstr ""
@@ -46,7 +45,6 @@ msgstr ""
 msgid "7 - Very important"
 msgstr ""
 
-#. Default: "Add"
 #: ./views/templates/main.pt:103
 msgid "Add"
 msgstr ""
@@ -63,8 +61,9 @@ msgstr ""
 msgid "Available languages"
 msgstr ""
 
-#. Default: "Cancel"
+#: ./views/base.py:126
 #: ./views/templates/reorder_questions.pt:35
+#: ./views/templates/reorder_surveysection.pt:32
 msgid "Cancel"
 msgstr ""
 
@@ -80,17 +79,14 @@ msgstr ""
 msgid "Choose language"
 msgstr ""
 
-#. Default: "Click the link to access survey:"
 #: ./views/templates/survey_invitation_mail.pt:15
 msgid "Click the link to access survey:"
 msgstr ""
 
-#. Default: "Click to go to profile. There you can make changes as well."
 #: ./views/templates/main.pt:69
 msgid "Click to go to profile. There you can make changes as well."
 msgstr ""
 
-#. Default: "Clone"
 #: ./views/templates/main.pt:133
 msgid "Clone"
 msgstr ""
@@ -103,22 +99,18 @@ msgstr ""
 msgid "Country code: ${country_code}"
 msgstr ""
 
-#. Default: "Default finished text"
 #: ./views/templates/survey_translate.pt:15
 msgid "Default finished text"
 msgstr ""
 
-#. Default: "Default welcome text"
 #: ./views/templates/survey_translate.pt:12
 msgid "Default welcome text"
 msgstr ""
 
-#. Default: "Displaying form"
 #: ./views/templates/survey_form.pt:26
 msgid "Displaying form"
 msgstr ""
 
-#. Default: "Edit"
 #: ./views/templates/main.pt:108
 msgid "Edit"
 msgstr ""
@@ -127,7 +119,6 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
-#. Default: "End time"
 #: ./views/templates/survey_admin_view.pt:20
 msgid "End time"
 msgstr ""
@@ -136,7 +127,6 @@ msgstr ""
 msgid "End time for survey"
 msgstr ""
 
-#. Default: "Export"
 #: ./views/templates/main.pt:130
 msgid "Export"
 msgstr ""
@@ -145,7 +135,6 @@ msgstr ""
 msgid "Female"
 msgstr ""
 
-#. Default: "Finished"
 #: ./views/templates/survey_participans.pt:19
 msgid "Finished"
 msgstr ""
@@ -159,6 +148,7 @@ msgid "Footer HTML code"
 msgstr ""
 
 #: ./schemas/questions.py:11
+#: ./schemas/surveys.py:37
 msgid "For each language"
 msgstr ""
 
@@ -174,7 +164,6 @@ msgstr ""
 msgid "Gender question"
 msgstr ""
 
-#. Default: "If you go back, the changes made here will be permanently lost."
 #: ./views/templates/main.pt:174
 msgid "If you go back, the changes made here will be permanently lost."
 msgstr ""
@@ -199,12 +188,11 @@ msgstr ""
 msgid "Invalid security token. Did you click the link in your email?"
 msgstr ""
 
-#. Default: "Invitations"
 #: ./views/templates/main.pt:115
+#: ./views/templates/survey_participans.pt:30
 msgid "Invitations"
 msgstr ""
 
-#. Default: "Invited"
 #: ./views/templates/survey_participans.pt:15
 msgid "Invited"
 msgstr ""
@@ -229,7 +217,6 @@ msgstr ""
 msgid "Logo link"
 msgstr ""
 
-#. Default: "Logout"
 #: ./views/templates/main.pt:73
 msgid "Logout"
 msgstr ""
@@ -242,7 +229,6 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
-#. Default: "Manage participants"
 #: ./views/templates/survey_participans.pt:12
 msgid "Manage participants"
 msgstr ""
@@ -275,27 +261,22 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#. Default: "No language has any untranslated questions"
 #: ./views/templates/survey_translations.pt:34
 msgid "No language has any untranslated questions"
 msgstr ""
 
-#. Default: "No sections added yet, so there won't be any results either..."
 #: ./views/templates/results.pt:30
 msgid "No sections added yet, so there won't be any results either..."
 msgstr ""
 
-#. Default: "Nothing set"
 #: ./views/templates/survey_admin_view.pt:17
 msgid "Nothing set"
 msgstr ""
 
-#. Default: "Nothing set, this survey will never close!"
 #: ./views/templates/survey_admin_view.pt:22
 msgid "Nothing set, this survey will never close!"
 msgstr ""
 
-#. Default: "Oh no!"
 #: ./views/templates/results.pt:29
 msgid "Oh no!"
 msgstr ""
@@ -324,12 +305,14 @@ msgstr ""
 msgid "Participant email addresses - add one per row."
 msgstr ""
 
-#. Default: "Participants"
+#: ./models/app.py:40
+#: ./models/participants.py:15
 #: ./views/templates/main.pt:78
 msgid "Participants"
 msgstr ""
 
 #: ./schemas/system.py:20
+#: ./schemas/users.py:23
 msgid "Password"
 msgstr ""
 
@@ -337,7 +320,6 @@ msgstr ""
 msgid "Password reset request from MadeToMeasure"
 msgstr ""
 
-#. Default: "Permissions"
 #: ./views/templates/main.pt:81
 msgid "Permissions"
 msgstr ""
@@ -362,12 +344,12 @@ msgstr ""
 msgid "Question type"
 msgstr ""
 
-#. Default: "Questions"
+#: ./models/app.py:41
+#: ./models/questions.py:21
 #: ./views/templates/main.pt:79
 msgid "Questions"
 msgstr ""
 
-#. Default: "Remaining"
 #: ./views/templates/survey_participans.pt:23
 msgid "Remaining"
 msgstr ""
@@ -380,12 +362,10 @@ msgstr ""
 msgid "Reminder message"
 msgstr ""
 
-#. Default: "Reorder questions"
 #: ./views/templates/main.pt:138
 msgid "Reorder questions"
 msgstr ""
 
-#. Default: "Reorder sections"
 #: ./views/templates/main.pt:127
 msgid "Reorder sections"
 msgstr ""
@@ -394,7 +374,6 @@ msgstr ""
 msgid "Request"
 msgstr ""
 
-#. Default: "Results"
 #: ./views/templates/main.pt:121
 msgid "Results"
 msgstr ""
@@ -411,8 +390,9 @@ msgstr ""
 msgid "Roles for user"
 msgstr ""
 
-#. Default: "Save"
+#: ./views/base.py:122
 #: ./views/templates/reorder_questions.pt:34
+#: ./views/templates/reorder_surveysection.pt:31
 msgid "Save"
 msgstr ""
 
@@ -432,7 +412,6 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#. Default: "Send reminder"
 #: ./views/templates/survey_participans.pt:34
 msgid "Send reminder"
 msgstr ""
@@ -445,7 +424,6 @@ msgstr ""
 msgid "Small text input question"
 msgstr ""
 
-#. Default: "Start time"
 #: ./views/templates/survey_admin_view.pt:15
 msgid "Start time"
 msgstr ""
@@ -474,7 +452,7 @@ msgstr ""
 msgid "Survey heading translations"
 msgstr ""
 
-#. Default: "Survey invitation"
+#: ./models/surveys.py:194
 #: ./views/templates/survey_invitation_mail.pt:11
 msgid "Survey invitation"
 msgstr ""
@@ -483,17 +461,16 @@ msgstr ""
 msgid "Survey welcome translations"
 msgstr ""
 
-#. Default: "Surveys"
+#: ./models/organisation.py:30
+#: ./models/surveys.py:37
 #: ./views/templates/main.pt:86
 msgid "Surveys"
 msgstr ""
 
-#. Default: "System users"
 #: ./views/templates/main.pt:80
 msgid "System users"
 msgstr ""
 
-#. Default: "Thank you!"
 #: ./views/templates/participant_finished.pt:12
 msgid "Thank you!"
 msgstr ""
@@ -506,12 +483,10 @@ msgstr ""
 msgid "The following addresses is invalid: ${emails}"
 msgstr ""
 
-#. Default: "The following languages have untranslated questions"
 #: ./views/templates/survey_translations.pt:22
 msgid "The following languages have untranslated questions"
 msgstr ""
 
-#. Default: "The following languages have untranslated welcome and/or finished message"
 #: ./views/templates/survey_translations.pt:13
 msgid "The following languages have untranslated welcome and/or finished message"
 msgstr ""
@@ -520,12 +495,10 @@ msgstr ""
 msgid "The survey is currently open."
 msgstr ""
 
-#. Default: "There aren't any particpants invited yet. Try clicking the invitations link and invite some."
 #: ./views/templates/survey_participans.pt:29
 msgid "There aren't any particpants invited yet. Try clicking the invitations link and invite some."
 msgstr ""
 
-#. Default: "This is how it will appear to participants."
 #: ./views/templates/survey_form.pt:27
 msgid "This is how it will appear to participants."
 msgstr ""
@@ -534,7 +507,6 @@ msgstr ""
 msgid "Timezone"
 msgstr ""
 
-#. Default: "Timezone is"
 #: ./views/templates/survey_admin_view.pt:24
 msgid "Timezone is"
 msgstr ""
@@ -544,10 +516,10 @@ msgid "Too short. At least 6 chars required."
 msgstr ""
 
 #: ./models/question_types.py:141
+#: ./views/surveys.py:442
 msgid "Total"
 msgstr ""
 
-#. Default: "Translations"
 #: ./views/templates/main.pt:124
 msgid "Translations"
 msgstr ""
@@ -561,6 +533,7 @@ msgid "User"
 msgstr ""
 
 #: ./schemas/system.py:18
+#: ./schemas/users.py:20
 msgid "UserID"
 msgstr ""
 
@@ -569,15 +542,14 @@ msgid "UserID or email address."
 msgstr ""
 
 #: ./models/app.py:33
+#: ./models/users.py:32
 msgid "Users"
 msgstr ""
 
-#. Default: "Variants"
 #: ./views/templates/main.pt:88
 msgid "Variants"
 msgstr ""
 
-#. Default: "Will only be sent to participants who haven't done 100 percent of the survey."
 #: ./views/templates/survey_participans.pt:35
 msgid "Will only be sent to participants who haven't done 100 percent of the survey."
 msgstr ""
@@ -594,7 +566,6 @@ msgstr ""
 msgid "Yes / No question"
 msgstr ""
 
-#. Default: "Your time"
 #: ./views/templates/main.pt:66
 msgid "Your time"
 msgstr ""
