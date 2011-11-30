@@ -52,3 +52,43 @@ class PasswordValidationTests(TestCase):
     def test_long(self):
         password = "".join(["1"]*101)
         self.assertRaises(colander.Invalid, self._fut, None, password)
+
+
+class OrganisationValidator(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def dummy_node(self):
+        return colander.SchemaNode(colander.String())
+
+    @property
+    def _fut(self):
+        from madetomeasure.models.root import SiteRoot
+        root = SiteRoot()
+        from madetomeasure.models.organisation import Organisation
+        organisation = Organisation()
+        organisation.set_field_value('title', 'O1')
+        root['o1'] = organisation
+        from madetomeasure.models.questions import Question
+        question = Question()
+        question.set_field_value('title', 'Q1')
+        root['q1'] = question
+        from madetomeasure.schemas.surveys import OrganisationValidator
+        organisation_validator = OrganisationValidator(context = organisation, request = testing.DummyRequest())
+        return organisation_validator
+
+    def test_valid(self):
+        self.assertEqual(self._fut(self.dummy_node, "o1"), None)
+        
+    def test_not_organisation(self):
+        self.assertRaises(colander.Invalid, self._fut, self.dummy_node, "q1")
+        
+    def test_missing(self):
+        self.assertRaises(colander.Invalid, self._fut, self.dummy_node, "")
+        
+    #FIXME: do thest with proper permissionsystem
