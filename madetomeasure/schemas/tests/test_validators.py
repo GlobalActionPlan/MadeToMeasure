@@ -28,3 +28,27 @@ class MultipleEmailValidatorTests(TestCase):
 
     def test_multiple_one_bad(self):
         self.assertRaises(colander.Invalid, self._fut, None, "one@two.com\nthree@four.net\nfive@six.com\none@two.com hello! \n")
+
+
+class PasswordValidationTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _fut(self):
+        from madetomeasure.schemas.users import password_validation
+        return password_validation
+
+    def test_good(self):
+        self.assertEqual(self._fut(None, "password"), None)
+
+    def test_short(self):
+        self.assertRaises(colander.Invalid, self._fut, None, "passw")
+
+    def test_long(self):
+        password = "".join(["1"]*101)
+        self.assertRaises(colander.Invalid, self._fut, None, password)
