@@ -210,3 +210,37 @@ class SurveyTests(unittest.TestCase):
         
         # participant has the survey in its survey list
         self.assertTrue(obj.__name__ in participant.surveys)
+        
+    def test_get_participants_data(self):
+        self.config.scan('betahaus.pyracont.fields.password')
+        
+        from madetomeasure.models.app import bootstrap_root
+        root = bootstrap_root()
+        
+        from madetomeasure.models.questions import Question
+        q1 = Question()
+        q2 = Question()
+        root['questions']['q1'] = q1
+        root['questions']['q2'] = q2
+        
+        from madetomeasure.models.organisation import Organisation
+        o1 = Organisation()
+        root['questions']['o1'] = o1
+        
+        from madetomeasure.models.surveys import Survey
+        from madetomeasure.models import SurveySection
+        s1 = Survey()
+        o1['surveys']['s1'] = s1
+
+        ss1 = SurveySection()
+        s1['ss1'] = ss1
+        ss1.set_field_value('structured_question_ids', {'dummy': ['q1', 'q2']})
+        
+        s1.create_ticket('1@test.com')
+        ticket_uid = s1.create_ticket('2@test.com')
+        ss1.update_question_responses(ticket_uid, {'q1': 'dummy'})
+        
+        results = s1.get_participants_data()
+        
+        # two participants
+        self.assertEqual(len(results), 2)
