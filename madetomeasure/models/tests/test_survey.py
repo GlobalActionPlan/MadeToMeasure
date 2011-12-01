@@ -9,6 +9,7 @@ from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOBTree
+from pyramid_mailer import get_mailer
 
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.interfaces import ISurvey
@@ -135,3 +136,77 @@ class SurveyTests(unittest.TestCase):
         self.assertTrue('en' in obj.translations['__welcome_text__'])
         self.assertEqual(obj.translations['__welcome_text__']['en'], 'Welcome to the survey')
         self.assertEqual(obj.get_translation('__welcome_text__', 'en'), 'Welcome to the survey')
+        
+    def test_set_translated_titles(self):
+        obj = self._cut()
+        translations = {'en': 'h_en', 'sv': 'h_sv', 'dk': 'h_dk', }
+        obj.set_heading_translations(translations)
+        self.assertEqual(obj.field_storage['heading_translations'], translations)
+        
+    def test_get_translated_title(self):
+        request = testing.DummyRequest(cookies={'_LOCALE_': 'sv'})
+        self.config = testing.setUp(request=request)
+        
+        from madetomeasure.models.surveys import Surveys
+        surveys = Surveys()
+        
+        obj = self._cut()
+        surveys['s1'] = obj
+        
+        translations = {'en': 'h_en', 'sv': 'h_sv', 'dk': 'h_dk', }
+        obj.set_heading_translations(translations)
+
+        self.assertEqual(obj.get_translated_title(), 'h_sv')
+        
+    def test_create_ticket(self):
+        obj = self._cut()
+        ticket_uid = obj.create_ticket('test@test.com')
+        self.assertTrue(ticket_uid in obj.tickets)
+        
+    def test_recreate_ticket(self):
+        obj = self._cut()
+        ticket_uid = obj.create_ticket('test@test.com')
+        
+        self.assertEqual(obj.create_ticket('test@test.com'), ticket_uid)
+        
+    def test_send_invitation_email(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+        self.config.include('pyramid_mailer.testing')
+
+        obj = self._cut()
+
+        obj.send_invitation_email(request, 'test@test.com', 'dumuid', 'Test')
+        
+        mailer = get_mailer(request)
+        self.assertEqual(len(mailer.outbox), 1)
+        
+        msg = mailer.outbox[0]
+        self.failUnless('dumuid' in msg.html)
+    
+    def test_start_survey(self):
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request=request)
+        
+        from madetomeasure.models.root import SiteRoot
+        root = SiteRoot()
+        
+        from madetomeasure.models.participants import Participants
+        participants = Participants()
+        root['participants'] = participants
+        
+        obj = self._cut()
+        root['s1'] = obj
+        
+        ticket_uid = obj.create_ticket('test@test.com')
+        request = testing.DummyRequest(params = {'uid':ticket_uid})
+        self.config = testing.setUp(request=request)
+        
+        participant_uid = obj.start_survey(request)
+        
+        # participant is in sites participant list
+        participant = participants.participant_by_ids(obj.__name__, participant_uid)
+        self.assertIsNotNone(participants)
+        
+        # participant has the survey in its survey list
+        self.assertTrue(obj.__name__ in participant.surveys)
