@@ -139,8 +139,9 @@ class ChoiceQuestionNode(BasicQuestionNode):
         response = []
         response.append(self.type_title.encode('utf-8'))
         response.append(_(u"Total"))
-        for choice in self.widget.values:
-            response.append(choice[1].encode('utf-8'))
+        choices = self.choice_values()
+        for choice in choices:
+            response.append(choices[choice].encode('utf-8'))
         
         return response
         
