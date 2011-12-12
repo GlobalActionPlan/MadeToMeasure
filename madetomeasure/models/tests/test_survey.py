@@ -176,7 +176,7 @@ class SurveyTests(unittest.TestCase):
 
         obj = self._cut()
 
-        obj.send_invitation_email(request, 'test@test.com', 'dumuid', 'Test')
+        obj.send_invitation_email(request, 'test@test.com', 'dumuid', 'Test subject', 'Message')
         
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)

@@ -1,21 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      i18n:domain="MadeToMeasure">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-
-<h1 i18n:translate="">Survey invitation</h1>
-
-<div tal:content="structure message">Message</div>
-
-<h5 i18n:translate="">Click the link to access survey:</h5>
-<a tal:attributes="href access_link"
-   tal:content="access_link">link</a>
-
-
-</body>
+xmlns:tal="http://xml.zope.org/namespaces/tal"
+xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+i18n:domain="MadeToMeasure">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    </head>
+    <body>
+        <h1 tal:content="subject">Survey invitation</h1>
+        <div tal:content="structure message">Message</div>
+        <div><a href="${access_link}" tal:content="access_link">link</a></div>
+    </body>
 </html>

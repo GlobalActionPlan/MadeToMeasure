@@ -7,7 +7,6 @@ from pyramid.security import has_permission
 from pyramid.traversal import find_root
 from zope.component import getUtility
 
-
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.questions import deferred_question_type_widget
 from madetomeasure.schemas.validators import multiple_email_validator
@@ -30,7 +29,6 @@ def deferred_available_languages_widget(node, kw):
         name = "%s - %s (%s)" % (util.title_for_code_default(lang), util.title_for_code(lang), lang)
         choices.append((lang, name))
     return deform.widget.CheckboxChoiceWidget(values=choices)
-
 
 def survey_heading_translations_node():
     return colander.Schema(title=_("Survey heading translations"),
@@ -95,11 +93,18 @@ class SurveySectionSchema(colander.Schema):
 
 
 class SurveyInvitationSchema(colander.Schema):
+    subject = colander.SchemaNode(colander.String(),
+                                  title = _(u"Email subject and text header"),
+                                  description = _(u"Will be visible in the subject line, and as a header in the email body."))
     message = colander.SchemaNode(colander.String(),
-                                  widget=deform.widget.RichTextWidget(),
-                                  default=_('Please fill in the survey'),)
+                                  title = _(u"Message - please note that the link will be added as a new line below the message!"),
+                                  widget = deform.widget.RichTextWidget(),
+                                  default = _(u'survey_default_invitation_message',
+                                              default = 'Please fill in the survey. Click the link below to access it:'),)
     emails = colander.SchemaNode(colander.String(),
                                  title = _(u"Participant email addresses - add one per row."),
+                                 description = _(u"invitation_emails_lang_notice",
+                                                 default = u"Remember to only add users who should recieve the message in this language."),
                                  validator = multiple_email_validator,
                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
 

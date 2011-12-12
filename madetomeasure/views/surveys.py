@@ -59,8 +59,9 @@ class SurveysView(BaseView):
             for email in appstruct['emails'].splitlines():
                 emails.add(email.strip())
             message = appstruct['message']
+            subject = appstruct['subject']
 
-            self.context.send_invitations(self.request, emails, message)
+            self.context.send_invitations(self.request, emails, subject, message)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
@@ -100,9 +101,9 @@ class SurveysView(BaseView):
 
             for participant in not_finished:
                 # a participant with less then 100% completion will receive the invite ticket again with specified message
-                ticket = participant['uid']
-                email = self.context.tickets[ticket]
-                self.context.send_invitation_email(self.request, email, ticket, appstruct['message'])
+                ticket_uid = participant['uid']
+                email = self.context.tickets[ticket_uid]
+                self.context.send_invitation_email(self.request, email, ticket_uid, appstruct['subject'], appstruct['message'])
 
             self.add_flash_message(_(u"Reminder has been sent"))
 

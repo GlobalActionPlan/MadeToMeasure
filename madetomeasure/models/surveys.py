@@ -171,31 +171,29 @@ class Survey(BaseFolder, SecurityAware):
         self.tickets[ticket_uid] = email
         return ticket_uid
 
-    def send_invitations(self, request, emails=(), message=None):
+    def send_invitations(self, request, emails=(), subject=None, message=None):
         """ Send out invitations to any emails stored as invitation_emails.
             Creates a ticket that a survey participant will "claim" to start the survey.
             Also removes emails from invitation pool.
         """
         for email in emails:
             invitation_uid = self.create_ticket(email)
-            self.send_invitation_email(request, email, invitation_uid, message)
+            self.send_invitation_email(request, email, invitation_uid, subject, message)
         
-    def send_invitation_email(self, request, email, uid, message):
+    def send_invitation_email(self, request, email, uid, subject, message):
         mailer = get_mailer(request)
-        #FIXME: Default value
         sender = self.get_field_value('from_address', '')
-
         response = {}
-        response['message'] = message
         response['access_link'] = "%sdo?uid=%s" % (resource_url(self, request), uid)
-        body_html = render('../views/templates/survey_invitation_mail.pt', response, request=request)
+        response['message'] = message
+        response['subject'] = subject
+        body_html = render('../views/templates/survey_invitation_mail.pt', response, request = request)
 
         #Must contain link etc, so each mail must be unique
-        msg = Message(subject=_(u"Survey invitation"),
+        msg = Message(subject = subject,
                       sender = sender and sender or None,
-                      recipients=[email],
-                      html=body_html)
-
+                      recipients = [email],
+                      html = body_html)
         mailer.send(msg)
 
     def start_survey(self, request):
