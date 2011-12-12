@@ -386,6 +386,9 @@ class Survey(BaseFolder, SecurityAware):
         root = find_root(self)
         if destination not in root:
             raise ValueError('No organisation with that name')
-        root[destination]['surveys'][title] = new_survey
-            
+
+        surveys = root[destination]['surveys']
+        name = new_survey.suggest_name(surveys)
+        surveys[name] = new_survey
+
         return new_survey
