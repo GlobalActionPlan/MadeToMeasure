@@ -115,7 +115,7 @@ class SurveysView(BaseView):
             
             start_time = self.survey_dt.dt_format(self.context.get_field_value('start_time', None), format='full')
             msg = _(u"not_started_error",
-                    default=_(u"Survey has not started yet, it will start at ${start_time}"),
+                    default=_(u"Survey has not started yet, it will start on ${start_time}"),
                     mapping={'start_time':start_time})
         if exeption.ended:
             end_time = self.survey_dt.dt_format(self.context.get_field_value('end_time', None), format='full')
@@ -124,7 +124,7 @@ class SurveysView(BaseView):
                     mapping={'end_time':end_time})
         return msg
 
-    @view_config(name="unavailable", context=ISurvey, renderer=BASE_VIEW_TEMPLATE)
+    @view_config(name="unavailable", context=ISurvey, renderer="templates/survey_unavailable.pt")
     def unavailable_view(self):
         """ Renders when a survey is unavailable. """
         return self.response
