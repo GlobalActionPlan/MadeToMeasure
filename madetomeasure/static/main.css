@@ -122,7 +122,14 @@ button {
 	border-bottom: 2px solid #ccc;
 	padding: 5px 0;
 }
-
+#flash_messages {
+}
+#flash_messages .message {
+	border: 1px solid #aaa;
+	background-color: #ccc;
+	padding: 5px;
+	margin: 5px 0px;
+}
 
 /* Administrative controls */
 #context-toolbar .button {

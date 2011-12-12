@@ -3,10 +3,9 @@ import StringIO
 from datetime import datetime
 from uuid import uuid4
 
+import colander
 from deform import Form
 from deform.exception import ValidationFailure
-import colander
-
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
@@ -62,6 +61,11 @@ class SurveysView(BaseView):
             subject = appstruct['subject']
 
             self.context.send_invitations(self.request, emails, subject, message)
+            
+            msg = _(u"invitations_sent_notice",
+                    default = u"${count} Invitation(s) sent",
+                    mapping = {'count': len(emails)})
+            self.add_flash_message(msg)
 
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
