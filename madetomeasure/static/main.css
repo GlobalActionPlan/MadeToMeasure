@@ -39,6 +39,9 @@ ul > li {
 	margin-left: 2em;
 	list-style-type:square;
 }
+p {
+	margin: 1.1em 0;
+}
 
 /* Font size */
 body,
