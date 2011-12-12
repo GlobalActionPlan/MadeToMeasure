@@ -374,6 +374,7 @@ class Survey(BaseFolder, SecurityAware):
         new_survey = deepcopy(self)
 
         new_survey.set_field_value('title', title)
+        new_survey.set_field_value('uid', unicode(uuid4()))
 
         # remove participant languages
         del new_survey.__participant_language__
@@ -381,6 +382,7 @@ class Survey(BaseFolder, SecurityAware):
 
         # remove participant responses
         for section in new_survey.values():
+            section.set_field_value('uid', unicode(uuid4()))
             del section.__responses__
             section.__responses__ = OOBTree()
 
