@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2011-11-18 10:51+0000\n"
+"POT-Creation-Date: 2011-12-21 10:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,14 +29,6 @@ msgstr ""
 msgid "(Nothing)"
 msgstr ""
 
-#: ./models/question_types.py:45
-msgid "(almost) always"
-msgstr ""
-
-#: ./models/question_types.py:41
-msgid "(almost) never"
-msgstr ""
-
 #: ./models/question_types.py:12
 msgid "1 - Not important"
 msgstr ""
@@ -53,11 +45,11 @@ msgstr ""
 msgid "Administrator"
 msgstr ""
 
-#: ./models/question_types.py:180
+#: ./models/question_types.py:182
 msgid "Agree text question"
 msgstr ""
 
-#: ./schemas/surveys.py:83
+#: ./schemas/surveys.py:81
 msgid "Available languages"
 msgstr ""
 
@@ -75,12 +67,8 @@ msgstr ""
 msgid "Change email address"
 msgstr ""
 
-#: ./schemas/surveys.py:130
+#: ./schemas/surveys.py:135
 msgid "Choose language"
-msgstr ""
-
-#: ./views/templates/survey_invitation_mail.pt:15
-msgid "Click the link to access survey:"
 msgstr ""
 
 #: ./views/templates/main.pt:69
@@ -119,11 +107,15 @@ msgstr ""
 msgid "Email"
 msgstr ""
 
+#: ./schemas/surveys.py:97
+msgid "Email subject and text header"
+msgstr ""
+
 #: ./views/templates/survey_admin_view.pt:20
 msgid "End time"
 msgstr ""
 
-#: ./schemas/surveys.py:68
+#: ./schemas/surveys.py:66
 msgid "End time for survey"
 msgstr ""
 
@@ -131,7 +123,7 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-#: ./models/question_types.py:58
+#: ./models/question_types.py:59
 msgid "Female"
 msgstr ""
 
@@ -148,19 +140,19 @@ msgid "Footer HTML code"
 msgstr ""
 
 #: ./schemas/questions.py:11
-#: ./schemas/surveys.py:37
+#: ./schemas/surveys.py:35
 msgid "For each language"
 msgstr ""
 
-#: ./models/question_types.py:168
+#: ./models/question_types.py:170
 msgid "Free text question"
 msgstr ""
 
-#: ./models/question_types.py:183
+#: ./models/question_types.py:185
 msgid "Frequency scale question"
 msgstr ""
 
-#: ./models/question_types.py:192
+#: ./models/question_types.py:194
 msgid "Gender question"
 msgstr ""
 
@@ -168,11 +160,11 @@ msgstr ""
 msgid "If you go back, the changes made here will be permanently lost."
 msgstr ""
 
-#: ./models/question_types.py:174
+#: ./models/question_types.py:176
 msgid "Importance scale question 1-7"
 msgstr ""
 
-#: ./models/question_types.py:177
+#: ./models/question_types.py:179
 msgid "Importance text question"
 msgstr ""
 
@@ -197,7 +189,7 @@ msgstr ""
 msgid "Invited"
 msgstr ""
 
-#: ./views/surveys.py:442
+#: ./views/surveys.py:447
 msgid "Languages"
 msgstr ""
 
@@ -225,7 +217,7 @@ msgstr ""
 msgid "Made To Measure"
 msgstr ""
 
-#: ./models/question_types.py:58
+#: ./models/question_types.py:59
 msgid "Male"
 msgstr ""
 
@@ -233,8 +225,12 @@ msgstr ""
 msgid "Manage participants"
 msgstr ""
 
-#: ./models/question_types.py:54
+#: ./models/question_types.py:55
 msgid "Maybe"
+msgstr ""
+
+#: ./schemas/surveys.py:100
+msgid "Message - please note that the link will be added as a new line below the message!"
 msgstr ""
 
 #: ./schemas/organisation.py:18
@@ -245,7 +241,7 @@ msgstr ""
 msgid "Must be a hex rgb value, same as all websites. Example: '#FF0000' for red."
 msgstr ""
 
-#: ./models/question_types.py:46
+#: ./models/question_types.py:47
 msgid "N/A"
 msgstr ""
 
@@ -257,7 +253,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: ./models/question_types.py:50
+#: ./models/question_types.py:51
 msgid "No"
 msgstr ""
 
@@ -281,7 +277,7 @@ msgstr ""
 msgid "Oh no!"
 msgstr ""
 
-#: ./views/surveys.py:373
+#: ./views/surveys.py:378
 msgid "Order updated"
 msgstr ""
 
@@ -301,7 +297,7 @@ msgstr ""
 msgid "Participant"
 msgstr ""
 
-#: ./schemas/surveys.py:102
+#: ./schemas/surveys.py:105
 msgid "Participant email addresses - add one per row."
 msgstr ""
 
@@ -322,10 +318,6 @@ msgstr ""
 
 #: ./views/templates/main.pt:81
 msgid "Permissions"
-msgstr ""
-
-#: ./schemas/surveys.py:100
-msgid "Please fill in the survey"
 msgstr ""
 
 #: ./views/base.py:125
@@ -354,11 +346,11 @@ msgstr ""
 msgid "Remaining"
 msgstr ""
 
-#: ./views/surveys.py:107
+#: ./views/surveys.py:112
 msgid "Reminder has been sent"
 msgstr ""
 
-#: ./schemas/surveys.py:109
+#: ./schemas/surveys.py:114
 msgid "Reminder message"
 msgstr ""
 
@@ -396,15 +388,15 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
-#: ./schemas/surveys.py:52
+#: ./schemas/surveys.py:50
 msgid "Section description translations"
 msgstr ""
 
-#: ./schemas/surveys.py:48
+#: ./schemas/surveys.py:46
 msgid "Section heading translations"
 msgstr ""
 
-#: ./schemas/surveys.py:94
+#: ./schemas/surveys.py:92
 msgid "Select participating questions"
 msgstr ""
 
@@ -420,7 +412,7 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: ./models/question_types.py:171
+#: ./models/question_types.py:173
 msgid "Small text input question"
 msgstr ""
 
@@ -428,7 +420,7 @@ msgstr ""
 msgid "Start time"
 msgstr ""
 
-#: ./schemas/surveys.py:61
+#: ./schemas/surveys.py:59
 msgid "Start time for survey"
 msgstr ""
 
@@ -440,24 +432,19 @@ msgstr ""
 msgid "Survey Section"
 msgstr ""
 
-#: ./schemas/surveys.py:44
+#: ./schemas/surveys.py:42
 msgid "Survey finished translations"
 msgstr ""
 
-#: ./views/surveys.py:41
+#: ./views/surveys.py:40
 msgid "Survey has closed, you can't invite"
 msgstr ""
 
-#: ./schemas/surveys.py:36
+#: ./schemas/surveys.py:34
 msgid "Survey heading translations"
 msgstr ""
 
-#: ./models/surveys.py:194
-#: ./views/templates/survey_invitation_mail.pt:11
-msgid "Survey invitation"
-msgstr ""
-
-#: ./schemas/surveys.py:40
+#: ./schemas/surveys.py:38
 msgid "Survey welcome translations"
 msgstr ""
 
@@ -471,11 +458,7 @@ msgstr ""
 msgid "System users"
 msgstr ""
 
-#: ./views/templates/participant_finished.pt:12
-msgid "Thank you!"
-msgstr ""
-
-#: ./schemas/surveys.py:79
+#: ./schemas/surveys.py:77
 msgid "Thanks a lot for filling out the survey."
 msgstr ""
 
@@ -491,7 +474,7 @@ msgstr ""
 msgid "The following languages have untranslated welcome and/or finished message"
 msgstr ""
 
-#: ./views/surveys.py:351
+#: ./views/surveys.py:356
 msgid "The survey is currently open."
 msgstr ""
 
@@ -515,8 +498,8 @@ msgstr ""
 msgid "Too short. At least 6 chars required."
 msgstr ""
 
-#: ./models/question_types.py:141
-#: ./views/surveys.py:442
+#: ./models/question_types.py:142
+#: ./views/surveys.py:447
 msgid "Total"
 msgstr ""
 
@@ -550,19 +533,23 @@ msgstr ""
 msgid "Variants"
 msgstr ""
 
+#: ./schemas/surveys.py:98
+msgid "Will be visible in the subject line, and as a header in the email body."
+msgstr ""
+
 #: ./views/templates/survey_participans.pt:35
 msgid "Will only be sent to participants who haven't done 100 percent of the survey."
 msgstr ""
 
-#: ./models/question_types.py:50
+#: ./models/question_types.py:51
 msgid "Yes"
 msgstr ""
 
-#: ./models/question_types.py:189
+#: ./models/question_types.py:191
 msgid "Yes / Maybe question / No"
 msgstr ""
 
-#: ./models/question_types.py:186
+#: ./models/question_types.py:188
 msgid "Yes / No question"
 msgstr ""
 
@@ -570,7 +557,15 @@ msgstr ""
 msgid "Your time"
 msgstr ""
 
-#: ./models/question_types.py:43
+#: ./models/question_types.py:46
+msgid "almost always"
+msgstr ""
+
+#: ./models/question_types.py:42
+msgid "almost never"
+msgstr ""
+
+#: ./models/question_types.py:44
 msgid "around half the time"
 msgstr ""
 
@@ -578,8 +573,12 @@ msgstr ""
 msgid "disagree"
 msgstr ""
 
+#: ./models/question_types.py:36
+msgid "do not know"
+msgstr ""
+
 #. Default: "Survey has ended, it closed at ${end_time}"
-#: ./views/surveys.py:121
+#: ./views/surveys.py:126
 msgid "ended_error"
 msgstr ""
 
@@ -591,11 +590,21 @@ msgstr ""
 msgid "fully agree"
 msgstr ""
 
-#: ./models/question_types.py:42
+#. Default: "Remember to only add users who should recieve the message in this language."
+#: ./schemas/surveys.py:106
+msgid "invitation_emails_lang_notice"
+msgstr ""
+
+#. Default: "${count} Invitation(s) sent"
+#: ./views/surveys.py:65
+msgid "invitations_sent_notice"
+msgstr ""
+
+#: ./models/question_types.py:43
 msgid "less than half the time"
 msgstr ""
 
-#: ./models/question_types.py:44
+#: ./models/question_types.py:45
 msgid "more than half"
 msgstr ""
 
@@ -603,8 +612,8 @@ msgstr ""
 msgid "not very important"
 msgstr ""
 
-#. Default: "Survey has not started yet, it will start at ${start_time}"
-#: ./views/surveys.py:116
+#. Default: "Survey has not started yet, it will start on ${start_time}"
+#: ./views/surveys.py:121
 msgid "not_started_error"
 msgstr ""
 
@@ -619,6 +628,11 @@ msgstr ""
 
 #: ./models/question_types.py:34
 msgid "somewhat disagree"
+msgstr ""
+
+#. Default: "Please fill in the survey. Click the link below to access it:"
+#: ./schemas/surveys.py:102
+msgid "survey_default_invitation_message"
 msgstr ""
 
 #: ./models/question_types.py:26

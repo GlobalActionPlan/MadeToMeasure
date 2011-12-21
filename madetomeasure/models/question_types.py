@@ -33,16 +33,17 @@ agree_text_choices = \
      ('somewhat_agree', _(u"somewhat agree")),
      ('somewhat_disagree', _(u"somewhat disagree")),
      ('disagree', _(u"disagree")),
+     ('dont_know', _(u"do not know")),
      )
 agree_text_choices_widget = deform.widget.RadioChoiceWidget(values=agree_text_choices)
 
 
 frequency_scale = \
-    (('never', _(u'(almost) never')),
+    (('never', _(u'almost never')),
      ('lesshalf', _(u'less than half the time')),
      ('halv', _(u'around half the time')),
      ('morehalf', _(u'more than half')),
-     ('always', _(u'(almost) always')),
+     ('always', _(u'almost always')),
      ('n_a', _(u'N/A')),)
 frequency_scale_choices_widget = deform.widget.RadioChoiceWidget(values=frequency_scale)
 
