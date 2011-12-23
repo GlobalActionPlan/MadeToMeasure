@@ -19,7 +19,8 @@ class SurveySection(BaseFolder, SecurityAware):
     custom_accessors = {}
     custom_mutators = {'order': 'set_order',
                        'heading_translations': 'set_heading_translations',
-                       'description_translations': 'set_description_translations',}
+                       'description_translations': 'set_description_translations',
+                       'structured_question_ids': 'set_structured_question_ids',}
 
     def __init__(self, data=None, **kwargs):
         """  Init Survey section """
@@ -110,6 +111,11 @@ class SurveySection(BaseFolder, SecurityAware):
             if not v.strip():
                 del value[k]
         self.field_storage['description_translations'] = value
+
+    def set_structured_question_ids(self, value, key=None):
+        #b/c compat
+        self.field_storage['structured_question_ids'] = value
+        self.set_order(self.get_order())
 
     def get_structured_question_ids(self):
         #b/c compat
