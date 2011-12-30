@@ -112,5 +112,7 @@ class Question(BaseFolder, SecurityAware):
         return node_util.render_result(request, data)
 
     def csv_export(self, data):
+        if not data:
+            return ()
         node_util = getUtility(IQuestionNode, name=self.get_question_type())
         return node_util.csv_export(data)
