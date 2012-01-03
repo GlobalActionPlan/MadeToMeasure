@@ -110,6 +110,9 @@ class SurveyInvitationSchema(colander.Schema):
 
 
 class SurveyReminderSchema(colander.Schema):
+    subject = colander.SchemaNode(colander.String(),
+                                  title = _(u"Email subject and text header"),
+                                  description = _(u"Will be visible in the subject line, and as a header in the email body."))
     message = colander.SchemaNode(colander.String(),
                                   title = _(u"Reminder message"),
                                   widget=deform.widget.RichTextWidget(),)
