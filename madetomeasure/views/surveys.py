@@ -473,6 +473,7 @@ class SurveysView(BaseView):
             return results
 
         for section in self.context.values():
+            writer.writerow([])
             writer.writerow(['Section: %s' % section.title.encode('utf-8')])
             writer.writerow([])
 
@@ -480,12 +481,7 @@ class SurveysView(BaseView):
                 writer.writerow(qtype['obj'].csv_header())
 
                 for question in qtype['questions']:
-                    titles = []
-                    for lang in self.context.get_available_languages():
-                        title = question.get_title(lang=lang).encode('utf-8')
-                        if title:
-                            titles.append(title)
-                    title = ", ".join(titles)
+                    title = question.get_title().encode('utf-8')
 
                     for qresult in question.csv_export(section.question_format_results().get(question.__name__)):
                         qrow = [title]
