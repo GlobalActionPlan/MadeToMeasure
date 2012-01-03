@@ -140,22 +140,22 @@ class ChoiceQuestionNode(BasicQuestionNode):
         response = []
         response.append(self.type_title.encode('utf-8'))
         response.append(_(u"Total"))
-        choices = self.choice_values()
-        for choice in choices:
-            response.append(choices[choice].encode('utf-8'))
+        choices = self.widget.values
+        for (id, title) in choices:
+            response.append(title.encode('utf-8'))
         
         return response
         
     def csv_export(self, data):
         response = []
-        choices = self.choice_values()
+        choices = self.widget.values
         occurences = []
         if data:
             occurences = self.count_occurences(data)
         result = []
-        for choice in choices:
-            if choice in occurences:
-                result.append(occurences[choice])
+        for (id, title) in choices:
+            if id in occurences:
+                result.append(occurences[id])
             else:
                 result.append(0)
         response.append(sum(result))
