@@ -134,7 +134,6 @@ class BaseView(object):
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
-    @view_config(context=IOrganisation, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_listing_view(self):
         #FIXME: move when implemented
         return self.response

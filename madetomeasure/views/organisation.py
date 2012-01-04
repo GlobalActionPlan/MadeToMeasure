@@ -23,6 +23,10 @@ from madetomeasure import security
 
 
 class OrganisationView(BaseView):
+    @view_config(context=IOrganisation, renderer='templates/organisation_view.pt', permission=security.VIEW)
+    def admin_listing_view(self):
+        return self.response
+
 
     @view_config(name='variants', context=IOrganisation, renderer='templates/organisation_variants.pt', permission=security.EDIT)
     def variants(self):
