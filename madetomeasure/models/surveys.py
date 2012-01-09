@@ -192,7 +192,7 @@ class Survey(BaseFolder, SecurityAware):
         #Must contain link etc, so each mail must be unique
         msg = Message(subject = subject,
                       sender = sender and sender or None,
-                      recipients = [email],
+                      recipients = [email.strip()],
                       html = body_html)
         mailer.send(msg)
 
