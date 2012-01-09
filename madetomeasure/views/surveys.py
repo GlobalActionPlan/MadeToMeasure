@@ -441,7 +441,7 @@ class SurveysView(BaseView):
         """ Results screen
         """
         output = StringIO.StringIO()
-        writer = csv.writer(output)
+        writer = csv.writer(output, delimiter=';' ,quotechar='"', quoting=csv.QUOTE_ALL)
         writer.writerow([self.context.title.encode('utf-8')])
         languages = self.context.get_language_participants
         lrow = [_(u"Languages").encode('utf-8'), _(u"Total").encode('utf-8')]
