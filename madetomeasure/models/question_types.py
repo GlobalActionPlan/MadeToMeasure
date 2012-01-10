@@ -33,7 +33,7 @@ agree_text_choices = \
      ('somewhat_agree', _(u"somewhat agree")),
      ('somewhat_disagree', _(u"somewhat disagree")),
      ('disagree', _(u"disagree")),
-     ('dont_know', _(u"do not know")),
+     ('dont_know', _(u"don't know")),
      )
 agree_text_choices_widget = deform.widget.RadioChoiceWidget(values=agree_text_choices)
 

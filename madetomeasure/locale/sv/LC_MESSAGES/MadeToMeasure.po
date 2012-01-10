@@ -623,8 +623,8 @@ msgid "disagree"
 msgstr "håller inte med"
 
 #: ./models/question_types.py:36
-msgid "do not know"
-msgstr "Vet ej"
+msgid "don't know"
+msgstr "vet ej"
 
 #. Default: "Survey has ended, it closed at ${end_time}"
 #: ./views/surveys.py:126
