@@ -49,6 +49,8 @@ setup(name='MadeToMeasure',
       entry_points = """\
       [paste.app_factory]
       main = madetomeasure:main
+      [console_scripts]
+      fix_nonpersistent_variants = madetomeasure.scripts.fix_nonpersistent_variants:fix_nonpersistent_variants
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
