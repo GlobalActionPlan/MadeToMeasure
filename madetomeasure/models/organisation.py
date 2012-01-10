@@ -50,5 +50,5 @@ class Organisation(BaseFolder, SecurityAware):
                 del self.variants[question_uid][lang]
         else:
             if not question_uid in self.variants:
-                self.variants[question_uid] = {}
+                self.variants[question_uid] = OOBTree()
             self.variants[question_uid][lang] = value
