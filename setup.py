@@ -24,6 +24,7 @@ requires = [
     'webhelpers',
     'pytz',
     'betahaus.pyracont',
+    'iso8601',
     ]
 
 setup(name='MadeToMeasure',
@@ -51,6 +52,7 @@ setup(name='MadeToMeasure',
       main = madetomeasure:main
       [console_scripts]
       fix_nonpersistent_variants = madetomeasure.scripts.fix_nonpersistent_variants:fix_nonpersistent_variants
+      debug_instance = madetomeasure.scripts.debug:debug_instance
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
