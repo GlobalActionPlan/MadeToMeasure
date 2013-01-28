@@ -12,12 +12,14 @@ from madetomeasure import MadeToMeasureTSF as _
 
 
 def appmaker(zodb_root):
-    if not 'app_root' in zodb_root:
+    try:
+        return zodb_root['app_root']
+    except KeyError:
         app_root = bootstrap_root()
         zodb_root['app_root'] = app_root
         import transaction
         transaction.commit()
-    return zodb_root['app_root']
+        return zodb_root['app_root']
 
 
 def bootstrap_root():
