@@ -1,14 +1,42 @@
 import colander
 import deform
 from zope.component import getUtilitiesFor
+from pyramid.traversal import find_interface
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IQuestionNode
-
+from madetomeasure.interfaces import IQuestions
 
 def question_text_node():
-    return colander.Schema(title=_("Question translations"),
+    return colander.Schema(title=_(u"Question translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
+
+@colander.deferred
+def deferred_tags_widget(node, kw):
+    context = kw['context']
+    questions = find_interface(context, IQuestions)
+    tags = set()
+    [tags.update(x.tags) for x in questions.values()]
+    return deform.widget.AutocompleteInputWidget(
+                title = _(u"Tags"),
+                size=60,
+                values = tuple(tags),
+            )
+
+
+def adjust_tags(value):
+    value = value.lower()
+    value = value.replace(" ", "_")
+    return value
+
+
+class TagsSequence(colander.SequenceSchema):
+    text = colander.SchemaNode(
+        colander.String(),
+        preparer = adjust_tags,
+        validator=colander.Length(max=100),
+        widget=deferred_tags_widget,
+        description='Enter some text (Hint: try "b" or "t")')
 
 
 @colander.deferred
@@ -31,7 +59,7 @@ class AddQuestionSchema(colander.Schema):
                                 title=_(u"Initial question text, should be in English"),
                                 widget=deform.widget.TextInputWidget(size=80),)
     question_text = question_text_node()
-
+    tags = TagsSequence()
 
 
 class EditQuestionSchema(colander.Schema):
@@ -39,7 +67,7 @@ class EditQuestionSchema(colander.Schema):
                                 title=_(u"Initial question text, should be in English"),
                                 widget=deform.widget.TextInputWidget(size=80),)
     question_text = question_text_node()
-
+    tags = TagsSequence()
 
 
 class TranslateQuestionSchema(colander.Schema):

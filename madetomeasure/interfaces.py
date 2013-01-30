@@ -41,6 +41,7 @@ class IQuestions(IBaseFolder):
 
 class IQuestion(IBaseFolder):
     """ A question model. """
+    tags = Attribute("A frozenset of used tags")
 
 
 class IOrganisation(IBaseFolder):

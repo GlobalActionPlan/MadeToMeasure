@@ -39,8 +39,10 @@ class Question(BaseFolder, SecurityAware):
     display_name = _(u"Question")
     allowed_contexts = ('Questions', )
     custom_accessors = {'title': 'get_title',
-                        'question_text': 'get_question_text'}
-    custom_mutators = {'question_text': 'set_question_text'}
+                        'question_text': 'get_question_text',
+                        'tags': '_get_tags'}
+    custom_mutators = {'question_text': 'set_question_text',
+                       'tags': '_set_tags',}
 
     def __init__(self, data = None, **kwargs):
         self.__question_text__ = OOBTree()
@@ -66,6 +68,13 @@ class Question(BaseFolder, SecurityAware):
             if lang in languages:
                 return languages[lang]
         return self._field_storage.get('title', default)
+
+    def _get_tags(self, **kw):
+        return self._field_storage.get('tags', frozenset())
+    def _set_tags(self, value, **kw):
+        value = frozenset(value)
+        self._field_storage['tags'] = value
+    tags = property(_get_tags, _set_tags)
 
     def get_question_text(self, **kw):
         return self.__question_text__
