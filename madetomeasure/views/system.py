@@ -8,6 +8,7 @@ from pyramid.view import view_config
 from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 
@@ -31,7 +32,10 @@ class SystemView(BaseView):
 
     @view_config(context=ISiteRoot, name='login', renderer=BASE_FORM_TEMPLATE)
     def login(self):
-        login_schema = LoginSchema().bind(came_from = self.request.GET.get('came_from', ''),)
+        forgot_pw_msg = _(u"Forgot your password? ${pw_link}Click here to recover it.${pw_link_end}",
+                          mapping = {'pw_link': '<a href="%s">' % self.request.resource_url(self.context, 'request_password'),
+                                     'pw_link_end': '</a>'})
+        login_schema = LoginSchema().bind(came_from = self.request.GET.get('came_from', ''), context = self.context, request = self.context)
         form = deform.Form(login_schema, buttons=(self.buttons['login'],))
         self.response['form_resources'] = form.get_widget_resources()
 
@@ -42,27 +46,33 @@ class SystemView(BaseView):
                 appstruct = form.validate(controls)
             except ValidationFailure, e:
                 self.response['form'] = e.render()
+                self.add_flash_message(forgot_pw_msg)
                 return self.response
 
-            #FIXME: We should validate pw as part of the schema
-            userid = appstruct['userid']
+            #userid here can be either an email address or a login name
+            userid_or_email = appstruct['userid_or_email']
+            if '@' in userid_or_email:
+                #assume email
+                user = self.context['users'].get_user_by_email(userid_or_email)
+            else:
+                user = self.context['users'].get(userid_or_email)
             password = appstruct['password']
             came_from = urllib.unquote(appstruct['came_from'])
-
-            user = self.root['users'].get(userid)
-            
-            if IUser.providedBy(user):
-                if user.check_password(password):
-                    headers = remember(self.request, user.__name__)
-                    if came_from:
-                        url = came_from
-                    else:
-                        url = resource_url(self.context, self.request)
-                        
-                    return HTTPFound(location = url,
-                                     headers = headers)
-
-        #Render login form            
+            #Validation of user object provided by schema
+            #FIXME: Do form validation for password instead
+            if user.check_password(password):
+                headers = remember(self.request, user.__name__)
+                self.add_flash_message(_(u"Welcome"))
+                if came_from:
+                    url = came_from
+                else:
+                    url = resource_url(self.context, self.request)
+                return HTTPFound(location = url,
+                                 headers = headers)
+            else:
+                self.add_flash_message(_(u"Login incorrect"))
+        #Render login form
+        self.add_flash_message(forgot_pw_msg)    
         self.response['form'] = form.render()
         return self.response
 
@@ -98,23 +108,24 @@ class SystemView(BaseView):
                 user = self.context['users'].get_user_by_email(userid_or_email)
             else:
                 user = self.context['users'].get(userid_or_email)
-
-            #FIXME: This should be handled by validation instead
-            if IUser.providedBy(user):
-                user.new_request_password_token(self.request)
-                url = resource_url(self.context, self.request)
-                return HTTPFound(location = url)
-
+            #Validation is handled by validator in schema
+            user.new_request_password_token(self.request)
+            self.add_flash_message(_(u"Password change link emailed."))
+            url = self.request.resource_url(self.context, 'login')
+            return HTTPFound(location = url)
         self.response['form'] = form.render()
         return self.response
         
     @view_config(context=IUser, name="token_pw", renderer=BASE_FORM_TEMPLATE)
     def token_password_change(self):
         """ Token password change view """
-
         if 'cancel' in self.request.POST:
             url = resource_url(self.root, self.request)
             return HTTPFound(location=url)
+
+        if self.context.__token__ == None:
+            self.add_flash_message(_(u"You haven't requested a new password"))
+            raise HTTPForbidden("Access to password token view not allowed if user didn't request password change.")
 
         schema = TokenPasswordChange(self.context)
         form = deform.Form(schema, buttons=(self.buttons['change'], self.buttons['cancel']))
@@ -130,7 +141,8 @@ class SystemView(BaseView):
             
             self.context.remove_password_token()
             self.context.set_field_value('password', appstruct['password'])
-            url = "%slogin" % resource_url(self.root, self.request)
+            self.add_flash_message(_(u"Password changed, please login."))
+            url = self.request.resource_url(self.root, 'login')
             return HTTPFound(location=url)
 
         #Fetch token from get request

@@ -91,15 +91,12 @@ class User(BaseFolder, SecurityAware):
     def new_request_password_token(self, request):
         """ Set a new request password token and email user. """
         locale = get_localizer(request)
-        
         self.__token__ = RequestPasswordToken()
-        
         #FIXME: Email should use a proper template
         pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
         body = locale.translate(_('request_new_password_text',
                  default=u"password link: ${pw_link}",
                  mapping={'pw_link':pw_link},))
-        
         email = self.get_field_value('email')
         if not email:
             raise HTTPForbidden("No email set")

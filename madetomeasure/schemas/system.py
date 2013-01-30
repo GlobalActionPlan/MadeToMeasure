@@ -5,6 +5,7 @@ from pyramid.traversal import find_root
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.users import password_validation
+from madetomeasure.schemas.validators import deferred_userid_or_email_validation
 from madetomeasure import security
 
 
@@ -14,8 +15,9 @@ def deferred_came_from(node, kw):
 
 
 class LoginSchema(colander.Schema):
-    userid = colander.SchemaNode(colander.String(),
-                                 title=_(u"UserID"))
+    userid_or_email = colander.SchemaNode(colander.String(),
+                                          title = _(u"UserID or email address."),
+                                          validator = deferred_userid_or_email_validation,)
     password = colander.SchemaNode(colander.String(),
                                    title=_('Password'),
                                    widget=deform.widget.PasswordWidget(size=20),)
@@ -27,7 +29,8 @@ class LoginSchema(colander.Schema):
 
 class RequestPasswordSchema(colander.Schema):
     userid_or_email = colander.SchemaNode(colander.String(),
-                                          title = _(u"UserID or email address."))
+                                          title = _(u"UserID or email address."),
+                                          validator = deferred_userid_or_email_validation,)
 
 
 def TokenPasswordChange(context):
@@ -40,7 +43,6 @@ def TokenPasswordChange(context):
                                        validator=password_validation,
                                        widget=deform.widget.CheckedPasswordWidget(size=20),
                                        title=_('Password'))
-                                       
     return _schema()
     
 
@@ -48,7 +50,6 @@ def PermissionSchema(context):
     """ Return selectable groups schema. This can be done in a smarter way with
         deferred schemas, but it can be like this for now.
     """
-    
     root = find_root(context)
     user_choices = tuple(root['users'].keys())
     
@@ -79,7 +80,6 @@ def PermissionSchema(context):
         
     class Schema(colander.Schema):
         userids_and_groups = UserIDsAndGroupsSequenceSchema(title=_(u'Role settings for users'))
-    
     return Schema()
 
 
