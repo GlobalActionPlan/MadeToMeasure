@@ -139,6 +139,11 @@
                        href="${resource_url(context, request) + 'reorder'}"
                        i18n:translate="">Reorder questions</a>
                 </tal:survey>
+                <tal:user condition="context.content_type == 'User'">
+                    <a class="button change_password"
+                       href="${request.resource_url(context, 'change_password')}"
+                       i18n:translate="">Change password</a>
+                </tal:user>
             </div>
 
             <div tal:condition="userid" id="path-bar">

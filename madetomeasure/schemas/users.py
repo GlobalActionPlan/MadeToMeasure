@@ -29,7 +29,6 @@ class AddUserSchema(colander.Schema):
                                     title=_(u"Last name"),)
     email = colander.SchemaNode(colander.String(),
                                 title=_(u"Email"),
-                                missing=u"",
                                 validator=colander.Email(),)
     time_zone = time_zone_node()
 
@@ -41,7 +40,6 @@ class EditUserSchema(colander.Schema):
                                     title=_(u"Last name"),)
     email = colander.SchemaNode(colander.String(),
                                 title=_(u"Email"),
-                                missing=u"",
                                 validator=colander.Email(),)
     time_zone = time_zone_node()
 

@@ -22,8 +22,12 @@ from madetomeasure import security
 class UsersView(BaseView):
     @view_config(context=IUser, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_view(self):
-        #FIXME: Should probably not exist at all :)
-            
+        schema = CONTENT_SCHEMAS["EditUser"]()
+        schema = schema.bind(context = self.context, request = self.request)
+        appstruct = self.context.get_field_appstruct(schema)                
+        form = Form(schema, buttons=())
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['form'] = form.render(readonly = True, appstruct = appstruct)
         return self.response
 
     @view_config(name='add', context=IUsers, renderer=BASE_FORM_TEMPLATE)

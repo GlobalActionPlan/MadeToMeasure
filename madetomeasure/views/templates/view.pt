@@ -8,6 +8,8 @@
 <body>
 
 <div metal:fill-slot="content">
+    
+    <tal:readonly_form replace="structure form|''">May contain a readonly form</tal:readonly_form>
 
     <tal:listing replace="structure listing_sniplet()"></tal:listing>
 
