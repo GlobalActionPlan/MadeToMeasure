@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
+from pyramid.interfaces import ISettings
 
 from madetomeasure import MadeToMeasureTSF as _
 
@@ -15,7 +16,11 @@ class ExceptionsView(object):
 
     @view_config(context=HTTPForbidden)
     def forbidden_view(self):
-        return HTTPFound(location = "/login")
+        settings = self.request.registry.getUtility(ISettings)
+        if settings.get('debug_templates', False):
+            raise self.exception
+        else:
+            return HTTPFound(location = "/login")
 
     @view_config(context=HTTPNotFound, renderer="templates/exceptions.pt")
     def not_found_view(self):

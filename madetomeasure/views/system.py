@@ -156,22 +156,7 @@ class SystemView(BaseView):
         appstruct = dict(token = token)
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response
-        
-    def get_permission_appstruct(self, context):
-        """ Return the current settings in a structure that is usable in a deform form.
-        """
-        root = self.root
-        users = root['users']
-        appstruct = {}
 
-        userids_and_groups = []
-        for userid in context._groups:
-            user = users[userid]
-            userids_and_groups.append({'userid':userid, 'groups':context.get_groups(userid)})
-        appstruct['userids_and_groups'] = userids_and_groups
-
-        return appstruct
-        
     @view_config(context=ISiteRoot, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(context=IOrganisation, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def permissions_form(self):
@@ -194,9 +179,10 @@ class SystemView(BaseView):
 
             #Set permissions
             self.context.update_userids_permissions(appstruct['userids_and_groups'])
+            self.add_flash_message(_(u"Saved"))
 
         #No action - Render edit form
-        appstruct = self.get_permission_appstruct(self.context)
+        appstruct = dict(userids_and_groups=self.context.get_security())
         
         self.response['form'] = form.render(appstruct=appstruct)
         return self.response

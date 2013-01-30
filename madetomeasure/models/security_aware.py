@@ -77,9 +77,11 @@ class SecurityAware(object):
     def get_security(self):
         """ Return the current security settings.
         """
+        users = find_root(self)['users']
         userids_and_groups = []
         for userid in self._groups:
-            userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
+            if userid in users:
+                userids_and_groups.append({'userid':userid, 'groups':self.get_groups(userid)})
         return userids_and_groups
 
     def _check_groups(self, groups):
