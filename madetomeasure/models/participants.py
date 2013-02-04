@@ -1,8 +1,12 @@
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 from betahaus.pyracont import BaseFolder
+from pyramid.security import Allow
+from pyramid.security import ALL_PERMISSIONS
+from pyramid.security import DENY_ALL
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure import security
 from madetomeasure.interfaces import IParticipant
 from madetomeasure.interfaces import IParticipants
 from madetomeasure.models.security_aware import SecurityAware
@@ -14,7 +18,11 @@ class Participants(BaseFolder, SecurityAware):
     content_type = 'Participants'
     display_name = _(u"Participants")
     allowed_contexts = () #Not manually addable
-    
+
+    __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+               DENY_ALL]
+
+
     def participants_by_emails(self, emails):
         results = set()
         for obj in self.values():

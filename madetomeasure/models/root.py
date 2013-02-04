@@ -1,4 +1,5 @@
-from pyramid.security import Allow, Everyone, ALL_PERMISSIONS
+from pyramid.security import Allow
+from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
 from zope.interface import implements
 from betahaus.pyracont import BaseFolder
@@ -16,4 +17,5 @@ class SiteRoot(BaseFolder, SecurityAware):
     allowed_contexts = () #Not manually addable
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+               (Allow, security.ROLE_TRANSLATOR, security.VIEW),
                DENY_ALL]

@@ -25,7 +25,8 @@ ADD_ORGANISATION = 'Add Organisation'
 ADD_SURVEY = 'Add Survey'
 ADD_SURVEY_SECTION = 'Add SurveySection'
 
-ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),)
+ROOT_ROLES = ((ROLE_ADMIN, _(u'Administrator')),
+              (ROLE_TRANSLATOR, _(u"Translator")),)
 ORGANISATION_ROLES = ((ROLE_ORGANISATION_MANAGER, _(u'Organisation manager')),)
 
 

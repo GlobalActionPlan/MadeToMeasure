@@ -3,9 +3,11 @@ from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
 from pyramid.url import resource_url
-from pyramid.renderers import get_renderer, render
+from pyramid.renderers import get_renderer
+from pyramid.renderers import render
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPForbidden
 from deform import Button
 from deform import Form
 from colander import Schema
@@ -15,12 +17,11 @@ from pyramid.i18n import get_locale_name
 from pyramid.location import lineage
 from pyramid.security import has_permission
 
-from madetomeasure.models.app import generate_slug
 from madetomeasure.models.app import get_users_dt_helper
 from madetomeasure.interfaces import *
-from madetomeasure.schemas import LoginSchema, CONTENT_SCHEMAS
-from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models import CONTENT_TYPES
+from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
 
 
@@ -152,7 +153,7 @@ class BaseView(object):
             parent = self.context.__parent__
             del parent[self.context.__name__]
 
-            url = resource_url(parent, self.request)
+            url = self.request.resource_url(parent)
             return HTTPFound(location=url)
 
         self.response['form'] = form.render()
@@ -170,10 +171,10 @@ class BaseView(object):
         #Permission check
         add_permission = "Add %s" % type_to_add
         if not has_permission(add_permission, self.context, self.request):
-            raise Forbidden("You're not allowed to add '%s' in this context." % content_type)
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
 
         if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         
         if type_to_add not in self.addable_types():
@@ -204,7 +205,7 @@ class BaseView(object):
             name = obj.suggest_name(self.context)            
             self.context[name] = obj
     
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         self.response['form'] = form.render()
@@ -219,7 +220,7 @@ class BaseView(object):
         """ Generic edit view
         """
         if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
@@ -246,7 +247,7 @@ class BaseView(object):
             
             self.context.set_field_appstruct(appstruct)
                 
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         appstruct = self.context.get_field_appstruct(schema)

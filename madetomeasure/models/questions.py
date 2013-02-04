@@ -4,8 +4,12 @@ from zope.component import getUtility
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
 from betahaus.pyracont import BaseFolder
+from pyramid.security import Allow
+from pyramid.security import ALL_PERMISSIONS
+from pyramid.security import DENY_ALL
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure import security
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
@@ -20,6 +24,10 @@ class Questions(BaseFolder, SecurityAware):
     content_type = 'Questions'
     display_name = _(u"Questions")
     allowed_contexts = ()
+
+    __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
+               (Allow, security.ROLE_TRANSLATOR, (security.TRANSLATE, security.VIEW)),
+               DENY_ALL]
 
     def questions_by_type(self, question_type):
         """ Return available question objects according to a specific type. """
