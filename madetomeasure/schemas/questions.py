@@ -1,3 +1,5 @@
+import re
+
 import colander
 import deform
 from zope.component import getUtilitiesFor
@@ -34,9 +36,9 @@ class TagsSequence(colander.SequenceSchema):
     text = colander.SchemaNode(
         colander.String(),
         preparer = adjust_tags,
-        validator=colander.Length(max=100),
+        validator=colander.All(colander.Length(max=100), colander.Regex('^\w*$', msg = _(u"Only letters and charracters a-z allowed"))),
         widget=deferred_tags_widget,
-        description='Enter some text (Hint: try "b" or "t")')
+        description=_(u"Enter some text"))
 
 
 @colander.deferred
