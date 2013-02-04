@@ -26,6 +26,6 @@ $(document).ready(function() {
         $("#tag_listing .question_text:contains('" + $(this).val() + "')").parents('.question').show();
         var tag_select = $('#tag_select [name="tag"]');
         tag_select.find('option:selected').removeAttr('selected');
-        tag_select.find("option[value='']").attr('selected', 'selected').change();
+        tag_select.find("option[value='']").attr('selected', 'selected'); //Don't trigger event
     })
 });
