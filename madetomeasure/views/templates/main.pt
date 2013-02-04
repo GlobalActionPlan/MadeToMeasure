@@ -45,7 +45,6 @@
         <script type="text/javascript">
             deform.load();
         </script>
-        <script type="text/javascript" src="${request.application_url}/static/main.js"></script>
     </tal:deform>
 
     <metal:head define-slot="head"></metal:head>
@@ -178,6 +177,9 @@
     <div class="js_translation" style="display: none !important;">
        <pre class="js_trans_confirm_back" i18n:translate="">If you go back, the changes made here will be permanently lost.</pre>
     </div>
+
+    <script type="text/javascript" src="${request.application_url}/static/main.js"></script>
+    <script tal:condition="userid|False" type="text/javascript" src="${request.application_url}/static/authenticated.js"></script>
 
 </body>
 </html>

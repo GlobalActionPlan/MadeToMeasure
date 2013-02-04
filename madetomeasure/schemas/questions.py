@@ -14,7 +14,7 @@ def question_text_node():
                            description=_(u"For each language")) #Send this to add_translations_schema
 
 @colander.deferred
-def deferred_tags_widget(node, kw):
+def deferred_tags_text_widget(node, kw):
     context = kw['context']
     questions = find_interface(context, IQuestions)
     tags = set()
@@ -25,6 +25,27 @@ def deferred_tags_widget(node, kw):
                 values = tuple(tags),
             )
 
+@colander.deferred
+def deferred_tags_select_widget(node, kw):
+    context = kw['context']
+    questions = find_interface(context, IQuestions)
+    tags = {}
+    for question in questions.values():
+        for tag in question.tags:
+            try:
+                tags[tag] += 1
+            except KeyError:
+                tags[tag] = 1
+    order = sorted(tags.keys())
+    results = [(u'', _(u'<select>'))]
+    for k in order:
+        results.append((k, u"%s (%s)" % (k, tags[k])))
+    return deform.widget.SelectWidget(
+                title = _(u"Tags"),
+                size=60,
+                values = tuple(results),
+            )
+    
 
 def adjust_tags(value):
     value = value.lower()
@@ -37,7 +58,7 @@ class TagsSequence(colander.SequenceSchema):
         colander.String(),
         preparer = adjust_tags,
         validator=colander.All(colander.Length(max=100), colander.Regex('^\w*$', msg = _(u"Only letters and charracters a-z allowed"))),
-        widget=deferred_tags_widget,
+        widget=deferred_tags_text_widget,
         description=_(u"Enter some text"))
 
 
@@ -74,3 +95,13 @@ class EditQuestionSchema(colander.Schema):
 
 class TranslateQuestionSchema(colander.Schema):
     question_text = question_text_node()
+
+
+class QuestionSearchSchema(colander.Schema):
+    query = colander.SchemaNode(
+        colander.String(),
+        title = _(u"Free text")
+    )
+    tag =  colander.SchemaNode(
+        colander.String(),
+        widget=deferred_tags_select_widget,)

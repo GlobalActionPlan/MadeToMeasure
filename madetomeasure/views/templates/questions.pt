@@ -9,12 +9,32 @@
 
 <div metal:fill-slot="content">
 
-    <tal:types repeat="type types.values()">
-        <h3 tal:content="type['name']">Type</h3>
-		
-        <tal:listing replace="structure listing_sniplet(type['questions'])"></tal:listing>
+    <tal:form replace="structure tag_form">Tag select form</tal:form>
 
-    </tal:types>
+    <table id="tag_listing">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Tags</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="question" tal:repeat="question questions">
+                <td>
+                    <a class="question_text"
+                       href="${request.resource_url(question, 'edit')}">${question.get_field_value('title')}</a><br/>
+                    <a href="${request.resource_url(question)}" i18n:translate="">View</a>
+                    | ${types[question.get_field_value('question_type')]|u'error!'}
+                </td>
+                <td class="tags">
+                    <tal:iterate repeat="tag question.tags">
+                        <a href="javascript:" class="tag ${'tag_%s' % tag}">${tag}</a>
+                    </tal:iterate>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
 
 </div>
 </body>

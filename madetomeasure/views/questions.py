@@ -15,6 +15,7 @@ from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
+from madetomeasure.schemas.questions import QuestionSearchSchema
 from madetomeasure import security
 
 
@@ -89,17 +90,20 @@ class QuestionsView(BaseView):
         return self.response
         
     @view_config(context=IQuestions, renderer='templates/questions.pt', permission=security.VIEW)
-    def admin_listing_view(self):
-        
+    def questions_view(self):
+        schema = QuestionSearchSchema().bind(context = self.context, request = self.request)
+        form = Form(schema, buttons = (), formid = 'tag_select', action = 'javascript:')
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['tag_form'] = form.render()
+
+        #Get question type titles
         types = {}
         for (name, util) in self.request.registry.getUtilitiesFor(IQuestionNode):
-            types[name] = {}
-            types[name]['name'] = getattr(util, 'type_title', '')
-            #FIXME: Use for local questions too
-            types[name]['questions'] = sorted(self.context.questions_by_type(name), key = lambda question: question.get_field_value('title'))
-            
+            types[name] = getattr(util, 'type_title', '')
         self.response['types'] = types
         
+        #Get questions, sorted
+        self.response['questions'] = sorted(self.context.values(), key = lambda q: q.get_field_value('title').lower())
         return self.response
     
     @view_config(context=IQuestion, renderer='templates/survey_form.pt', permission=security.VIEW)
