@@ -1,4 +1,3 @@
-from pytz import common_timezones
 from operator import itemgetter
 
 import colander
@@ -8,27 +7,15 @@ from pyramid.traversal import find_root
 from zope.component import getUtility
 
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.schemas.questions import deferred_question_type_widget
+from madetomeasure.schemas.common import deferred_available_languages_widget
+from madetomeasure.schemas.common import time_zone_node
 from madetomeasure.schemas.validators import multiple_email_validator
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.models.fields import TZDateTime
-from madetomeasure.schemas.common import time_zone_node
-from madetomeasure.interfaces import IOrganisation, IQuestionTranslations
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.security import EDIT
 
-
-@colander.deferred
-def deferred_available_languages_widget(node, kw):
-    util = getUtility(IQuestionTranslations)
-    sort = []
-    for lang in util.available_languages:
-        sort.append((lang, util.title_for_code_default(lang).lower()))
-    sort = sorted(sort, key=itemgetter(1))
-    choices = []
-    for (lang, name) in sort:
-        name = "%s - %s (%s)" % (util.title_for_code_default(lang), util.title_for_code(lang), lang)
-        choices.append((lang, name))
-    return deform.widget.CheckboxChoiceWidget(values=choices)
 
 def survey_heading_translations_node():
     return colander.Schema(title=_("Survey heading translations"),
