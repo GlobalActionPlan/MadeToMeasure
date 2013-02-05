@@ -1,5 +1,5 @@
 <ul class="replies">
-	<li tal:repeat="reply data">
-		<span tal:content="reply">Each reply goes here</span>
-	</li>
+    <tal:iterate repeat="reply data">
+    	<li tal:condition="reply" tal:content="reply">Each reply goes here</li>
+	</tal:iterate>
 </ul>
