@@ -65,26 +65,26 @@
                     <span i18n:translate="">Your time</span>
                     <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
                     |
-                    <a href="${resource_url(user, request)}"
+                    <a href="${request.resource_url(user)}"
                        title="Click to go to profile. There you can make changes as well."
                        i18n:attributes="title">${user.title} (${userid})</a>
                     |
-                    <a href="${resource_url(root, request)+'logout'}" i18n:translate="">Logout</a>
+                    <a href="${request.resource_url(root, 'logout')}" i18n:translate="">Logout</a>
                 </div>
 
                 <div id="global">
                     Global:
-                    <a href="${resource_url(root['participants'], request)}" i18n:translate="">Participants</a> |
-                    <a href="${resource_url(root['questions'], request)}" i18n:translate="">Questions</a> |
-                    <a href="${resource_url(root['users'], request)}" i18n:translate="">System users</a> |
-                    <a href="${resource_url(root, request)}permissions" i18n:translate="">Permissions</a>
+                    <a href="${request.resource_url(root['participants'])}" i18n:translate="">Participants</a> |
+                    <a href="${request.resource_url(root['questions'])}" i18n:translate="">Questions</a> |
+                    <a href="${request.resource_url(root['users'])}" i18n:translate="">System users</a> |
+                    <a href="${request.resource_url(root, 'permissions')}" i18n:translate="">Permissions</a>
                 </div>
 
                 <div tal:condition="organisation|False" id="organisation">
                     <span tal:content="organisation.title">Title</span>:
-                    <a href="${resource_url(organisation['surveys'], request)}" i18n:translate="">Surveys</a> |
-                    <a href="${resource_url(organisation, request)}permissions" i18n:translate="">Permissions</a> |
-                    <a href="${resource_url(organisation, request)}variants" i18n:translate="">Variants</a>
+                    <a href="${request.resource_url(organisation['surveys'])}" i18n:translate="">Surveys</a> |
+                    <a href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a> |
+                    <a href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
                 </div>
                 
             </div>
@@ -98,44 +98,44 @@
                 <tal:add tal:condition="addable_types">
                     <tal:iterate repeat="type_id addable_types">
                         <a class="button add"
-                           href="${resource_url(context, request) + 'add?content_type=' + type_id}">
+                           href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
                             ${type_id}
                         </a> |
                     </tal:iterate>
                 </tal:add>
-                <a class="button edit" href="${resource_url(context, request) + 'edit'}" i18n:translate="">Edit</a> |
+                <a class="button edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a> |
                 <tal:organisation condition="context.content_type == 'Organisation'">
                    <a class="button variants"
-                       href="${resource_url(context, request) + 'variants'}"
+                       href="${request.resource_url(context, 'variants')}"
                        i18n:translate="">Variants</a> |
                 </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a class="button invitaions" 
-                       href="${resource_url(context, request) + 'invitation_emails'}"
+                       href="${request.resource_url(context, 'invitation_emails')}"
                        i18n:translate="">Invitations</a> |
                     <a class="button participants"
-                       href="${resource_url(context, request) + 'participants'}"
+                       href="${request.resource_url(context, 'participants')}"
                        i18n:translate="">Participants</a> |
                     <a class="button results"
-                       href="${resource_url(context, request) + 'results'}"
+                       href="${request.resource_url(context, 'results')}"
                        i18n:translate="">Results</a> |
                     <a class="button translations"
-                       href="${resource_url(context, request) + 'translations'}"
+                       href="${request.resource_url(context, 'translations')}"
                        i18n:translate="">Translations</a> |
                     <a class="button reorder"
-                       href="${resource_url(context, request) + 'reorder'}"
+                       href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder sections</a> |
                     <a class="button export"
-                       href="${resource_url(context, request) + 'export.csv'}"
+                       href="${request.resource_url(context, 'export.csv')}"
                        i18n:translate="">Export</a> |
                     <a class="button export"
-                       href="${resource_url(context, request) + 'clone'}"
+                       href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
                 <tal:survey condition="context.content_type == 'SurveySection'">
                     <a class="button reorder"
-                       href="${resource_url(context, request) + 'reorder'}"
+                       href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder questions</a>
                 </tal:survey>
                 <tal:user condition="context.content_type == 'User'">
