@@ -38,11 +38,8 @@ def bootstrap_root():
     root['users']['admin'] = admin
     #Add admin to group managers
     root.add_groups('admin', [security.ROLE_ADMIN])
-    
     root['participants'] = Participants(title=_(u"Participants"))
     root['questions'] = Questions(title=_(u"Questions"))
-    
-    
     return root
 
 def generate_slug(context, text, limit=20):

@@ -51,11 +51,12 @@ class SecurityAwareTests(unittest.TestCase):
         self.assertRaises(ValueError, obj.add_groups, 'tester', ['Hipsters'])
 
     def test_get_security(self):
-        obj = self._make_obj()
-
-        self.assertEqual(obj.get_security(), [])
-        obj.set_groups('robin', ['role:Admin', 'group:Hipsters'])
-        self.assertEqual(obj.get_security(),[{'userid': 'robin', 'groups': ('group:Hipsters', 'role:Admin')}])
+        from madetomeasure.models.app import bootstrap_root
+        self.config.scan('betahaus.pyracont.fields.password')
+        obj = bootstrap_root()
+        self.assertEqual(obj.get_security(), [{'userid': 'admin', 'groups': ('role:Admin',)}])
+        obj.set_groups('admin', ['role:Admin', 'group:Hipsters'])
+        self.assertEqual(obj.get_security(),[{'userid': 'admin', 'groups': ('group:Hipsters', 'role:Admin')}])
 
     def test_update_userids_permissions(self):
         obj = self._make_obj()
