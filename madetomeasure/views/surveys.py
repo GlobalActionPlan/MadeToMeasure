@@ -312,17 +312,16 @@ class SurveysView(BaseView):
             sections.append(section)
             section_results[section.__name__] = section.question_format_results()
 
-        def _get_questions(section):
-            question_ids = list(section.question_ids)
-            for part_data in section.responses.values():
-                #import pdb;pdb.set_trace()
-                [question_ids.append(x) for x in part_data.keys() if x not in question_ids]
-            return [section.question_object_from_id(id) for id in question_ids]
-
         self.response['sections'] = sections
         self.response['section_results'] = section_results
-        self.response['get_questions_for_section'] = _get_questions
+        self.response['get_questions_for_section'] = self._get_questions
         return self.response
+
+    def _get_questions(self, section):
+        question_ids = list(section.question_ids)
+        for part_data in section.responses.values():
+            [question_ids.append(x) for x in part_data.keys() if x not in question_ids]
+        return [section.question_object_from_id(id) for id in question_ids]
 
     @view_config(context=ISurveySection, renderer='templates/survey_form.pt', permission=security.VIEW)
     def show_dummy_form_view(self):
@@ -471,29 +470,27 @@ class SurveysView(BaseView):
         writer.writerow(lrow)
         writer.writerow([])
 
-        def _get_questions(section):
-            results = {}
-            for name in section.question_ids:
-                question = section.question_object_from_id(name)
-                if question.get_question_type() not in results:
-                    results[question.get_question_type()] = {}
-                    results[question.get_question_type()]['obj'] = getUtility(IQuestionNode, name=question.get_question_type())
-                    results[question.get_question_type()]['questions'] = []
-
-                results[question.get_question_type()]['questions'].append(question)
-            return results
-
         for section in self.context.values():
             writer.writerow([])
             writer.writerow(['Section: %s' % section.title.encode('utf-8')])
             writer.writerow([])
 
-            for qtype in _get_questions(section).values():
-                writer.writerow(qtype['obj'].csv_header())
-
-                for question in qtype['questions']:
+            #Sort all questions according to which type they are
+            results = {}
+            for question in self._get_questions(section):
+                q_type = question.get_question_type()
+                if q_type not in results:
+                    results[q_type] = dict(
+                        obj = getUtility(IQuestionNode, name=q_type),
+                        questions = [],
+                     )
+                results[q_type]['questions'].append(question)
+            
+            #Loop trough all sorted questions
+            for type_questions in results.values():
+                writer.writerow(type_questions['obj'].csv_header())
+                for question in type_questions['questions']:
                     title = question.get_title().encode('utf-8')
-
                     for qresult in question.csv_export(section.question_format_results().get(question.__name__)):
                         qrow = [title]
                         qrow.extend(qresult)
