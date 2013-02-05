@@ -20,7 +20,7 @@ class SurveySection(BaseFolder, SecurityAware):
     custom_mutators = {'order': 'set_order',
                        'heading_translations': 'set_heading_translations',
                        'description_translations': 'set_description_translations',
-                       'structured_question_ids': 'set_structured_question_ids',}
+                       'question_ids': 'set_question_ids',}
 
     def __init__(self, data=None, **kwargs):
         """  Init Survey section """
@@ -56,39 +56,11 @@ class SurveySection(BaseFolder, SecurityAware):
 
     @property
     def question_ids(self):
-        uids = set()
-        for v in self.get_structured_question_ids().values():
-            uids.update(v)
-        
-        order = self.get_order()
-        extra_uids = []
-        for v in uids:
-            if not v in order:
-                extra_uids.append(v)
-        
-        if extra_uids:
-            order = list(order)
-            order.extend(extra_uids)
-            order = tuple(order)
-        return order
-        
-    def get_order(self):
-        #b/c compat
-        return self.get_field_value('order', ())
-            
-    def set_order(self, value, key=None):
-        #b/c compat
-        uids = set()
-        for v in self.get_structured_question_ids().values():
-            uids.update(v)
-            
-        order = []
-        for v in value:
-            if v in uids:
-                order.append(v)
-        
-        order = tuple(order)
-        self.field_storage['order'] = order
+        return self.get_field_value('question_ids', ())
+
+    def set_question_ids(self, value, **kw):
+        value = tuple(value)
+        self.field_storage['question_ids'] = value
 
     def get_question_type(self):
         #FIXME: Isn't this obsolete?
@@ -111,15 +83,6 @@ class SurveySection(BaseFolder, SecurityAware):
             if not v.strip():
                 del value[k]
         self.field_storage['description_translations'] = value
-
-    def set_structured_question_ids(self, value, key=None):
-        #b/c compat
-        self.field_storage['structured_question_ids'] = value
-        self.set_order(self.get_order())
-
-    def get_structured_question_ids(self):
-        #b/c compat
-        return self.get_field_value('structured_question_ids', default={})
 
     def append_questions_to_schema(self, schema, request):
         """ Append all questions to a schema. """

@@ -23,6 +23,7 @@ from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.exceptions import SurveyUnavailableError
+from madetomeasure.interfaces import ISurveySection
 from madetomeasure import security
 
 
@@ -381,30 +382,39 @@ class SurveysView(BaseView):
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()
         return self.response
-        
-    @view_config(name='reorder', context=ISurveySection, renderer='templates/reorder_questions.pt', permission=security.EDIT)
-    def reorder_questions(self):
+
+    def process_question_ids(self, survey):
+        questions = self.root['questions']
+        for (sect_id, question_ids) in self.request.POST.dict_of_lists().items():
+            if sect_id in survey: #Might be other things than section ids within the post
+                survey[sect_id].set_question_ids(question_ids)
+
+    @view_config(name='manage_questions', context=ISurvey, renderer='templates/manage_questions.pt', permission=security.EDIT)
+    def manage_questions(self):
         post = self.request.POST
 
         if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         if 'save' in post:
-            controls = self.request.POST.items()
-            questions = []
-            for (k, v) in controls:
-                if k == 'questions':
-                    questions.append(v)
-                        
-            self.context.set_order(questions)
-            self.add_flash_message(_('Order updated'))
-            
-        form = Form(colander.Schema())
-        self.response['form_resources'] = form.get_widget_resources()
-        self.response['dummy_form'] = form.render()
+            self.process_question_ids(self.context)
+            self.add_flash_message(_('Updated'))
+
+        picked_questions = set()
+        survey_sections = []
+        for section in self.context.values():
+            if not ISurveySection.providedBy(section):
+                continue
+            picked_questions.update(section.question_ids)
+            survey_sections.append(section)
+        self.response['survey_sections'] = survey_sections
+
+        #Load all question objects that haven't been picked
+        questions = self.root['questions']
+        self.response['available_questions'] = [questions[x] for x in questions.keys() if x not in picked_questions]
         return self.response
-        
+
     @view_config(name='translate', context=ISurvey, renderer='templates/survey_translate.pt', permission=security.TRANSLATE)
     def translate_view(self):
 

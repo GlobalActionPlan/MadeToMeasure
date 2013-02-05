@@ -35,10 +35,3 @@ class SurveySectionTests(unittest.TestCase):
         obj = self._cut()
         self._survey_fixture(obj)
         self.failUnless(verifyObject(ISurveySection, obj))
-
-    def test_reorder_questions(self):
-        obj = self._cut()
-        self._survey_fixture(obj)
-        obj.set_field_value('structured_question_ids', {'dummy1': ['q1', 'q2'], 'dummy2': ['q3']})        
-        obj.set_order(['q2', 'q3', 'q1'])
-        self.assertEqual(obj.question_ids, ('q2', 'q3', 'q1'))

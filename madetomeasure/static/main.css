@@ -177,8 +177,15 @@ input {
 }
 
 /* reorder */
+ul.ui-sortable {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    min-height: 20px;
+}
 ul.ui-sortable li {
     cursor: pointer;
     border: 1px solid #CCC;
     background-color: white;
+    padding: 0.25em;
+    margin-top: 0.25em;
 }

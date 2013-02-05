@@ -112,7 +112,7 @@ class SurveyTests(unittest.TestCase):
 
         ss1 = SurveySection()
         s1['ss1'] = ss1
-        ss1.set_field_value('structured_question_ids', {'dummy': ['q1', 'q2']})
+        ss1.set_field_value('question_ids', ['q1', 'q2'])
         
         langs = s1.untranslated_languages()
         self.assertEqual(len(langs.keys()), 2)
@@ -234,7 +234,7 @@ class SurveyTests(unittest.TestCase):
 
         ss1 = SurveySection()
         s1['ss1'] = ss1
-        ss1.set_field_value('structured_question_ids', {'dummy': ['q1', 'q2']})
+        ss1.set_field_value('question_ids', ['q1', 'q2'])
         
         s1.create_ticket('1@test.com')
         ticket_uid = s1.create_ticket('2@test.com')

@@ -126,6 +126,9 @@
                     <a class="button reorder"
                        href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder sections</a> |
+                    <a class="button manage_questions"
+                       href="${request.resource_url(context, 'manage_questions')}"
+                       i18n:translate="">Manage questions</a> |
                     <a class="button export"
                        href="${request.resource_url(context, 'export.csv')}"
                        i18n:translate="">Export</a> |
@@ -134,9 +137,6 @@
                        i18n:translate="">Clone</a>
                 </tal:survey>
                 <tal:surveysection condition="context.content_type == 'SurveySection'">
-                    <a class="button reorder"
-                       href="${request.resource_url(context, 'reorder')}"
-                       i18n:translate="">Reorder questions</a>
                 </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
                     <a class="button change_password"

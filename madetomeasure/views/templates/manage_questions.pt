@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="main_macro"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="MadeToMeasure">
+<body>
+
+<metal:head fill-slot="head">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="${request.application_url}/static/manage_questions.js"></script>
+</metal:head>
+
+<div metal:fill-slot="content">
+
+    <h3>${context.title}</h3>
+
+    <form method="POST">
+        <ul id="manage_sections">
+            <tal:sections repeat="section survey_sections">
+                <li>
+                    ${section.title}
+                    <ul class="survey_section pickable_questions" name="${section.__name__}">
+                        <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
+                            <li>
+                                ${question.title}
+                                <input type="hidden" name="${section.__name__}" value="${question.__name__}" />
+                            </li>
+                        </tal:questions>
+                    </ul>
+                </li>
+            </tal:sections>
+        </ul>
+        <div>
+            <button id="deformsave" name="save" type="submit" class="btnText submit"
+                    value="save" i18n:translate="">Save</button>
+            <button id="deformcancel" name="cancel" type="submit" class="btnText submit"
+                    value="cancel" i18n:translate="">Cancel</button>
+        </div>
+    </form>
+
+    <h3>Pool</h3>
+
+    <ul class="survey_section pickable_questions">
+        <tal:questions repeat="question available_questions">
+            <li>
+                ${question.title}
+                <input type="hidden" value="${question.__name__}" />
+            </li>
+        </tal:questions>
+    </ul>
+
+
+</div>
+</body>
+</html>
+
