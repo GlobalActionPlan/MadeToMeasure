@@ -4,6 +4,7 @@ import colander
 import deform
 from pytz import common_timezones
 from zope.component import getUtility
+from pyramid.traversal import find_root
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IQuestionTranslations
@@ -33,12 +34,48 @@ def _get_langs(omit = ()):
         choices.append((lang, name))
     return choices
 
+def adjust_tags(value):
+    value = value.lower()
+    value = value.replace(" ", "_")
+    return value
 
 @colander.deferred
 def deferred_available_languages_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values = _get_langs())
 
-
 @colander.deferred
 def deferred_translator_languages_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values = _get_langs(omit = ('en',)))
+
+@colander.deferred
+def deferred_tags_text_widget(node, kw):
+    context = kw['context']
+    questions = find_root(context)['questions']
+    tags = set()
+    [tags.update(x.tags) for x in questions.values()]
+    return deform.widget.AutocompleteInputWidget(
+                title = _(u"Tags"),
+                size=60,
+                values = tuple(tags),
+            )
+
+@colander.deferred
+def deferred_tags_select_widget(node, kw):
+    context = kw['context']
+    questions = find_root(context)['questions']
+    tags = {}
+    for question in questions.values():
+        for tag in question.tags:
+            try:
+                tags[tag] += 1
+            except KeyError:
+                tags[tag] = 1
+    order = sorted(tags.keys())
+    results = [(u'', _(u'<select>'))]
+    for k in order:
+        results.append((k, u"%s (%s)" % (k, tags[k])))
+    return deform.widget.SelectWidget(
+                title = _(u"Tags"),
+                size=60,
+                values = tuple(results),
+            )

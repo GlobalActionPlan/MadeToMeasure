@@ -185,7 +185,6 @@ class BaseView(object):
 
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
         if type_to_add == 'SurveySection':
-            self.context.add_structured_question_choices(schema['structured_question_ids'])
             self.trans_util.add_translations_schema(schema['heading_translations'])
             self.trans_util.add_translations_schema(schema['description_translations'], richtext=True)
 
@@ -230,7 +229,6 @@ class BaseView(object):
             self.trans_util.add_translations_schema(schema['heading_translations'])
         
         if ISurveySection.providedBy(self.context):
-            self.context.__parent__.add_structured_question_choices(schema['structured_question_ids'])
             self.trans_util.add_translations_schema(schema['heading_translations'])
             self.trans_util.add_translations_schema(schema['description_translations'], richtext=True)
 

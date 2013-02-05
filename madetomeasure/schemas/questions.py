@@ -1,57 +1,17 @@
-import re
-
 import colander
 import deform
 from zope.component import getUtilitiesFor
-from pyramid.traversal import find_interface
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.schemas.common import adjust_tags
+from madetomeasure.schemas.common import deferred_tags_text_widget
+from madetomeasure.schemas.common import deferred_tags_select_widget
 from madetomeasure.interfaces import IQuestionNode
-from madetomeasure.interfaces import IQuestions
 
 
 def question_text_node():
     return colander.Schema(title=_(u"Question translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
-
-@colander.deferred
-def deferred_tags_text_widget(node, kw):
-    context = kw['context']
-    questions = find_interface(context, IQuestions)
-    tags = set()
-    [tags.update(x.tags) for x in questions.values()]
-    return deform.widget.AutocompleteInputWidget(
-                title = _(u"Tags"),
-                size=60,
-                values = tuple(tags),
-            )
-
-@colander.deferred
-def deferred_tags_select_widget(node, kw):
-    context = kw['context']
-    questions = find_interface(context, IQuestions)
-    tags = {}
-    for question in questions.values():
-        for tag in question.tags:
-            try:
-                tags[tag] += 1
-            except KeyError:
-                tags[tag] = 1
-    order = sorted(tags.keys())
-    results = [(u'', _(u'<select>'))]
-    for k in order:
-        results.append((k, u"%s (%s)" % (k, tags[k])))
-    return deform.widget.SelectWidget(
-                title = _(u"Tags"),
-                size=60,
-                values = tuple(results),
-            )
-    
-
-def adjust_tags(value):
-    value = value.lower()
-    value = value.replace(" ", "_")
-    return value
 
 
 class TagsSequence(colander.SequenceSchema):

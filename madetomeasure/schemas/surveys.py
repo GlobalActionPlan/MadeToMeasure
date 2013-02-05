@@ -9,6 +9,8 @@ from zope.component import getUtility
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.common import deferred_available_languages_widget
 from madetomeasure.schemas.common import time_zone_node
+from madetomeasure.schemas.common import adjust_tags
+from madetomeasure.schemas.common import deferred_tags_select_widget
 from madetomeasure.schemas.validators import multiple_email_validator
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.models.fields import TZDateTime
@@ -76,7 +78,12 @@ class SurveySectionSchema(colander.Schema):
                                       widget=deform.widget.RichTextWidget(),
                                       missing=u"",)
     description_translations = section_description_translations_node()
-    structured_question_ids = colander.Schema(title=_(u"Select participating questions"),)
+    tag = colander.SchemaNode(
+        colander.String(),
+        preparer = adjust_tags,
+        widget = deferred_tags_select_widget,
+        description = _(u"Prepopulate this section with questions that have this tag"),
+        missing = u"")
 
 
 class SurveyInvitationSchema(colander.Schema):

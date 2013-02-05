@@ -2,8 +2,6 @@ from decimal import Decimal
 from uuid import uuid4
 from copy import deepcopy
 
-import colander
-import deform
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from zope.component import getUtility
@@ -21,7 +19,6 @@ from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import ISurvey
 from madetomeasure.interfaces import ISurveys
-from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.models.participants import Participant
 from madetomeasure.models.date_time_helper import utcnow
@@ -250,31 +247,6 @@ class Survey(BaseFolder, SecurityAware):
             participants.append(participant)
         
         return participants
-
-    def structured_global_question_objects(self):
-        root = find_root(self)
-        questions = root['questions']
-        results = {}
-        for question in questions.values():
-            if not IQuestion.providedBy(question):
-                continue
-            type = question.get_question_type()
-            if type not in results:
-                results[type] = []
-            results[type].append(question)
-        return results
-
-    def add_structured_question_choices(self, schema):
-        """ Append all selectable questions to a schema.
-        """
-        questions = self.structured_global_question_objects()
-
-        for (type, questions) in questions.items():
-            choices = [(x.__name__, x.title) for x in questions]
-            schema.add(colander.SchemaNode(deform.Set(allow_empty=True),
-                                           name=type,
-                                           widget=deform.widget.CheckboxChoiceWidget(values=choices),),
-                                           )
 
     def check_open(self):
         """ Check if survey is open. The following principles apply:
