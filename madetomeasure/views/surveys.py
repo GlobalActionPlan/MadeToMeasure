@@ -313,10 +313,11 @@ class SurveysView(BaseView):
             section_results[section.__name__] = section.question_format_results()
 
         def _get_questions(section):
-            results = []
-            for name in section.question_ids:
-                results.append(section.question_object_from_id(name))
-            return results
+            question_ids = list(section.question_ids)
+            for part_data in section.responses.values():
+                #import pdb;pdb.set_trace()
+                [question_ids.append(x) for x in part_data.keys() if x not in question_ids]
+            return [section.question_object_from_id(id) for id in question_ids]
 
         self.response['sections'] = sections
         self.response['section_results'] = section_results

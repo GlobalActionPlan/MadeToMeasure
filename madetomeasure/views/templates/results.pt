@@ -17,8 +17,6 @@
 			participants completed this section
 		</div>
 
-
-
 		<tal:questions repeat="question get_questions_for_section(section)">
 			<h5 tal:content="question.title">Question title</h5>
             <div tal:content="structure question.render_result(request, section_results[section.__name__].get(question.__name__))">Question result rendered</div>
