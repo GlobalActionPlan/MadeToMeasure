@@ -133,11 +133,11 @@
                        href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
-                <tal:survey condition="context.content_type == 'SurveySection'">
+                <tal:surveysection condition="context.content_type == 'SurveySection'">
                     <a class="button reorder"
                        href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder questions</a>
-                </tal:survey>
+                </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
                     <a class="button change_password"
                        href="${request.resource_url(context, 'change_password')}"
