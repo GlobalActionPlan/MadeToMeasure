@@ -60,12 +60,15 @@ class Question(BaseFolder, SecurityAware):
         return self._field_storage.get('title', default)
 
     def get_title(self, lang=None, context=None, default=u"", **kwargs):
+        """ Note that get title has some fault tolerant behaviour so we don't have to
+            use a full test setup to investigate this model.
+        """
         #Make sure we have a valid context
         request = get_current_request()
         if not context:
-            context = request.context
+            context = getattr(request, 'context', None)
         #Check if there is a variant for the question for lang
-        if not lang:
+        if not lang and context is not None:
             trans_util = request.registry.getUtility(IQuestionTranslations)
             lang = trans_util.default_locale_name
         #Is there a local question with that lang?
