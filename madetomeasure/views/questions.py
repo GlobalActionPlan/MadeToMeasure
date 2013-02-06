@@ -34,7 +34,7 @@ class QuestionsView(BaseView):
             raise ValueError("No content type called %s" % type_to_add)
 
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
-        schema = schema.bind()
+        schema = schema.bind(context = self.context, request = self.request)
         
         self.trans_util.add_translations_schema(schema['question_text'])
 
