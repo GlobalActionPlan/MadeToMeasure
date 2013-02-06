@@ -210,11 +210,13 @@ ul.ui-sortable {
 }
 ul.ui-sortable li {
     cursor: pointer;
-    background-color: lightgray;
+    background-color: #EEFFEE;
     padding: 0.5em;
-    margin: 0.25em 1em;
+    margin: 0.25em;
 }
-
+ul.ui-sortable li:hover {
+    background-color: #DDEEEE;
+}
 .column ul li {
     list-style-type: none;
 }
@@ -223,5 +225,8 @@ ul.ui-sortable li {
     padding-right: 1%;
     display: inline-block;
     vertical-align: top;
-    width: 40%;
+    width: 49%;
+}
+#manage_sections > li {
+    margin-left: 0px;
 }
