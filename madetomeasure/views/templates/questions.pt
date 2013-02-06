@@ -16,6 +16,8 @@
             <tr>
                 <th>Question</th>
                 <th>Tags</th>
+                <th>Translations</th>
+                <th tal:condition="is_org">Variants</th>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +36,12 @@
                     <tal:iterate repeat="tag question.tags">
                         <a href="javascript:" class="tag ${'tag_%s' % tag}">${tag}</a>
                     </tal:iterate>
+                </td>
+                <td>
+                    <tal:lang replace="', '.join(question.get_question_text().keys())"></tal:lang>
+                </td>
+                <td tal:condition="is_org">
+                    <tal:lang_variants replace="', '.join(context.variants.get(question.uid, {}).keys())">sv, de</tal:lang_variants>
                 </td>
             </tr>
         </tbody>

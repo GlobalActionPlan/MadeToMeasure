@@ -105,7 +105,8 @@ class QuestionsView(BaseView):
         
         #Get questions, sorted
         self.response['questions'] = sorted(self.root['questions'].values(), key = lambda q: q.get_field_value('title').lower())
-        self.response['show_edit_variants'] = IOrganisation.providedBy(self.context) and \
+        self.response['is_org'] = IOrganisation.providedBy(self.context)
+        self.response['show_edit_variants'] = self.response['is_org'] and \
             security.context_has_permission(self.context, security.MANAGE_SURVEY, self.userid)
         self.response['show_edit'] = security.context_has_permission(self.root['questions'], security.EDIT, self.userid)
         return self.response
