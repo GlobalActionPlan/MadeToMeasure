@@ -384,8 +384,11 @@ class SurveysView(BaseView):
         return self.response
 
     def process_question_ids(self, survey):
-        questions = self.root['questions']
-        for (sect_id, question_ids) in self.request.POST.dict_of_lists().items():
+        sect_id_questions = self.request.POST.dict_of_lists()
+        for section in survey.values():
+          if ISurveySection.providedBy(section):
+            sect_id_questions.setdefault(section.__name__, [])
+        for (sect_id, question_ids) in sect_id_questions.items():
             if sect_id in survey: #Might be other things than section ids within the post
                 survey[sect_id].set_question_ids(question_ids)
 
