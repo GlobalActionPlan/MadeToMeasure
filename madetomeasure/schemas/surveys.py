@@ -45,14 +45,17 @@ class SurveySchema(colander.Schema):
          TZDateTime(),
          title = _(u"Start time for survey"),
          missing=colander.null,
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'},),
+         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+                                                           'timeFormat': 'hh:mm',
+                                                           'separator': ' '}),
     )
-
     end_time = colander.SchemaNode(
          TZDateTime(),
          title = _(u"End time for survey"),
          missing=colander.null,
-         widget=deform.widget.DateTimeInputWidget(options={'timeFormat': 'hh:mm'}),
+         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
+                                                           'timeFormat': 'hh:mm',
+                                                           'separator': ' '}),
     )
     from_address = colander.SchemaNode(colander.String(),
                                        validator=colander.Email(),)
