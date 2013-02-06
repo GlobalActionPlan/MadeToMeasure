@@ -2,7 +2,7 @@
 	<ul tal:condition="contents">
 	<tal:iterate repeat="obj contents">
 	    <li><a tal:content="obj.title"
-	           href="${resource_url(obj, request)}">Title</a></li>
+	           href="${request.resource_url(obj)}">Title</a></li>
 	</tal:iterate>
 	</ul>
 </tal:main>

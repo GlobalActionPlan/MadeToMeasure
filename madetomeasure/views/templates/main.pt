@@ -74,16 +74,20 @@
 
                 <div id="global">
                     Global:
-                    <a href="${request.resource_url(root['participants'])}" i18n:translate="">Participants</a> |
-                    <a href="${request.resource_url(root['questions'])}" i18n:translate="">Questions</a> |
-                    <a href="${request.resource_url(root['users'])}" i18n:translate="">System users</a> |
-                    <a href="${request.resource_url(root, 'permissions')}" i18n:translate="">Permissions</a>
+                    <a tal:condition="context_has_permission(root['participants'], 'View')"
+                       href="${request.resource_url(root['participants'])}" i18n:translate="">Participants</a>
+                    <a tal:condition="context_has_permission(root['questions'], 'View')"
+                       href="${request.resource_url(root['questions'])}" i18n:translate="">Questions</a>
+                    <a tal:condition="context_has_permission(root['users'], 'View')"
+                       href="${request.resource_url(root['users'])}" i18n:translate="">System users</a>
+                    <a tal:condition="context_has_permission(root, 'Manage server')"
+                       href="${request.resource_url(root, 'permissions')}" i18n:translate="">Permissions</a>
                 </div>
 
-                <div tal:condition="organisation|False" id="organisation">
+                <div tal:condition="organisation and context_has_permission(organisation, 'View')|False" id="organisation">
                     <span tal:content="organisation.title">Title</span>:
-                    <a href="${request.resource_url(organisation['surveys'])}" i18n:translate="">Surveys</a> |
-                    <a href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a> |
+                    <a href="${request.resource_url(organisation['surveys'])}" i18n:translate="">Surveys</a>
+                    <a href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a>
                     <a href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
                 </div>
                 
@@ -101,45 +105,56 @@
                            href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
                             ${type_id}
-                        </a> |
+                        </a>
                     </tal:iterate>
                 </tal:add>
-                <a class="button edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a> |
+                <a tal:condition="context_has_permission(context, 'Edit')"
+                   class="button edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
                 <tal:organisation condition="context.content_type == 'Organisation'">
-                   <a class="button variants"
-                       href="${request.resource_url(context, 'variants')}"
-                       i18n:translate="">Variants</a> |
+                   <a tal:condition="context_has_permission(context, 'Edit')"
+                      class="button variants"
+                      href="${request.resource_url(context, 'variants')}"
+                      i18n:translate="">Variants</a>
                 </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
-                    <a class="button invitaions" 
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button invitaions" 
                        href="${request.resource_url(context, 'invitation_emails')}"
-                       i18n:translate="">Invitations</a> |
-                    <a class="button participants"
+                       i18n:translate="">Invitations</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button participants"
                        href="${request.resource_url(context, 'participants')}"
                        i18n:translate="">Participants</a> |
-                    <a class="button results"
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button results"
                        href="${request.resource_url(context, 'results')}"
-                       i18n:translate="">Results</a> |
-                    <a class="button translations"
+                       i18n:translate="">Results</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button translations"
                        href="${request.resource_url(context, 'translations')}"
-                       i18n:translate="">Translations</a> |
-                    <a class="button reorder"
+                       i18n:translate="">Translations</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button reorder"
                        href="${request.resource_url(context, 'reorder')}"
-                       i18n:translate="">Reorder sections</a> |
-                    <a class="button manage_questions"
+                       i18n:translate="">Reorder sections</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button manage_questions"
                        href="${request.resource_url(context, 'manage_questions')}"
-                       i18n:translate="">Manage questions</a> |
-                    <a class="button export"
+                       i18n:translate="">Manage questions</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button export"
                        href="${request.resource_url(context, 'export.csv')}"
-                       i18n:translate="">Export</a> |
-                    <a class="button export"
+                       i18n:translate="">Export</a>
+                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                       class="button export"
                        href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
                 <tal:surveysection condition="context.content_type == 'SurveySection'">
                 </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
-                    <a class="button change_password"
+                    <a tal:condition="context_has_permission(context, 'Edit')"
+                       class="button change_password"
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
                 </tal:user>

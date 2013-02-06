@@ -10,7 +10,7 @@ from madetomeasure import security
 
 admin = set([security.ROLE_ADMIN])
 translator = set([security.ROLE_TRANSLATOR])
-
+auth = set([Authenticated])
 
 class RootPermissionTests(unittest.TestCase):
     """ Check permissions. """
@@ -31,7 +31,7 @@ class RootPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         # VIEW
-        self.assertEqual(self.pap(obj, security.VIEW), admin | translator)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | auth)
         
         # EDIT
         self.assertEqual(self.pap(obj, security.EDIT), admin)

@@ -50,6 +50,7 @@ class BaseView(object):
             path = tuple(path),
             footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
+            context_has_permission = self.context_has_permission
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
@@ -97,20 +98,23 @@ class BaseView(object):
         loc = get_locale_name(self.request)
         return createObject('dt_helper', tz, loc)
 
+    def context_has_permission(self, context, permission):
+        """ Check if a user has view permission on a specific context. """
+        return security.context_has_permission(context, permission, self.userid)
+
     def addable_types(self):
-        #FIXME: Check permission?
         context_type = getattr(self.context, 'content_type', '')
         addable = []
         for (type, klass) in CONTENT_TYPES.items():
             if context_type in klass.allowed_contexts:
-                addable.append(type)
+                if self.context_has_permission(self.context, "Add %s" % type):
+                    addable.append(type)
         return addable
 
     def listing_sniplet(self, contents=None):
         response = {}
-        response['resource_url'] = resource_url
         if contents is None:
-            response['contents'] = self.context.values()
+            response['contents'] = [x for x in self.context.values() if security.context_has_permission(x, security.VIEW, self.userid)]
         else:
             response['contents'] = contents
             
@@ -171,7 +175,7 @@ class BaseView(object):
         #Permission check
         add_permission = "Add %s" % type_to_add
         if not has_permission(add_permission, self.context, self.request):
-            raise HTTPForbidden("You're not allowed to add '%s' in this context." % content_type)
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % type_to_add)
 
         if 'cancel' in self.request.POST:
             url = self.request.resource_url(self.context)
