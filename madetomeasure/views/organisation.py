@@ -53,7 +53,7 @@ class OrganisationView(BaseView):
 
         if question_uid is None and not question_uid in root['questions']:
             self.add_flash_message(_(u"Invalid question uid."))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
             
         question = root['questions'][question_uid]
@@ -61,7 +61,7 @@ class OrganisationView(BaseView):
         schema = CONTENT_SCHEMAS["Translate%s" % question.content_type]()
         schema = schema.bind(context = question, request = self.request)
         # add default locale
-        description = question.get_title()
+        description = question.get_original_title()
         descriptions = question.get_question_text()
         self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name, description=description)
         self.trans_util.add_translations_schema(schema['question_text'], descriptions=descriptions)

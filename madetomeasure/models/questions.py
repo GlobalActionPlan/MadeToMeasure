@@ -55,26 +55,30 @@ class Question(BaseFolder, SecurityAware):
     def __init__(self, data = None, **kwargs):
         self.__question_text__ = OOBTree()
         super(Question, self).__init__(data = data, **kwargs)
-        
+
+    def get_original_title(self, default = u""):
+        return self._field_storage.get('title', default)
+
     def get_title(self, lang=None, context=None, default=u"", **kwargs):
-        # if context is supplied find organisation and look if there is 
-        # a variant for the question for lang
-        if context:
-            if lang:
-                local_lang = lang
-            else:
-                request = get_current_request()
-                trans_util = request.registry.getUtility(IQuestionTranslations)
-                local_lang = trans_util.default_locale_name
-            organisation = find_interface(context, IOrganisation)
-            if organisation:
-                variant = organisation.get_variant(self.__name__, local_lang)
-                if variant:
-                    return variant
-        if lang:
-            languages = self.get_question_text()
-            if lang in languages:
-                return languages[lang]
+        #Make sure we have a valid context
+        request = get_current_request()
+        if not context:
+            context = request.context
+        #Check if there is a variant for the question for lang
+        if not lang:
+            trans_util = request.registry.getUtility(IQuestionTranslations)
+            lang = trans_util.default_locale_name
+        #Is there a local question with that lang?
+        organisation = find_interface(context, IOrganisation)
+        if organisation:
+            variant = organisation.get_variant(self.__name__, lang)
+            if variant:
+                return variant
+        #Check for local language
+        question_texts = self.get_question_text()
+        if lang in question_texts:
+            return question_texts[lang]
+        #Fallback, english title
         return self._field_storage.get('title', default)
 
     def _get_tags(self, **kw):
