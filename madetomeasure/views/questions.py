@@ -90,6 +90,7 @@ class QuestionsView(BaseView):
         return self.response
         
     @view_config(context=IQuestions, renderer='templates/questions.pt', permission=security.VIEW)
+    @view_config(name="variants", context=IOrganisation, renderer='templates/questions.pt', permission=security.VIEW)
     def questions_view(self):
         schema = QuestionSearchSchema().bind(context = self.context, request = self.request)
         form = Form(schema, buttons = (), formid = 'tag_select', action = 'javascript:')
@@ -103,17 +104,18 @@ class QuestionsView(BaseView):
         self.response['types'] = types
         
         #Get questions, sorted
-        self.response['questions'] = sorted(self.context.values(), key = lambda q: q.get_field_value('title').lower())
+        self.response['questions'] = sorted(self.root['questions'].values(), key = lambda q: q.get_field_value('title').lower())
+        self.response['show_edit_variants'] = IOrganisation.providedBy(self.context) and \
+            security.context_has_permission(self.context, security.MANAGE_SURVEY, self.userid)
+        self.response['show_edit'] = security.context_has_permission(self.root['questions'], security.EDIT, self.userid)
         return self.response
     
     @view_config(context=IQuestion, renderer='templates/survey_form.pt', permission=security.VIEW)
     def admin_view(self):
         schema = Schema()
         schema.add(self.context.question_schema_node('dummy'))
-        
         form = Form(schema)
         self.response['form_resources'] = form.get_widget_resources()
-        
         self.response['dummy_form'] = form.render()
         return self.response
         

@@ -27,25 +27,6 @@ class OrganisationView(BaseView):
     def admin_listing_view(self):
         return self.response
 
-
-    @view_config(name='variants', context=IOrganisation, renderer='templates/organisation_variants.pt', permission=security.EDIT)
-    def variants(self):
-        root = find_root(self.context)
-        
-        def _get_variants(question):
-            variants = []
-            if question.__name__ in self.context.variants:
-                for lang in self.context.variants[question.__name__]:
-                    variants.append(self.trans_util.title_for_code(lang))
-            variants = sorted(variants)
-            return ", ".join(variants)
-        
-        self.response['get_variants'] = _get_variants
-        self.response['url'] = resource_url(self.context, self.request) + 'variant?question_uid='
-        self.response['questions'] = root['questions']
-        
-        return self.response
-
     @view_config(name='variant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def variant(self):
         root = find_root(self.context)

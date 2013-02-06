@@ -11,7 +11,7 @@
 
     <tal:form replace="structure tag_form">Tag select form</tal:form>
 
-    <table id="tag_listing">
+    <table id="tag_listing" class="listing">
         <thead>
             <tr>
                 <th>Question</th>
@@ -21,10 +21,14 @@
         <tbody>
             <tr class="question" tal:repeat="question questions">
                 <td>
-                    <a class="question_text"
-                       href="${request.resource_url(question, 'edit')}">${question.get_field_value('title')}</a><br/>
+                    <div class="question_text"
+                       href="${request.resource_url(question, 'edit')}">${question.get_field_value('title')}</div>
                     <a href="${request.resource_url(question)}" i18n:translate="">View</a>
-                    | ${types[question.get_field_value('question_type')]|u'error!'}
+                    <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question</a>
+                    <a tal:condition="show_edit_variants"
+                       href="${request.resource_url(context, 'variant' , query={'question_uid': question.uid})}"
+                       i18n:translate="">Edit local variant</a>
+                    ${types[question.get_field_value('question_type')]|u'error!'}
                 </td>
                 <td class="tags">
                     <tal:iterate repeat="tag question.tags">

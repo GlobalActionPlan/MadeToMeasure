@@ -137,6 +137,19 @@ button {
 #context-toolbar .button:hover {
 }
 
+/* table */
+table.listing th {
+    font-size: 120%;
+}
+table.listing th,
+table.listing td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.question_text {
+    font-size: 110%;
+    margin-bottom: 5px;
+}
 /* Survey form tweaks */
 #survey ul.deformSet > li {
     display: inline;
