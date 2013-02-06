@@ -101,7 +101,7 @@
         
                 <tal:add tal:condition="addable_types">
                     <tal:iterate repeat="type_id addable_types">
-                        <a class="button add"
+                        <a class="context-tab add"
                            href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
                             ${type_id}
@@ -109,44 +109,44 @@
                     </tal:iterate>
                 </tal:add>
                 <a tal:condition="context_has_permission(context, 'Edit')"
-                   class="button edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
+                   class="context-tab edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
                 <tal:organisation condition="context.content_type == 'Organisation'">
                    <a tal:condition="context_has_permission(context, 'Edit')"
-                      class="button variants"
+                      class="context-tab variants"
                       href="${request.resource_url(context, 'variants')}"
                       i18n:translate="">Variants</a>
                 </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button invitaions" 
+                       class="context-tab invitaions" 
                        href="${request.resource_url(context, 'invitation_emails')}"
                        i18n:translate="">Invitations</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button participants"
+                       class="context-tab participants"
                        href="${request.resource_url(context, 'participants')}"
-                       i18n:translate="">Participants</a> |
+                       i18n:translate="">Participants</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button results"
+                       class="context-tab results"
                        href="${request.resource_url(context, 'results')}"
                        i18n:translate="">Results</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button translations"
+                       class="context-tab translations"
                        href="${request.resource_url(context, 'translations')}"
                        i18n:translate="">Translations</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button reorder"
+                       class="context-tab reorder"
                        href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder sections</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button manage_questions"
+                       class="context-tab manage_questions"
                        href="${request.resource_url(context, 'manage_questions')}"
                        i18n:translate="">Manage questions</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button export"
+                       class="context-tab export"
                        href="${request.resource_url(context, 'export.csv')}"
                        i18n:translate="">Export</a>
                     <a tal:condition="context_has_permission(context, 'Manage survey')"
-                       class="button export"
+                       class="context-tab export"
                        href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
@@ -154,10 +154,11 @@
                 </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
                     <a tal:condition="context_has_permission(context, 'Edit')"
-                       class="button change_password"
+                       class="context-tab change_password"
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
                 </tal:user>
+                <div class="clear"><!-- --></div>
             </div>
 
             <div tal:condition="userid" id="path-bar">
