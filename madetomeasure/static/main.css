@@ -73,6 +73,7 @@ button {
     padding-bottom: 100px;
 }
 #main-area {
+    overflow: hidden;
 	width: 1000px;
 	position: relative;
 	margin: auto;
@@ -205,11 +206,22 @@ ul.ui-sortable {
     padding-top: 0.25em;
     padding-bottom: 0.25em;
     min-height: 20px;
+    border: 1px solid #CCC;
 }
 ul.ui-sortable li {
     cursor: pointer;
-    border: 1px solid #CCC;
-    background-color: white;
-    padding: 0.25em;
-    margin-top: 0.25em;
+    background-color: lightgray;
+    padding: 0.5em;
+    margin: 0.25em 1em;
+}
+
+.column ul li {
+    list-style-type: none;
+}
+.column {
+    float: left;
+    padding-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+    width: 40%;
 }

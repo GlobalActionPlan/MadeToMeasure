@@ -17,43 +17,44 @@
 
     <h3>${context.title}</h3>
 
-    <form method="POST">
-        <ul id="manage_sections">
-            <tal:sections repeat="section survey_sections">
+    <div class="column">
+        <form method="POST">
+            <ul id="manage_sections">
+                <tal:sections repeat="section survey_sections">
+                    <li>
+                        ${section.title}
+                        <ul class="survey_section pickable_questions" name="${section.__name__}">
+                            <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
+                                <li>
+                                    ${question.title}
+                                    <input type="hidden" name="${section.__name__}" value="${question.__name__}" />
+                                </li>
+                            </tal:questions>
+                        </ul>
+                    </li>
+                </tal:sections>
+            </ul>
+            <div>
+                <button id="deformsave" name="save" type="submit" class="btnText submit"
+                        value="save" i18n:translate="">Save</button>
+                <button id="deformcancel" name="cancel" type="submit" class="btnText submit"
+                        value="cancel" i18n:translate="">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="column">
+        <h3>Pool</h3>
+        <ul class="survey_section pickable_questions">
+            <tal:questions repeat="question available_questions">
                 <li>
-                    ${section.title}
-                    <ul class="survey_section pickable_questions" name="${section.__name__}">
-                        <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                            <li>
-                                ${question.title}
-                                <input type="hidden" name="${section.__name__}" value="${question.__name__}" />
-                            </li>
-                        </tal:questions>
-                    </ul>
+                    ${question.title}
+                    <input type="hidden" value="${question.__name__}" />
                 </li>
-            </tal:sections>
+            </tal:questions>
         </ul>
-        <div>
-            <button id="deformsave" name="save" type="submit" class="btnText submit"
-                    value="save" i18n:translate="">Save</button>
-            <button id="deformcancel" name="cancel" type="submit" class="btnText submit"
-                    value="cancel" i18n:translate="">Cancel</button>
-        </div>
-    </form>
-
-    <h3>Pool</h3>
-
-    <ul class="survey_section pickable_questions">
-        <tal:questions repeat="question available_questions">
-            <li>
-                ${question.title}
-                <input type="hidden" value="${question.__name__}" />
-            </li>
-        </tal:questions>
-    </ul>
-
+    </div>
 
 </div>
 </body>
 </html>
-
