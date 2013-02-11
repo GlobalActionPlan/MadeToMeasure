@@ -20,8 +20,12 @@
             <ul id="manage_sections">
                 <tal:sections repeat="section survey_sections">
                     <li>
+                        <span class="sectiontags">
+                            <select class="add_from_tag"><option>(tags)</option></select>
+                            <button type="button" class="add_questions">+</button>
+                            <button type="button" class="del_questions">&ndash;</button>
+                        </span>
                         <h3>${section.title}</h3>
-                        <span class="sectiontags"><select class="add_from_tag"><option>(tags)</option></select> <button type="button" class="add_questions">+</button> <button type="button" class="del_questions">&ndash;</button></span>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
                                 <li class="question">
