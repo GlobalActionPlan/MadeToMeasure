@@ -15,19 +15,20 @@
 
 <div metal:fill-slot="content">
 
-    <h3>${context.title}</h3>
-
     <div class="column">
+        <h3>${context.title}</h3>
+
         <form method="POST">
             <ul id="manage_sections">
                 <tal:sections repeat="section survey_sections">
                     <li>
                         ${section.title}
+                        <span class="sectiontags"><select class="add_from_tag"><option>(tags)</option></select> <button type="button" class="add_questions">+</button> <button type="button" class="del_questions">&ndash;</button></span>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                                <li>
-                                    ${question.title}
-                                    <input type="hidden" name="${section.__name__}" value="${question.__name__}" />
+                                <li class="question">
+                                    <span class="question_text">${question.title}</span>
+                                    <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
                             </tal:questions>
                         </ul>
@@ -45,11 +46,11 @@
 
     <div class="column">
         <h3>Pool</h3>
-        <ul class="survey_section pickable_questions">
+        <ul id="tag_listing" class="survey_section pickable_questions">
             <tal:questions repeat="question available_questions">
-                <li>
-                    ${question.title}
-                    <input type="hidden" value="${question.__name__}" />
+                <li class="question">
+                    <span class="question_text">${question.title}</span>
+                    <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" value="${question.__name__}" />
                 </li>
             </tal:questions>
         </ul>
