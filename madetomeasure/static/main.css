@@ -210,14 +210,16 @@ ul.ui-sortable {
 }
 ul.ui-sortable li {
     cursor: pointer;
-    background-color: lightgray;
+    background-color: #EEFFEE;
     padding: 0.5em;
     margin: 0.25em 0.5em;
+}
+ul.ui-sortable li:hover {
+    background-color: #DDEEEE;
 }
 ul.survey_section {
     margin: 1em 0;
 }
-
 .column ul li {
     list-style-type: none;
 }
@@ -226,9 +228,10 @@ ul.survey_section {
     padding-right: 1%;
     display: inline-block;
     vertical-align: top;
-    width: 40%;
+    width: 49%;
 }
 
+/* manage questions */
 .sectiontags {
     float: right;
 }
@@ -239,4 +242,9 @@ ul.survey_section {
 .del_questions {
     color: red;
     padding: 2pt 4pt;
+}
+
+/* manage section */
+#manage_sections > li {
+    margin-left: 0px;
 }

@@ -16,13 +16,11 @@
 <div metal:fill-slot="content">
 
     <div class="column">
-        <h3>${context.title}</h3>
-
         <form method="POST">
             <ul id="manage_sections">
                 <tal:sections repeat="section survey_sections">
                     <li>
-                        ${section.title}
+                        <h3>${section.title}</h3>
                         <span class="sectiontags"><select class="add_from_tag"><option>(tags)</option></select> <button type="button" class="add_questions">+</button> <button type="button" class="del_questions">&ndash;</button></span>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
@@ -45,7 +43,7 @@
     </div>
 
     <div class="column">
-        <h3>Pool</h3>
+        <h3 i18n:translate="">Question pool</h3>
         <ul id="tag_listing" class="survey_section pickable_questions">
             <tal:questions repeat="question available_questions">
                 <li class="question">
