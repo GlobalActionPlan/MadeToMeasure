@@ -22,8 +22,10 @@
                     <li>
                         <span class="sectiontags">
                             <select class="add_from_tag"><option>(tags)</option></select>
-                            <button type="button" class="add_questions">+</button>
-                            <button type="button" class="del_questions">&ndash;</button>
+                            <button type="button" class="add_questions"
+                                    title="Add from selected tag" i18n:attributes="title">+</button>
+                            <button type="button" class="del_questions"
+                                    title="Remove from selected tag" i18n:attributes="title">&ndash;</button>
                         </span>
                         <h3>${section.title}</h3>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
