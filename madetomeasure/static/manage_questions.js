@@ -33,7 +33,10 @@ $(document).ready(function() {
         }
     });
     $('.del_questions').click(function() {
-        $(this).parents('li').find('.question input').attr('name', '');
-        $(this).parents('li').find('.question').appendTo($('#tag_listing'));
+        var tag = $(this).siblings('.add_from_tag').val();
+        if (tag != '(tags)') {
+            $(this).parents('li').find('.question .tag_' + tag).attr('name', '');
+            $(this).parents('li').find('.question .tag_' + tag).parent().appendTo($('#tag_listing'));
+        }
     });
 });
