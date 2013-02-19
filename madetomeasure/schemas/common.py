@@ -35,6 +35,8 @@ def _get_langs(omit = ()):
     return choices
 
 def adjust_tags(value):
+    if not value:
+        return value
     value = value.lower()
     value = value.replace(" ", "_")
     return value
