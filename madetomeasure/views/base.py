@@ -50,7 +50,8 @@ class BaseView(object):
             path = tuple(path),
             footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
-            context_has_permission = self.context_has_permission
+            context_has_permission = self.context_has_permission,
+            context_has_schema = self.context_has_schema
         )
         if self.userid:
             self.response['user_dt'] = get_users_dt_helper(request=request)
@@ -101,6 +102,10 @@ class BaseView(object):
     def context_has_permission(self, context, permission):
         """ Check if a user has view permission on a specific context. """
         return security.context_has_permission(context, permission, self.userid)
+
+    def context_has_schema(self, context, schema_name):
+        """ Check if a schema is available named given schema + given context. """
+        return schema_name + getattr(self.context, 'content_type', '') in CONTENT_SCHEMAS
 
     def addable_types(self):
         context_type = getattr(self.context, 'content_type', '')
