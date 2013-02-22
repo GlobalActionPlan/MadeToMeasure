@@ -30,7 +30,7 @@
                         <h3>${section.title}</h3>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                                <li class="question">
+                                <li class="question${('',' variant')[question.is_variant]}">
                                     <span class="question_text">${question.title}</span>
                                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
@@ -52,7 +52,7 @@
         <h3 i18n:translate="">Question pool</h3>
         <ul id="tag_listing" class="survey_section pickable_questions">
             <tal:questions repeat="question available_questions">
-                <li class="question">
+                <li class="question${('',' variant')[question.is_variant]}">
                     <span class="question_text">${question.title}</span>
                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" value="${question.__name__}" />
                 </li>

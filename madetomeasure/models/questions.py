@@ -84,6 +84,26 @@ class Question(BaseFolder, SecurityAware):
         #Fallback, english title
         return self._field_storage.get('title', default)
 
+    @property
+    def is_variant(self, lang=None, context=None, default=u"", **kwargs):
+        """ Is the title returned by get_title a local variant, True/False?
+        """
+        #Make sure we have a valid context
+        request = get_current_request()
+        if not context:
+            context = getattr(request, 'context', None)
+        #Check if there is a variant for the question for lang
+        if not lang and context is not None:
+            trans_util = request.registry.getUtility(IQuestionTranslations)
+            lang = trans_util.default_locale_name
+        #Is there a local question with that lang?
+        organisation = find_interface(context, IOrganisation)
+        if organisation:
+            variant = organisation.get_variant(self.__name__, lang)
+            if variant:
+                return True
+        return False
+                                                        
     def _get_tags(self, **kw):
         return self._field_storage.get('tags', frozenset())
     def _set_tags(self, value, **kw):
