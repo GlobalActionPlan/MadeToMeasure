@@ -13,17 +13,26 @@ $(document).ready(function(){
 
 /* Attach functions for add all/remove all-buttons */
 $(document).ready(function() {
-    var processed_tags = {};
+    var processed_tags = [];
+
+    /* Collect tags from question pool */
     $('.pickable_questions .question input').each(function() {
         var tags = $(this).attr('class').split(' ');
         for (i = 0; i < tags.length; ++i) {
             tag = tags[i].substring(4);
-            if ((tags[i].substring(0, 4) == 'tag_') && (! (tag in processed_tags))) {
-                processed_tags[tag] = 0;
-                $('.add_from_tag').append('<option>' + tag + '</option>');
+            if ((tags[i].substring(0, 4) == 'tag_') && (processed_tags.indexOf(tag) == -1)) {
+                processed_tags.push(tag);
             }
         }
     });
+
+    /* Insert option tag */
+    processed_tags.sort();
+    for (i = 0; i < processed_tags.length; ++i) {
+      $('.add_from_tag').append('<option>' + processed_tags[i] + '</option>');
+    }
+
+    /* Click handler for add-from-tag-button */
     $('.add_questions').click(function() {
         var tag = $(this).siblings('.add_from_tag').val();
         var name = $(this).parent().siblings('ul').attr('name');
@@ -32,6 +41,8 @@ $(document).ready(function() {
             $('#tag_listing .tag_' + tag).parent().appendTo($(this).parents('li').find('ul'));
         }
     });
+
+    /* Click handler for del-from-tag-button */
     $('.del_questions').click(function() {
         var tag = $(this).siblings('.add_from_tag').val();
         if (tag != '(tags)') {
