@@ -151,6 +151,9 @@ table.listing td {
     font-size: 110%;
     margin-bottom: 5px;
 }
+.question a {
+    float: right;
+}
 /* Survey form tweaks */
 #survey ul.deformSet > li {
     display: inline;

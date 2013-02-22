@@ -404,6 +404,8 @@ class SurveysView(BaseView):
             self.process_question_ids(self.context)
             self.add_flash_message(_('Updated'))
 
+        self.response['organisation'] = find_interface(self.context, IOrganisation)
+
         picked_questions = set()
         survey_sections = []
         for section in self.context.values():

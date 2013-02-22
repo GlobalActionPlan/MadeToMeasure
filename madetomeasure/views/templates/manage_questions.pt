@@ -32,6 +32,7 @@
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
                                 <li class="question${('',' variant')[question.is_variant]}">
                                     <span class="question_text">${question.title}</span>
+                                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}" target="_blank"><img src="/static/editpen.png"></a>
                                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
                             </tal:questions>
@@ -54,6 +55,7 @@
             <tal:questions repeat="question available_questions">
                 <li class="question${('',' variant')[question.is_variant]}">
                     <span class="question_text">${question.title}</span>
+                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}" target="_blank"><img src="/static/editpen.png"></a>
                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" value="${question.__name__}" />
                 </li>
             </tal:questions>
