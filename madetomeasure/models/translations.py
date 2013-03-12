@@ -6,9 +6,11 @@ from deform.widget import RichTextWidget
 from pyramid.threadlocal import get_current_registry
 from zope.interface import implements
 from pyramid.interfaces import ISettings
+from pyramid.traversal import find_interface
 from babel.localedata import load
 
 from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 
 
@@ -51,11 +53,20 @@ class QuestionTranslations(object):
             return self.default_lang_names[lang]
         return _(u"Country code: ${country_code}", mapping={'country_code':lang})
 
-    def add_translations_schema(self, schema, richtext=False, descriptions={}):
+    def add_translations_schema(self, schema, context, richtext=False, descriptions=None):
         """ Fetch all possible translations (according to settings)
             and create a schema with each lang as a node.
         """
-        for lang in self.translatable_languages:
+        survey = find_interface(context, ISurvey)
+        if survey:
+            langs = list(context.get_field_value('available_languages', ()))
+            if self.default_locale_name in langs:
+                langs.remove(self.default_locale_name)
+        else:
+            langs = self.translatable_languages
+        if descriptions is None:
+            descriptions = {}
+        for lang in langs:
             description = u""
             if lang in descriptions:
                 description = descriptions[lang]

@@ -36,7 +36,7 @@ class QuestionsView(BaseView):
         schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
         schema = schema.bind(context = self.context, request = self.request)
         
-        self.trans_util.add_translations_schema(schema['question_text'])
+        self.trans_util.add_translations_schema(schema['question_text'], self.context)
 
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
@@ -66,7 +66,7 @@ class QuestionsView(BaseView):
 
         schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
         schema = schema.bind(context = self.context, request = self.request)
-        self.trans_util.add_translations_schema(schema['question_text'])
+        self.trans_util.add_translations_schema(schema['question_text'], self.context)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()

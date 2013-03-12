@@ -40,8 +40,8 @@ class QuestionTranslationsTests(unittest.TestCase):
     def test_add_translations_schema(self):
         obj = self._make_obj()
         schema = colander.Schema()
-        
-        obj.add_translations_schema(schema)
+        context = testing.DummyResource()
+        obj.add_translations_schema(schema, context)
         
         childrens_names = set([x.name for x in schema.children])
         self.assertEqual(childrens_names, set(['sv', 'de', 'ru']))
