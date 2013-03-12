@@ -98,10 +98,10 @@ class Question(BaseFolder, SecurityAware):
             lang = trans_util.default_locale_name
         #Is there a local question with that lang?
         organisation = find_interface(context, IOrganisation)
-        if organisation:
-            variant = organisation.get_variant(self.__name__, lang)
-            if variant:
-                return True
+        if organisation and self.__name__ in organisation.variants:
+            for variant in organisation.variants[self.__name__].values():
+                if variant:
+                    return True
         return False
                                                         
     def _get_tags(self, **kw):

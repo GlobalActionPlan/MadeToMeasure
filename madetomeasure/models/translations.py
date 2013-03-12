@@ -71,7 +71,7 @@ class QuestionTranslations(object):
             if lang in descriptions:
                 description = descriptions[lang]
             self.add_translation_schema(schema, lang, richtext=richtext, description=description)
-                                           
+
     def add_translation_schema(self, schema, lang, richtext=False, description=u""):
         """ Sreate a schema with lang as a node.
         """
