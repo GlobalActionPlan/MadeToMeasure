@@ -11,6 +11,7 @@
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
     <script type="text/javascript" src="${request.application_url}/static/manage_questions.js"></script>
+    <link href="${request.application_url}/deform/css/form.css" rel="stylesheet" type="text/css" />
 </metal:head>
 
 <div metal:fill-slot="content">
@@ -30,9 +31,10 @@
                         <h3>${section.title}</h3>
                         <ul class="survey_section pickable_questions" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                                <li class="question${('',' variant')[question.is_variant]}">
+                                <li id="${question.__name__}" class="question${('',' variant')[question.is_variant]}">
                                     <span class="question_text">${question.title}</span>
-                                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}" target="_blank"><img src="/static/editpen.png"></a>
+                                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}"
+                                       class="edit_variant" target="_blank"><img src="/static/editpen.png"></a>
                                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
                             </tal:questions>
@@ -53,14 +55,17 @@
         <h3 i18n:translate="">Question pool</h3>
         <ul id="tag_listing" class="survey_section pickable_questions">
             <tal:questions repeat="question available_questions">
-                <li class="question${('',' variant')[question.is_variant]}">
+                <li id="${question.__name__}" class="question${('',' variant')[question.is_variant]}">
                     <span class="question_text">${question.title}</span>
-                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}" target="_blank"><img src="/static/editpen.png"></a>
+                    <a href="${request.resource_url(organisation, 'variant', query={'question_uid': question.uid})}"
+                       class="edit_variant" target="_blank"><img src="/static/editpen.png"></a>
                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" value="${question.__name__}" />
                 </li>
             </tal:questions>
         </ul>
     </div>
+
+    <div id="fullscreen"></div>
 
 </div>
 </body>

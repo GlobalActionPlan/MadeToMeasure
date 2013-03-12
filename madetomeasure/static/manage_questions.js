@@ -1,5 +1,6 @@
 /* Drag-drop questions to survey sections */
 var unsaved = false;
+var edit_variant = "";
 
 $(document).ready(function(){
     /* Attach sort function */
@@ -57,4 +58,41 @@ $(document).ready(function(){
             $(this).parents('li').find('.question .tag_' + tag).parent().appendTo($('#tag_listing'));
         }
     });
+    
+    /* Click handler for edit pen / variants */
+    $('.edit_variant').click(function(event) {
+        event.preventDefault();
+        var url = $(this).attr('href');
+        var fullscreen = $('#fullscreen');
+        edit_variant = $(this).parents('li')
+        fullscreen.load(url, function() {
+            fullscreen.fadeIn();
+            $('#fullscreen form').on('submit', ajax_save_variant);
+            $('#deformcancel').live('click', function(event) {
+                event.preventDefault();
+                fullscreen.empty().fadeOut();
+            })
+        });
+    });
 });
+
+function ajax_save_variant(event) {
+    event.preventDefault();
+    var url = $(this).attr('action');
+    var fullscreen = $('#fullscreen');
+    var formdata = $(this).serialize();
+    formdata += "&save=1";
+    $.post(url, formdata, function(data) {
+        var data = $.parseJSON(data);
+        edit_variant.find('.question_text').html(data['question_text']);
+        if (data['is_variant']) {
+            edit_variant.addClass('variant');
+        } else {
+            edit_variant.removeClass('variant');
+        }
+        fullscreen.empty().fadeOut();
+    })
+    .fail(function() {
+        alert("Save failed!");
+    })
+}

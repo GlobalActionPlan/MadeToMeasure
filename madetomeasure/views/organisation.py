@@ -1,14 +1,16 @@
 from uuid import uuid4
 
-from deform import Form
-from deform.exception import ValidationFailure
 import colander
-
+from deform import Form
+from deform import Button
+from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
 from pyramid.traversal import find_root
 from pyramid.exceptions import Forbidden
+from pyramid.response import Response
+from pyramid.renderers import render
 from zope.component import getUtility
 
 from madetomeasure.interfaces import *
@@ -47,7 +49,7 @@ class OrganisationView(BaseView):
         self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name, description=description)
         self.trans_util.add_translations_schema(schema['question_text'], self.context, descriptions=descriptions)
         
-        form = Form(schema, buttons=(self.buttons['save'],))
+        form = Form(schema, action = self.request.url, buttons=(self.buttons['save'], self.buttons['cancel']))
         self.response['form_resources'] = form.get_widget_resources()
         
         if 'save' in self.request.POST:
@@ -61,7 +63,11 @@ class OrganisationView(BaseView):
             for (lang, value) in appstruct['question_text'].items():
                 self.context.set_variant(question_uid, lang, value)
 
-            url = "%svariants" % resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context, 'variants')
+            return HTTPFound(location = url)
+        
+        if 'cancel' in self.request.POST:
+            url = self.request.resource_url(self.context, 'variants')
             return HTTPFound(location = url)
 
         appstruct = {'question_text': {}}
@@ -72,3 +78,15 @@ class OrganisationView(BaseView):
         
         self.response['form'] = form.render(appstruct)
         return self.response
+
+    @view_config(name='variant', context=IOrganisation, permission=security.EDIT, xhr=True)
+    def variant_ajax(self):
+        response = self.variant()
+        if isinstance(response, HTTPFound):
+            #Override redirect
+            question_uid = self.request.GET.get('question_uid', None)
+            question = self.root['questions'][question_uid]
+            response = {'question_text': question.get_title(context = self.context),
+                        'is_variant': question.is_variant}
+            return Response(render("json", response, request = self.request))
+        return Response(render("templates/ajax_form.pt", response, request = self.request))

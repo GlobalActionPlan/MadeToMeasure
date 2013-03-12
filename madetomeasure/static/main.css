@@ -257,3 +257,16 @@ ul.survey_section {
 #manage_sections > li {
     margin-left: 0px;
 }
+
+/* fullscreen */
+#fullscreen {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: #fff;
+    overflow: auto;
+    z-index: 1000;
+    display: none;
+}
