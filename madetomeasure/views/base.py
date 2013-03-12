@@ -194,8 +194,8 @@ class BaseView(object):
 
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
         if type_to_add == 'SurveySection':
-            self.trans_util.add_translations_schema(schema['heading_translations'])
-            self.trans_util.add_translations_schema(schema['description_translations'], richtext=True)
+            self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
+            self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -235,11 +235,11 @@ class BaseView(object):
         schema = schema.bind(context = self.context, request = self.request)
 
         if ISurvey.providedBy(self.context):
-            self.trans_util.add_translations_schema(schema['heading_translations'])
+            self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
         
         if ISurveySection.providedBy(self.context):
-            self.trans_util.add_translations_schema(schema['heading_translations'])
-            self.trans_util.add_translations_schema(schema['description_translations'], richtext=True)
+            self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
+            self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
