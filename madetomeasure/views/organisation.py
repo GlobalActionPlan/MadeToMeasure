@@ -45,7 +45,7 @@ class OrganisationView(BaseView):
         description = question.get_original_title()
         descriptions = question.get_question_text()
         self.trans_util.add_translation_schema(schema['question_text'], self.trans_util.default_locale_name, description=description)
-        self.trans_util.add_translations_schema(schema['question_text'], descriptions=descriptions)
+        self.trans_util.add_translations_schema(schema['question_text'], self.context, descriptions=descriptions)
         
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
