@@ -1,18 +1,25 @@
 /* Drag-drop questions to survey sections */
+var unsaved = false;
 
-/* Attach sort function */
 $(document).ready(function(){
+    /* Attach sort function */
     $('.pickable_questions').sortable({
         connectWith: '.pickable_questions',
         receive: function(event, ui) {
             var name = ui.item.parents('ul').attr('name');
             ui.item.children('input').attr('name', name);
+        },
+        update: function(event, ui) {
+          if (! unsaved) {
+            unsaved = true;
+            $(window).on('beforeunload', function() {
+                return "You have unsaved changes"
+            });
+          }
         }
     });
-});
 
-/* Attach functions for add all/remove all-buttons */
-$(document).ready(function() {
+    /* Attach functions for add all/remove all-buttons */
     var processed_tags = [];
 
     /* Collect tags from question pool */
