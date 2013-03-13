@@ -342,13 +342,15 @@ class Survey(BaseFolder, SecurityAware):
     # clone survey
     def clone(self, title, destination):
         new_survey = deepcopy(self)
-
         new_survey.set_field_value('title', title)
         new_survey.set_field_value('uid', unicode(uuid4()))
-
+        # remove start and time
+        del new_survey.field_storage['start_time']
+        del new_survey.field_storage['end_time']
         # remove participant languages
-        del new_survey.__participant_language__
-        new_survey.__participant_language__ = OOBTree()
+        new_survey.participant_language.clear()
+        # remove invitation tickets
+        new_survey.tickets.clear()
 
         # remove participant responses
         for section in new_survey.values():

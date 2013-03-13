@@ -512,14 +512,11 @@ class SurveysView(BaseView):
     def clone(self):
         """ Cloning survey
         """
-        
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-
         schema = CONTENT_SCHEMAS["Clone%s" % self.context.content_type]()
         schema = schema.bind(context = self.context, request = self.request)
-        
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         
@@ -532,12 +529,10 @@ class SurveysView(BaseView):
                 return self.response
             
             new_survey = self.context.clone(appstruct['title'], appstruct['destination'])
-            
-            url = resource_url(new_survey, self.request)
+            url = self.request.resource_url(new_survey, 'edit')
             return HTTPFound(location = url)
 
         appstruct = {}
         appstruct['title'] = "%s_clone_%s" % (self.context.title, datetime.now())
-
         self.response['form'] = form.render(appstruct)
         return self.response
