@@ -53,7 +53,7 @@ class QuestionTranslations(object):
             return self.default_lang_names[lang]
         return _(u"Country code: ${country_code}", mapping={'country_code':lang})
 
-    def add_translations_schema(self, schema, context, richtext=False, descriptions=None):
+    def add_translations_schema(self, schema, context, richtext=False, descriptions=None, only_with_description=False):
         """ Fetch all possible translations (according to settings)
             and create a schema with each lang as a node.
         """
@@ -70,6 +70,8 @@ class QuestionTranslations(object):
             description = u""
             if lang in descriptions:
                 description = descriptions[lang]
+            elif only_with_description:
+                continue
             self.add_translation_schema(schema, lang, richtext=richtext, description=description)
 
     def add_translation_schema(self, schema, lang, richtext=False, description=u""):
@@ -79,7 +81,6 @@ class QuestionTranslations(object):
             widget = RichTextWidget()
         else:
             widget = TextInputWidget(size=80)
-        
         schema.add(colander.SchemaNode(colander.String(),
                                        name=lang,
                                        title=self.title_for_code(lang),
