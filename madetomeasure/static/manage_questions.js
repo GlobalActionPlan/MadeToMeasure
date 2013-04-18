@@ -71,7 +71,8 @@ $(document).ready(function(){
             $('#deformcancel').live('click', function(event) {
                 event.preventDefault();
                 fullscreen.empty().fadeOut();
-            })
+            });
+            show_descriptions();
         });
     });
 });

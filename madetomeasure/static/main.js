@@ -23,9 +23,13 @@ $(document).ready(function() {
 
 /* descriptions */
 $(document).ready(function() {
+    show_descriptions();
+});
+
+function show_descriptions() {
     $('label.desc').each(function() {
         var desc = $(this).attr('title');
         if(desc != '')
             $(this).after('<p>'+desc+'</p>');
     });
-});
+}
