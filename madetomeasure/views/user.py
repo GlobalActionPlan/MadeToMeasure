@@ -28,6 +28,7 @@ class UsersView(BaseView):
         form = Form(schema, buttons=())
         self.response['form_resources'] = form.get_widget_resources()
         self.response['form'] = form.render(readonly = True, appstruct = appstruct)
+        self.response['listing'] = self.listing_sniplet()
         return self.response
 
     @view_config(name='add', context=IUsers, renderer=BASE_FORM_TEMPLATE)

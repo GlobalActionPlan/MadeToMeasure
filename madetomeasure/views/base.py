@@ -139,13 +139,23 @@ class BaseView(object):
         
         return buttons
 
-    @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_listing_view(self):
         #FIXME: move when implemented
+        self.response['listing'] = self.listing_sniplet()
+        return self.response
+
+    @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    def admin_root_listing(self):
+        contents = []
+        for obj in self.context.values():
+            if IOrganisation.providedBy(obj) and security.context_has_permission(obj, security.VIEW, self.userid):
+                contents.append(obj)
+        contents = sorted(contents, key = lambda x: x.title.lower())
+        self.response['listing'] = self.listing_sniplet(contents)
         return self.response
 
     @view_config(name="delete", renderer="templates/form.pt", permission=security.DELETE)
