@@ -42,6 +42,7 @@ class OrganisationView(BaseView):
         question = root['questions'][question_uid]
 
         schema = CONTENT_SCHEMAS["Translate%s" % question.content_type]()
+        schema.title = _(u"Edit question variant for this organisation")
         schema = schema.bind(context = question, request = self.request)
         # add default locale
         description = question.get_original_title()
