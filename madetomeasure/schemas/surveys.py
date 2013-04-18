@@ -88,8 +88,7 @@ class SurveyInvitationSchema(colander.Schema):
     message = colander.SchemaNode(colander.String(),
                                   title = _(u"Message - please note that the link will be added as a new line below the message!"),
                                   widget = deform.widget.RichTextWidget(),
-                                  default = _(u'survey_default_invitation_message',
-                                              default = 'Please fill in the survey. Click the link below to access it:'),)
+                                  default = _(u'Please fill in the survey. Click the link below to access it:'),)
     emails = colander.SchemaNode(colander.String(),
                                  title = _(u"Participant email addresses - add one per row."),
                                  description = _(u"invitation_emails_lang_notice",
