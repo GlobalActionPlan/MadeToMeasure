@@ -46,15 +46,13 @@ class BaseView(object):
             flash_messages = self.get_flash_messages,
             organisation = self.organisation,
             survey_dt = self.survey_dt,
-            user_dt = None,
+            user_dt = self.user_dt,
             path = tuple(path),
             footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
             context_has_permission = self.context_has_permission,
             context_has_schema = self.context_has_schema
         )
-        if self.userid:
-            self.response['user_dt'] = get_users_dt_helper(request=request)
         if self.organisation:
             self.response['hex_color'] = self.organisation.get_field_value('hex_color')
             self.response['logo_link'] = self.organisation.get_field_value('logo_link')
@@ -98,6 +96,13 @@ class BaseView(object):
         tz = survey.get_time_zone()
         loc = get_locale_name(self.request)
         return createObject('dt_helper', tz, loc)
+
+    @reify
+    def user_dt(self):
+        if not self.userid:
+            return None
+        return get_users_dt_helper(request = self.request)
+
 
     def context_has_permission(self, context, permission):
         """ Check if a user has view permission on a specific context. """

@@ -116,14 +116,14 @@ class SurveysView(BaseView):
         return self.response
 
     def _survey_error_msg(self, exeption):
+        dt = self.user_dt and self.user_dt or self.survey_dt
         if exeption.not_started:
-            
-            start_time = self.survey_dt.dt_format(self.context.get_field_value('start_time', None), format='full')
+            start_time = dt.dt_format(self.context.get_field_value('start_time', None), format='full')
             msg = _(u"not_started_error",
                     default=_(u"Survey has not started yet, it will start on ${start_time}"),
                     mapping={'start_time':start_time})
         if exeption.ended:
-            end_time = self.survey_dt.dt_format(self.context.get_field_value('end_time', None))
+            end_time = dt.dt_format(self.context.get_field_value('end_time', None))
             msg = _(u"ended_error",
                     default=_(u"Survey has ended, it closed at ${end_time}"),
                     mapping={'end_time':end_time})
@@ -346,9 +346,9 @@ class SurveysView(BaseView):
         start_time = self.context.get_field_value('start_time', None)
         end_time = self.context.get_field_value('end_time', None)
         if start_time:
-            start_time = self.survey_dt.dt_format(start_time)
+            start_time = self.response['user_dt'].dt_format(start_time)
         if end_time:
-            end_time = self.survey_dt.dt_format(end_time)
+            end_time = self.response['user_dt'].dt_format(end_time)
         self.response['start_time'] = start_time
         self.response['end_time'] = end_time
         #Is survey active?

@@ -50,6 +50,10 @@ def deferred_translator_languages_widget(node, kw):
     return deform.widget.CheckboxChoiceWidget(values = _get_langs(omit = ('en',)))
 
 @colander.deferred
+def deferred_pick_language_widget(node, kw):
+    return deform.widget.SelectWidget(values = _get_langs())
+
+@colander.deferred
 def deferred_tags_text_widget(node, kw):
     context = kw['context']
     questions = find_root(context)['questions']

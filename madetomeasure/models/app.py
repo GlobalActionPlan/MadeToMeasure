@@ -71,12 +71,12 @@ def get_users_dt_helper(request=None):
     root = find_root(request.context)
     if root is None:
         tz = request.registry.getUtility(ISettings)['default_timezone']
+        locale = get_locale_name(request)
     else:
-        user = root['users'].get(userid)
+        user = root['users'][userid]
         tz = user.get_time_zone()
-
-    locale = get_locale_name(request)
-    #FIXME: Default lang settable on user profile too, or in request?
+        datetime_localisation = user.get_field_value('datetime_localisation', None)
+        locale = datetime_localisation and datetime_localisation or get_locale_name(request)
     return createObject('dt_helper', tz, locale)
 
 def select_language(context, request=None):
