@@ -153,6 +153,7 @@ table.listing td {
 }
 .question a {
     float: right;
+    padding-left: 10px;
 }
 /* Survey form tweaks */
 #survey ul.deformSet > li {

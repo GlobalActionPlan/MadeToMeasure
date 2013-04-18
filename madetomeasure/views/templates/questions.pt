@@ -25,11 +25,11 @@
                 <td>
                     <div class="question_text"
                        href="${request.resource_url(question, 'edit')}">${question.get_field_value('title')}</div>
-                    <a href="${request.resource_url(question)}" i18n:translate="">View</a>
-                    <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question</a>
+                    <a tal:condition="context_has_permission(question, 'View')" href="${request.resource_url(question)}" i18n:translate="">View </a>
+                    <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question </a>
                     <a tal:condition="show_edit_variants"
                        href="${request.resource_url(context, 'variant' , query={'question_uid': question.uid})}"
-                       i18n:translate="">Edit local variant</a>
+                       i18n:translate="">Edit local variant </a>
                     ${types[question.get_field_value('question_type')]|u'error!'}
                 </td>
                 <td class="tags">
