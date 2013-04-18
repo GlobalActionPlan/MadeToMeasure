@@ -20,7 +20,7 @@
         <form method="POST">
             <ul id="manage_sections">
                 <tal:sections repeat="section survey_sections">
-                    <li>
+                    <li class="toggle_area toggle_opened">
                         <span class="sectiontags">
                             <select class="add_from_tag"><option>(tags)</option></select>
                             <button type="button" class="add_questions"
@@ -28,8 +28,8 @@
                             <button type="button" class="del_questions"
                                     title="Remove from selected tag" i18n:attributes="title">&ndash;</button>
                         </span>
-                        <h3>${section.title}</h3>
-                        <ul class="survey_section pickable_questions" name="${section.__name__}">
+                        <h3><a href="javascript:" class="toggle_minimize">${section.title}</a></h3>
+                        <ul class="survey_section pickable_questions minimizable_area" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
                                 <li id="${question.__name__}" class="question${('',' variant')[question.is_variant]}">
                                     <span class="question_text">${question.title}</span>
@@ -39,6 +39,7 @@
                                 </li>
                             </tal:questions>
                         </ul>
+                        <div class="minimizable_inverted" i18n:translate="">&lt;Hidden - Click header to open section&gt;</div>
                     </li>
                 </tal:sections>
             </ul>

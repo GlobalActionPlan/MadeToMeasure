@@ -246,6 +246,7 @@ ul.survey_section {
 /* manage questions */
 .sectiontags {
     float: right;
+    padding-left: 10px;
 }
 .add_questions {
     color: green;
@@ -272,4 +273,19 @@ ul.survey_section {
     overflow: auto;
     z-index: 1000;
     display: none;
+}
+/* Minimizable content */
+.toggle_minimize {
+}
+.toggle_opened .toggle_minimize {
+}
+.toggle_opened .toggle_minimize:hover {}
+.toggle_closed .toggle_minimize {
+}
+.toggle_closed .toggle_minimize:hover {}
+.toggle_area.toggle_closed .minimizable_area {
+    display: none !important;
+}
+.toggle_area.toggle_opened .minimizable_inverted {
+    display: none !important;
 }
