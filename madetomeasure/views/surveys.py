@@ -123,7 +123,7 @@ class SurveysView(BaseView):
                     default=_(u"Survey has not started yet, it will start on ${start_time}"),
                     mapping={'start_time':start_time})
         if exeption.ended:
-            end_time = self.survey_dt.dt_format(self.context.get_field_value('end_time', None), format='full')
+            end_time = self.survey_dt.dt_format(self.context.get_field_value('end_time', None))
             msg = _(u"ended_error",
                     default=_(u"Survey has ended, it closed at ${end_time}"),
                     mapping={'end_time':end_time})
