@@ -85,7 +85,7 @@ function ajax_save_variant(event) {
     formdata += "&save=1";
     $.post(url, formdata, function(data) {
         var data = $.parseJSON(data);
-        edit_variant.find('.question_text').html(data['question_text']);
+        edit_variant.children('.question_text').html(data['question_text']);
         if (data['is_variant']) {
             edit_variant.addClass('variant');
         } else {
