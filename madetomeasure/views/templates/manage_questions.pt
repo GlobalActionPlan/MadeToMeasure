@@ -20,8 +20,8 @@
         <form method="POST">
             <ul id="manage_sections">
                 <tal:sections repeat="section survey_sections">
-                    <li class="toggle_area toggle_opened">
-                        <span class="sectiontags">
+                    <li class="toggle_area toggle_closed">
+                        <span class="sectiontags minimizable_area">
                             <select class="add_from_tag"><option>(tags)</option></select>
                             <button type="button" class="add_questions"
                                     title="Add from selected tag" i18n:attributes="title">+</button>
