@@ -8,13 +8,11 @@ CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
 
 requires = [
     'pyramid',
-    'pyramid_debugtoolbar',
     'pyramid_mailer',
-    'repoze.zodbconn',
-    'repoze.tm2>=1.0b1', # default_commit_veto
-    'repoze.retry',
+    'pyramid_zodbconn',
+    'pyramid_tm',
+    'fanstatic',
     'ZODB3',
-    'WebError',
     'Babel',
     'repoze.folder',
     'colander',
@@ -28,7 +26,7 @@ requires = [
     ]
 
 setup(name='MadeToMeasure',
-      version='0.0',
+      version='0.1dev',
       description='MadeToMeasure',
       long_description=README + '\n\n' +  CHANGES,
       classifiers=[
@@ -37,9 +35,9 @@ setup(name='MadeToMeasure',
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
         ],
-      author='',
-      author_email='',
-      url='',
+      author='Made to Measure develpopment team',
+      author_email='robin@betahaus.net',
+      url='https://github.com/GlobalActionPlan/MadeToMeasure',
       keywords='web pylons pyramid',
       packages=find_packages(),
       include_package_data=True,
@@ -51,14 +49,12 @@ setup(name='MadeToMeasure',
       [paste.app_factory]
       main = madetomeasure:main
       [console_scripts]
-      fix_nonpersistent_variants = madetomeasure.scripts.fix_nonpersistent_variants:fix_nonpersistent_variants
       debug_instance = madetomeasure.scripts.debug:debug_instance
       """,
       paster_plugins=['pyramid'],
       message_extractors = { '.': [
           ('**.py',   'lingua_python', None ),
           ('**.pt',   'lingua_xml', None ),
-          ('**.zcml',   'lingua_zcml', None ),
           ]},
       )
 
