@@ -18,3 +18,4 @@ parts
 Data.fs*
 .tmp*
 *.egg-info
+eggs
