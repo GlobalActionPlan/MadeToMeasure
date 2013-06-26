@@ -8,14 +8,16 @@ from pyramid.renderers import render
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPForbidden
+from pyramid.i18n import get_locale_name
+from pyramid.location import lineage
+from pyramid.security import has_permission
 from deform import Button
 from deform import Form
 from colander import Schema
 from deform.exception import ValidationFailure
 from zope.component import createObject
-from pyramid.i18n import get_locale_name
-from pyramid.location import lineage
-from pyramid.security import has_permission
+from betahaus.pyracont.interfaces import IContentFactory
+
 
 from madetomeasure.models.app import get_users_dt_helper
 from madetomeasure.interfaces import *
@@ -103,7 +105,6 @@ class BaseView(object):
             return None
         return get_users_dt_helper(request = self.request)
 
-
     def context_has_permission(self, context, permission):
         """ Check if a user has view permission on a specific context. """
         return security.context_has_permission(context, permission, self.userid)
@@ -112,7 +113,12 @@ class BaseView(object):
         """ Check if a schema is available named given schema + given context. """
         return schema_name + getattr(self.context, 'content_type', '') in CONTENT_SCHEMAS
 
+    def content_info(self):
+        """ Return a dict with classes registered as a content factory. """
+        return dict(self.request.getUtilitiesFor(IContentFactory))
+
     def addable_types(self):
+        #FIXME: Refactor
         context_type = getattr(self.context, 'content_type', '')
         addable = []
         for (type, klass) in CONTENT_TYPES.items():
@@ -120,6 +126,13 @@ class BaseView(object):
                 if self.context_has_permission(self.context, "Add %s" % type):
                     addable.append(type)
         return addable
+
+    def question_types_info(self):
+        results = {}
+        for (name, factory) in self.content_info():
+            if IQuestionNode.providedBy(factory):
+                results[name] = factory
+        return results
 
     def listing_sniplet(self, contents=None):
         response = {}
@@ -148,6 +161,7 @@ class BaseView(object):
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    @view_config(context=IQuestionTypes, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_listing_view(self):
         #FIXME: move when implemented
         self.response['listing'] = self.listing_sniplet()
@@ -239,6 +253,8 @@ class BaseView(object):
     @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=IQuestionType, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name='edit', context=IChoice, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def edit_view(self):
         """ Generic edit view
         """
@@ -276,3 +292,8 @@ class BaseView(object):
 
         self.response['form'] = form.render(appstruct)
         return self.response
+
+    @view_config(context=IChoice)
+    def redirect_to_parent_view(self):
+        url = self.request.resource_url(self.context.__parent__)
+        return HTTPFound(location = url)

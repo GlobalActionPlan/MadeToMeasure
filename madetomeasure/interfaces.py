@@ -44,13 +44,66 @@ class IQuestion(IBaseFolder):
     tags = Attribute("A frozenset of used tags")
 
 
+class IQuestionTypes(IBaseFolder):
+    """ Container and handler for question types. """
+
+
+class IQuestionType(IBaseFolder):
+    """ Question type object. Contains information on a specific question type. Like "True or False"
+        or a "Free text question".
+    """
+
+
+class IChoiceQuestionType(IBaseFolder):
+    """ All the different choice based questions must implement this interface.
+
+        i.e. Both classes that implement single choice with radio buttons multi choice
+        with checkboxes must implement this interface but not full text answers.
+    """
+
+
+class ITextQuestionType(IBaseFolder):
+    """ All the different text based questions must implement this interface.
+    """
+
+
+class IChoice(IBaseFolder):
+    """ Base object that makes the choices of a IQuestionType.
+    
+        I.e. the question type of radio buttons have different choices that can be made. Each one of those choices is an IChoice.
+            
+        Do you garbage recycle? (IQuestionType)
+            * Yes (IChoice)
+            * Sometimes (IChoice)
+            * No (IChoice)    
+    """
+
+    def get_title(lang=None):
+        """ Finds and returns the title based on 'lang'. 
+            If no language is specified or no translation in specified language
+            the system default title is returned instead.
+
+            lang:
+                Translation that should be used
+        """
+
+    def set_title_translations(value, **kw):
+        """ Set translations for this ChoiceQuestionType.
+
+            value:
+                A dict or list of tuples with all the lang, translation pairs.
+            **kw:
+                Ignored, but is needed for compatibility with the rest of the system.
+        """
+
+
 class IOrganisation(IBaseFolder):
     """ An organisation model. """
     variants = Attribute("Question variants storage")
-        
+
     def get_variant(question_uid, lang):
         """ Returns variant of question for language if there is one """
-        
+
     def set_variant(question_uid, lang, value):
         """ Sets variants """
 
@@ -58,29 +111,34 @@ class IOrganisation(IBaseFolder):
 class IQuestionNode(Interface):
     """ A utility that will create a question colander.SchemaNode when called. """
 
-    type_title = Attribute("Readable title for this class. Used in question choices for instance.")
+    title = Attribute("Readable title for this class. Used in question choices for instance.")
     widget = Attribute("Which widget to use when running the 'node' method")
     default_kwargs = Attribute("Any kwargs passed along to init will be stored here."
                                "They will be passed along to the colander.SchemaNode constructed when node is run.")
 
-    def __init__(type_title, widget, **kwargs):
+    def __init__(widget, **kwargs):
         """ Create instance.
             widget must be a deform widget.
             kwargs will be passed along to the colander.SchemaNode when
             node method is run.
         """
-    
+
     def node(name, **kwargs):
         """ Return a schema node.
             name argument is the nodes name in the schema
             kwargs here will override the node_kwargs attribute
         """
-    
+
     def render_result(request, data):
         """ Render the result of this specific type of question.
             Returns a renderer.
             Data is the result data to be displayed. It must be of this questions own format.
         """
+
+
+class IQuestionWidget(Interface):
+    """ Selectable question widgets. """
+    valid_for = Attribute("A list of question type names this widget is valid for.")
 
 
 class IQuestionTranslations(Interface):
@@ -107,7 +165,7 @@ class ISecurityAware(Interface):
     """ Mixin for all content that should handle groups.
         Principal in this terminology is a userid or a group id.
     """
-    
+
     def get_groups(principal):
         """ Return groups for a principal in this context.
             The special group "role:Owner" is never inherited.
@@ -116,7 +174,7 @@ class ISecurityAware(Interface):
     def add_groups(principal, groups):
         """ Add a groups for a principal in this context.
         """
-    
+
     def set_groups(principal, groups):
         """ Set groups for a principal in this context. (This clears any previous setting)
         """

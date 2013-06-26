@@ -30,7 +30,7 @@
                     <a tal:condition="show_edit_variants"
                        href="${request.resource_url(context, 'variant' , query={'question_uid': question.uid})}"
                        i18n:translate="">Edit local variant </a>
-                    ${types[question.get_field_value('question_type')]|u'error!'}
+                    ${question.get_type_object().title|u'error!'}
                 </td>
                 <td class="tags">
                     <tal:iterate repeat="tag question.tags">

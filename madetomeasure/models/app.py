@@ -29,6 +29,8 @@ def bootstrap_root():
     from madetomeasure.models.surveys import Surveys
     from madetomeasure.models.participants import Participants
     from madetomeasure.models.questions import Questions
+    from madetomeasure.models.question_types import QuestionTypes
+    from madetomeasure.models.question_types import TextQuestionType
     from madetomeasure import security
 
     root = SiteRoot(creators=['admin'], title=_(u"Made To Measure"))
@@ -40,6 +42,11 @@ def bootstrap_root():
     root.add_groups('admin', [security.ROLE_ADMIN])
     root['participants'] = Participants(title=_(u"Participants"))
     root['questions'] = Questions(title=_(u"Questions"))
+    root['question_types'] = QuestionTypes()
+    #Note, free_text_question is also used in tests!
+    root['question_types']['free_text_question'] = TextQuestionType(title = u"Free text question",
+                                                                    description = u"Just a text field",
+                                                                    input_widget = 'text_widget')
     return root
 
 def generate_slug(context, text, limit=20):

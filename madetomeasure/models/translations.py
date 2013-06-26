@@ -14,7 +14,6 @@ from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 
 
-
 class QuestionTranslations(object):
     """ Util to help out with managing runtime translations of questions. """
     implements(IQuestionTranslations)
@@ -75,7 +74,7 @@ class QuestionTranslations(object):
             self.add_translation_schema(schema, lang, richtext=richtext, description=description)
 
     def add_translation_schema(self, schema, lang, richtext=False, description=u""):
-        """ Sreate a schema with lang as a node.
+        """ Create a schema with lang as a node.
         """
         if richtext == True:
             widget = RichTextWidget()

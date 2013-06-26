@@ -58,6 +58,7 @@ class SurveySchema(colander.Schema):
                                                            'separator': ' '}),
     )
     from_address = colander.SchemaNode(colander.String(),
+                                       title = _(u"Email to send system mail from"),
                                        validator=colander.Email(),)
     welcome_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.RichTextWidget(),

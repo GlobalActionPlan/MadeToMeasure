@@ -1,17 +1,16 @@
-from uuid import uuid4
-
 from colander import Schema
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.url import resource_url
+from pyramid.httpexceptions import HTTPForbidden
 from pyramid.security import has_permission
 
-from madetomeasure.interfaces import *
-from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestion
+from madetomeasure.interfaces import IQuestions
+
 from madetomeasure.views.base import BaseView
-from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models import CONTENT_TYPES
 from madetomeasure.schemas import CONTENT_SCHEMAS
@@ -28,7 +27,7 @@ class QuestionsView(BaseView):
         #Permission check
         add_permission = "Add %s" % type_to_add
         if not has_permission(add_permission, self.context, self.request):
-            raise Forbidden("You're not allowed to add '%s' in this context." % type_to_add)
+            raise HTTPForbidden("You're not allowed to add '%s' in this context." % type_to_add)
             
         if type_to_add not in self.addable_types():
             raise ValueError("No content type called %s" % type_to_add)
@@ -54,7 +53,7 @@ class QuestionsView(BaseView):
             obj = CONTENT_TYPES[type_to_add](**appstruct)
             self.context[obj.uid] = obj
     
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         self.response['form'] = form.render()
@@ -82,7 +81,7 @@ class QuestionsView(BaseView):
 
             self.context.set_field_appstruct(appstruct)
                 
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         appstruct = self.context.get_field_appstruct(schema)
@@ -96,12 +95,6 @@ class QuestionsView(BaseView):
         form = Form(schema, buttons = (), formid = 'tag_select', action = 'javascript:')
         self.response['form_resources'] = form.get_widget_resources()
         self.response['tag_form'] = form.render()
-
-        #Get question type titles
-        types = {}
-        for (name, util) in self.request.registry.getUtilitiesFor(IQuestionNode):
-            types[name] = getattr(util, 'type_title', '')
-        self.response['types'] = types
         
         #Get questions, sorted
         self.response['questions'] = sorted(self.root['questions'].values(), key = lambda q: q.get_field_value('title').lower())
@@ -143,7 +136,7 @@ class QuestionsView(BaseView):
             for (lang, value) in appstruct['question_text'].items():
                 self.context.set_question_text_lang(value, lang)
             
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         appstruct = self.context.get_field_appstruct(schema)

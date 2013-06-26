@@ -486,7 +486,7 @@ class SurveysView(BaseView):
                 q_type = question.get_question_type()
                 if q_type not in results:
                     results[q_type] = dict(
-                        obj = getUtility(IQuestionNode, name=q_type),
+                        obj = question.get_type_object(),
                         questions = [],
                      )
                 results[q_type]['questions'].append(question)

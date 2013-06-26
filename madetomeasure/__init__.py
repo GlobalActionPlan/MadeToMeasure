@@ -31,7 +31,7 @@ def main(global_config, **settings):
     config.add_static_view('static', 'madetomeasure:static')
     config.add_static_view('deform', 'deform:static')
 
-    config.include('madetomeasure.models.question_types')
+    config.include('madetomeasure.models.question_widgets')
     config.include('madetomeasure.models.translations')
     config.include('madetomeasure.models.date_time_helper')
     

@@ -13,9 +13,12 @@ from madetomeasure.schemas.surveys import SurveyTranslate
 from madetomeasure.schemas.surveys import SurveyClone
 from madetomeasure.schemas.users import AddUserSchema
 from madetomeasure.schemas.users import EditUserSchema
-
+from madetomeasure.schemas.question_types import EditTextQuestionSchema
+from madetomeasure.schemas.question_types import EditChoiceQuestionSchema
+from madetomeasure.schemas.question_types import ChoiceSchema
 from madetomeasure.schemas.system import LoginSchema
 
+#FIXME: Replace with proper factories
 
 CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'EditQuestion':EditQuestionSchema,
@@ -34,5 +37,10 @@ CONTENT_SCHEMAS = {'AddQuestion':AddQuestionSchema,
                    'EditParticipant':EditParticipant,
                    'EditSiteRoot':EditSiteRoot,
                    'TranslateSurvey':SurveyTranslate, 
-                   'CloneSurvey':SurveyClone,}
+                   'CloneSurvey':SurveyClone,
+                   'EditTextQuestionType': EditTextQuestionSchema,
+                   'EditChoiceQuestionType': EditChoiceQuestionSchema,
+                   'AddChoice': ChoiceSchema,
+                   'EditChoice': ChoiceSchema,
+                   }
 

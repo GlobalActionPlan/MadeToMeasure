@@ -8,6 +8,18 @@ from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 from BTrees.OOBTree import OOBTree
 
+from madetomeasure.interfaces import IQuestion
+
+
+def _fixture(config, obj):
+    from madetomeasure.models.app import bootstrap_root
+    config.scan('betahaus.pyracont.fields.password')
+    config.include('madetomeasure.models.question_widgets')
+    root = bootstrap_root()
+    root['questions']['test_q'] = obj
+    obj.set_question_type('free_text_question') #bootstrap_root creates this
+    return obj
+
 
 class QuestionTests(unittest.TestCase):
     def setUp(self):
@@ -20,14 +32,12 @@ class QuestionTests(unittest.TestCase):
     def _cut(self):
         from madetomeasure.models import Question
         return Question
-    
-    def _utils_fixture(self):
-        self.config.include('madetomeasure.models.question_types')
 
-    def test_interface(self):
-        from madetomeasure.interfaces import IQuestion
-        obj = self._cut()
-        self.assertTrue(verifyObject(IQuestion, obj))
+    def test_verify_class(self):
+        self.assertTrue(verifyClass(IQuestion, self._cut))
+
+    def test_verify_obj(self):
+        self.assertTrue(verifyObject(IQuestion, self._cut()))
 
     def test_question_text(self):
         obj = self._cut()
@@ -51,20 +61,16 @@ class QuestionTests(unittest.TestCase):
         self.assertEqual(obj.get_question_type(), "Some type")
 
     def test_question_schema_node(self):
-        self._utils_fixture()
         obj = self._cut()
-        obj.set_question_type('importance_scale')
+        _fixture(self.config, obj)
         node = obj.question_schema_node('dummy')
         self.assertTrue(isinstance(node, colander.SchemaNode))
     
     def test_render_result(self):
-        self._utils_fixture()
         obj = self._cut()
-        obj.set_question_type('free_text')
-        
+        _fixture(self.config, obj)
         request = testing.DummyRequest()
         data = ['I wrote something', "She wrote something else"]
-        
         result = obj.render_result(request, data)
         self.assertTrue('I wrote something' in result)
         

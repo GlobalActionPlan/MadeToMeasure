@@ -3,18 +3,20 @@ from BTrees.OOBTree import OOBTree
 from zope.component import getUtility
 from pyramid.threadlocal import get_current_request
 from pyramid.traversal import find_interface
+from pyramid.traversal import find_root
 from betahaus.pyracont import BaseFolder
 from pyramid.security import Allow
 from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
+from persistent import Persistent
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
-from madetomeasure.interfaces import IQuestionNode
 from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.interfaces import IQuestionWidget
 from madetomeasure.models.security_aware import SecurityAware
 
 
@@ -88,6 +90,7 @@ class Question(BaseFolder, SecurityAware):
     def is_variant(self, lang=None, context=None, default=u"", **kwargs):
         """ Is the title returned by get_title a local variant, True/False?
         """
+        #FIXME: If this is a property, args will hardly matter
         #Make sure we have a valid context
         request = get_current_request()
         if not context:
@@ -103,7 +106,11 @@ class Question(BaseFolder, SecurityAware):
                 if variant:
                     return True
         return False
-                                                        
+
+    @property
+    def is_required(self):
+        return self.get_field_value('required', True)
+
     def _get_tags(self, **kw):
         return self._field_storage.get('tags', frozenset())
     def _set_tags(self, value, **kw):
@@ -136,7 +143,6 @@ class Question(BaseFolder, SecurityAware):
         self.__question_text__ = question_text
 
     def get_question_type(self):
-        """ Return a dict with country codes as key and question translations as value. """
         #b/c compat
         return self.get_field_value('question_type', default = "")
 
@@ -144,19 +150,24 @@ class Question(BaseFolder, SecurityAware):
         #b/c compat
         self.set_field_value('question_type', value)
 
-    def question_schema_node(self, name, lang=None, context=None):
-        #If the correct question type isn't set, this might raise a ComponentLookupError
-        node_util = getUtility(IQuestionNode, name=self.get_question_type())
-        return node_util.node(name, title=self.get_title(lang, context=context))
+    def get_type_object(self):
+        root = find_root(self)
+        return root['question_types'].get(self.get_field_value('question_type', ''), None)
+
+    def question_schema_node(self, name, lang=None, context=None, **kw):
+        qtype = self.get_type_object()
+        if not self.is_required:
+            kw['missing'] = u""
+        return qtype.node(name, title = self.get_title(lang, context=context), **kw)
 
     def render_result(self, request, data):
         if not data:
             return _(u"(Nothing)")
-        node_util = getUtility(IQuestionNode, name=self.get_question_type())
-        return node_util.render_result(request, data)
+        qtype = self.get_type_object()
+        return qtype.render_result(request, data)
 
     def csv_export(self, data):
         if not data:
             return ()
-        node_util = getUtility(IQuestionNode, name=self.get_question_type())
-        return node_util.csv_export(data)
+        qtype = self.get_type_object()
+        return qtype.csv_export(data)
