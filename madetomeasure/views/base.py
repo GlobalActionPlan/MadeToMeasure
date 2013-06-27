@@ -180,23 +180,17 @@ class BaseView(object):
     @view_config(name="delete", renderer="templates/form.pt", permission=security.DELETE)
     def delete_form(self):
         #FIXME: This is temporary!
-        
         schema = Schema()
-        
         form = Form(schema, buttons=('delete',))
         self.response['form_resources'] = form.get_widget_resources()
-
         post = self.request.POST
         if 'delete' in post:
             parent = self.context.__parent__
             del parent[self.context.__name__]
-
             url = self.request.resource_url(parent)
             return HTTPFound(location=url)
-
         self.response['form'] = form.render()
         return self.response
-
 
     @view_config(name='add', context=ISurveys, renderer=BASE_FORM_TEMPLATE)
     @view_config(name='add', context=ISurvey, renderer=BASE_FORM_TEMPLATE)

@@ -1,10 +1,8 @@
 from datetime import datetime
 from datetime import timedelta
-from hashlib import sha1
 from random import choice
 import string
 
-from pyramid.url import resource_url
 from zope.interface import implements
 from zope.component import getUtility
 from pyramid_mailer import get_mailer
@@ -93,7 +91,7 @@ class User(BaseFolder, SecurityAware):
         locale = get_localizer(request)
         self.__token__ = RequestPasswordToken()
         #FIXME: Email should use a proper template
-        pw_link = "%stoken_pw?token=%s" % (resource_url(self, request), self.__token__())
+        pw_link = request.resource_url(self, 'token_pw', query = {'token': self.__token__()})
         body = locale.translate(_('request_new_password_text',
                  default=u"password link: ${pw_link}",
                  mapping={'pw_link':pw_link},))
@@ -103,7 +101,6 @@ class User(BaseFolder, SecurityAware):
         msg = Message(subject=_(u"Password reset request from MadeToMeasure"),
                        recipients=[email],
                        body=body)
-
         mailer = get_mailer(request)
         mailer.send(msg)
         
