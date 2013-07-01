@@ -18,7 +18,7 @@ class SelectLanguageTests(unittest.TestCase):
         return select_language
 
     def _survey(self):
-        from madetomeasure.models import Survey
+        from madetomeasure.models.surveys import Survey
         return Survey()
 
     def test_survey_one_lang(self):

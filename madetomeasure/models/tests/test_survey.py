@@ -4,11 +4,9 @@ import unittest
 from datetime import datetime
 
 import pytz
-import colander
 from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
-from BTrees.OOBTree import OOBTree
 from pyramid_mailer import get_mailer
 
 from madetomeasure.models.exceptions import SurveyUnavailableError
@@ -24,7 +22,7 @@ class SurveyTests(unittest.TestCase):
 
     @property
     def _cut(self):
-        from madetomeasure.models import Survey
+        from madetomeasure.models.surveys import Survey
         return Survey
     
     def _utcnow(self):
@@ -105,7 +103,7 @@ class SurveyTests(unittest.TestCase):
         self.root['questions']['o1'] = o1
         
         from madetomeasure.models.surveys import Survey
-        from madetomeasure.models import SurveySection
+        from madetomeasure.models.survey_section import SurveySection
         s1 = Survey()
         s1.set_available_languages(['sv', 'de'])
         o1['surveys']['s1'] = s1
@@ -228,7 +226,7 @@ class SurveyTests(unittest.TestCase):
         root['questions']['o1'] = o1
         
         from madetomeasure.models.surveys import Survey
-        from madetomeasure.models import SurveySection
+        from madetomeasure.models.survey_section import SurveySection
         s1 = Survey()
         o1['surveys']['s1'] = s1
 

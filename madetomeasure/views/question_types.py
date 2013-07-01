@@ -5,8 +5,10 @@ from deform.exception import ValidationFailure
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
-from madetomeasure.interfaces import *
-from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.interfaces import IChoice
+from madetomeasure.interfaces import IChoiceQuestionType
+from madetomeasure.interfaces import IQuestionType
+from madetomeasure.interfaces import IQuestionTypes
 from madetomeasure import security
 from madetomeasure.views.base import BaseView
 from madetomeasure.schemas.common import add_translations_node

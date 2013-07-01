@@ -14,6 +14,7 @@ from pyramid.traversal import find_root
 from pyramid.renderers import render
 from pyramid.interfaces import ISettings
 from betahaus.pyracont import BaseFolder
+from betahaus.pyracont.decorators import content_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IOrganisation
@@ -35,6 +36,7 @@ class Surveys(BaseFolder, SecurityAware):
     allowed_contexts = () #Not manually addable
 
 
+@content_factory('Survey')
 class Survey(BaseFolder, SecurityAware):
     """ Survey model """
     implements(ISurvey)
@@ -48,6 +50,9 @@ class Survey(BaseFolder, SecurityAware):
                        'heading_translations': 'set_heading_translations',
                        'welcome_text': 'set_welcome_text', 
                        'finished_text': 'set_finished_text',}
+    schemas = {'add': 'SurveySchema', 'edit': 'SurveySchema', 'invitation': 'SurveyInvitationSchema',
+               'reminder': 'SurveyReminderSchema', 'language': 'SurveyLangugageSchema',
+               'translate': 'SurveyTranslateSchema', 'clone': 'SurveyCloneSchema'}
     
     def __init__(self, data=None, **kwargs):
         """  Init Survey """

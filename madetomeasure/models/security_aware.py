@@ -2,12 +2,8 @@ from BTrees.OOBTree import OOBTree
 from pyramid.location import lineage
 from pyramid.traversal import find_root
 from zope.interface import implements
-import colander
-import deform
 
 from madetomeasure.interfaces import ISecurityAware
-from madetomeasure import security
-from madetomeasure import MadeToMeasureTSF as _
 
 
 ROLES_NAMESPACE = 'role:'

@@ -2,7 +2,6 @@ from pyramid.decorator import reify
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
-from pyramid.url import resource_url
 from pyramid.renderers import get_renderer
 from pyramid.renderers import render
 from pyramid.view import view_config
@@ -16,13 +15,25 @@ from deform import Form
 from colander import Schema
 from deform.exception import ValidationFailure
 from zope.component import createObject
+from betahaus.pyracont.interfaces import IBaseFolder
 from betahaus.pyracont.interfaces import IContentFactory
-
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
 
 from madetomeasure.models.app import get_users_dt_helper
-from madetomeasure.interfaces import *
-from madetomeasure.schemas import CONTENT_SCHEMAS
-from madetomeasure.models import CONTENT_TYPES
+from madetomeasure.interfaces import IChoice
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestion
+from madetomeasure.interfaces import IQuestionNode
+from madetomeasure.interfaces import IQuestionTypes
+from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.interfaces import ISiteRoot
+from madetomeasure.interfaces import ISurvey
+from madetomeasure.interfaces import ISurveys
+from madetomeasure.interfaces import ISurveySection
+from madetomeasure.interfaces import IParticipant
+from madetomeasure.interfaces import IParticipants
+from madetomeasure.interfaces import IUsers
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
 
@@ -42,9 +53,9 @@ class BaseView(object):
             userid = self.userid,
             user = self.user_profile,
             main_macro = self.main_macro,
-            resource_url = resource_url,
             root = self.root,
-            addable_types = self.addable_types(),
+            addable_types = self.addable_types,
+            content_info = self.content_info,
             flash_messages = self.get_flash_messages,
             organisation = self.organisation,
             survey_dt = self.survey_dt,
@@ -111,25 +122,27 @@ class BaseView(object):
 
     def context_has_schema(self, context, schema_name):
         """ Check if a schema is available named given schema + given context. """
-        return schema_name + getattr(self.context, 'content_type', '') in CONTENT_SCHEMAS
+        if hasattr(context, 'schemas'):
+            return schema_name in context.schemas
 
+    @reify
     def content_info(self):
         """ Return a dict with classes registered as a content factory. """
-        return dict(self.request.getUtilitiesFor(IContentFactory))
+        return dict(self.request.registry.getUtilitiesFor(IContentFactory))
 
+    @reify
     def addable_types(self):
-        #FIXME: Refactor
         context_type = getattr(self.context, 'content_type', '')
         addable = []
-        for (type, klass) in CONTENT_TYPES.items():
-            if context_type in klass.allowed_contexts:
+        for (type, factory) in self.content_info.items():
+            if context_type in factory._callable.allowed_contexts:
                 if self.context_has_permission(self.context, "Add %s" % type):
                     addable.append(type)
         return addable
 
     def question_types_info(self):
         results = {}
-        for (name, factory) in self.content_info():
+        for (name, factory) in self.content_info:
             if IQuestionNode.providedBy(factory):
                 results[name] = factory
         return results
@@ -192,16 +205,14 @@ class BaseView(object):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name='add', context=ISurveys, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='add', context=ISurvey, renderer=BASE_FORM_TEMPLATE)
-    @view_config(name='add', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE)
+    @view_config(name = 'add', context = IBaseFolder, renderer = BASE_FORM_TEMPLATE)
     def add_view(self):
         """ Generic add view.
         """
         type_to_add = self.request.GET.get('content_type')
 
         #Permission check
-        add_permission = "Add %s" % type_to_add
+        add_permission = "Add %s" % type_to_add #FIXME: Refactor, put on content type?
         if not has_permission(add_permission, self.context, self.request):
             raise HTTPForbidden("You're not allowed to add '%s' in this context." % type_to_add)
 
@@ -209,20 +220,21 @@ class BaseView(object):
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         
-        if type_to_add not in self.addable_types():
-            raise ValueError("No content type called %s" % type_to_add)
+        if type_to_add not in self.addable_types:
+            raise ValueError("No content type called %s addable here" % type_to_add)
 
-        schema = CONTENT_SCHEMAS["Add%s" % type_to_add]()
+        schema = createSchema(self.content_info[type_to_add].schemas['add'])
         schema = schema.bind(context=self.context, request=self.request)
 
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
         if type_to_add == 'SurveySection':
             self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
             self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
+        if type_to_add == 'Question':
+            self.trans_util.add_translations_schema(schema['question_text'], self.context)
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
-        
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
             try:
@@ -230,41 +242,37 @@ class BaseView(object):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             appstruct['creators'] = [self.userid]
-            obj = CONTENT_TYPES[type_to_add](**appstruct)
-            name = obj.suggest_name(self.context)            
+            if type_to_add == 'User':
+                name = appstruct['userid']
+                del appstruct['userid']
+                obj = createContent(type_to_add, **appstruct)
+            else: #All other
+                obj = createContent(type_to_add, **appstruct)
+                name = obj.suggest_name(self.context)
             self.context[name] = obj
-    
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
-
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name='edit', context=ISiteRoot, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=ISurveySection, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=IParticipant, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=IQuestionType, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(name='edit', context=IChoice, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(name = 'edit', context = IBaseFolder, renderer = BASE_FORM_TEMPLATE, permission = security.EDIT)
     def edit_view(self):
         """ Generic edit view
         """
         if 'cancel' in self.request.POST:
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
-
-        schema = CONTENT_SCHEMAS["Edit%s" % self.context.content_type]()
+        schema = createSchema(self.context.schemas['edit'])
         schema = schema.bind(context = self.context, request = self.request)
 
         if ISurvey.providedBy(self.context):
             self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
-        
         if ISurveySection.providedBy(self.context):
             self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
             self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
+        if IQuestion.providedBy(self.context):
+            self.trans_util.add_translations_schema(schema['question_text'], self.context)
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -276,14 +284,10 @@ class BaseView(object):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             self.context.set_field_appstruct(appstruct)
-                
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
-
         appstruct = self.context.get_field_appstruct(schema)
-
         self.response['form'] = form.render(appstruct)
         return self.response
 

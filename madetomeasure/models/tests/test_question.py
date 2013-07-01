@@ -6,7 +6,6 @@ import colander
 from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
-from BTrees.OOBTree import OOBTree
 
 from madetomeasure.interfaces import IQuestion
 
@@ -30,7 +29,7 @@ class QuestionTests(unittest.TestCase):
 
     @property
     def _cut(self):
-        from madetomeasure.models import Question
+        from madetomeasure.models.questions import Question
         return Question
 
     def test_verify_class(self):

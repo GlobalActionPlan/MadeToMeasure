@@ -1,7 +1,6 @@
 import csv
 import StringIO
 from datetime import datetime
-from uuid import uuid4
 
 import colander
 from deform import Form
@@ -9,19 +8,17 @@ from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
 from pyramid.url import resource_url
-from pyramid.traversal import find_root
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.response import Response
-from zope.component import getUtility
+from betahaus.pyracont.factories import createContent
+from betahaus.pyracont.factories import createSchema
 
-from madetomeasure.interfaces import *
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
-from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
-from madetomeasure.models import CONTENT_TYPES
-from madetomeasure.schemas import CONTENT_SCHEMAS
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure import security
@@ -31,10 +28,7 @@ class SurveysView(BaseView):
 
     @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_SURVEY)
     def invitation_emails_view(self):
-        """ Edit email addresses for who should be part of a survey. """
-        
         closed_survey = self._closed_survey(self.context)
-        
         post = self.request.POST
         if 'cancel' in post or closed_survey:
             if closed_survey:
@@ -42,7 +36,7 @@ class SurveysView(BaseView):
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
 
-        schema = CONTENT_SCHEMAS["SurveyInvitation"]()
+        schema = createSchema(self.context.schemas['invitation'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['send'], self.buttons['cancel']))
         self.response['form_resources'] = form.get_widget_resources()
@@ -89,8 +83,7 @@ class SurveysView(BaseView):
         not_finished = [x for x in participants if x['finished']<100]
         self.response['not_finished'] = not_finished
         self.response['closed_survey'] = self._closed_survey(self.context)
-
-        schema = CONTENT_SCHEMAS["SurveyReminder"]()
+        schema = createSchema(self.context.schemas['reminder'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['send'],))
         self.response['form_resources'] = form.get_widget_resources()
@@ -149,7 +142,7 @@ class SurveysView(BaseView):
 
         selected_language = None
         available_languages = self.context.get_available_languages()
-        schema = CONTENT_SCHEMAS["SurveyLangugage"]()
+        schema = createSchema(self.context.schemas['language'])
         schema = schema.bind(languages = available_languages, context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
@@ -368,7 +361,6 @@ class SurveysView(BaseView):
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-
         if 'save' in post:
             controls = self.request.POST.items()
             sections = []
@@ -386,8 +378,8 @@ class SurveysView(BaseView):
     def process_question_ids(self, survey):
         sect_id_questions = self.request.POST.dict_of_lists()
         for section in survey.values():
-          if ISurveySection.providedBy(section):
-            sect_id_questions.setdefault(section.__name__, [])
+            if ISurveySection.providedBy(section):
+                sect_id_questions.setdefault(section.__name__, [])
         for (sect_id, question_ids) in sect_id_questions.items():
             if sect_id in survey: #Might be other things than section ids within the post
                 survey[sect_id].set_question_ids(question_ids)
@@ -422,9 +414,8 @@ class SurveysView(BaseView):
 
     @view_config(name='translate', context=ISurvey, renderer='templates/survey_translate.pt', permission=security.TRANSLATE)
     def translate_view(self):
-
         lang = self.request.GET['lang']
-        schema = CONTENT_SCHEMAS["Translate%s" % self.context.content_type]()
+        schema = createContent(self.context.schemas['translate'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['cancel'], self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
@@ -456,7 +447,7 @@ class SurveysView(BaseView):
         """ Results screen
         """
         output = StringIO.StringIO()
-        writer = csv.writer(output, delimiter=';' ,quotechar='"', quoting=csv.QUOTE_ALL)
+        writer = csv.writer(output, delimiter=';', quotechar='"', quoting=csv.QUOTE_ALL)
         writer.writerow([self.context.title.encode('utf-8')])
         languages = self.context.get_language_participants
         lrow = [_(u"Languages").encode('utf-8'), _(u"Total").encode('utf-8')]
@@ -515,11 +506,10 @@ class SurveysView(BaseView):
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-        schema = CONTENT_SCHEMAS["Clone%s" % self.context.content_type]()
+        schema = createSchema(self.context.schemas['clone'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
-        
         if 'save' in self.request.POST:
             controls = self.request.POST.items()
             try:
@@ -527,7 +517,6 @@ class SurveysView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             new_survey = self.context.clone(appstruct['title'], appstruct['destination'])
             url = self.request.resource_url(new_survey, 'edit')
             return HTTPFound(location = url)

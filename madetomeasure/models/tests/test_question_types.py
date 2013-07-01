@@ -1,6 +1,5 @@
 import unittest
 
-import colander
 from pyramid import testing
 from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject

@@ -1,5 +1,6 @@
 import colander
 import deform
+from betahaus.pyracont.decorators import schema_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.common import time_zone_node
@@ -31,6 +32,7 @@ def datetime_loc_node():
                                missing = 'en',
                                default = 'en')
 
+@schema_factory('AddUserSchema')
 class AddUserSchema(colander.Schema):
     userid = colander.SchemaNode(colander.String(),
                                  title=_(u"UserID"),
@@ -51,7 +53,7 @@ class AddUserSchema(colander.Schema):
     translator_langs = translator_node()
 
 
-
+@schema_factory('EditUserSchema')
 class EditUserSchema(colander.Schema):
     first_name = colander.SchemaNode(colander.String(),
                                      title=_(u"First name"),)
@@ -65,6 +67,7 @@ class EditUserSchema(colander.Schema):
     translator_langs = translator_node()
 
 
+@schema_factory('ChangePasswordSchema')
 class ChangePasswordSchema(colander.Schema):
     password = colander.SchemaNode(colander.String(),
                                    title=_('Password'),

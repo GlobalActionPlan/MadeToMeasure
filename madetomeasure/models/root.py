@@ -7,7 +7,7 @@ from betahaus.pyracont import BaseFolder
 
 from madetomeasure import security
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.interfaces import *
+from madetomeasure.interfaces import ISiteRoot
 from madetomeasure.models.security_aware import SecurityAware
 
 

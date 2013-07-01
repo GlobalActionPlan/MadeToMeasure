@@ -106,7 +106,7 @@
                         <a class="context-tab add"
                            href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
-                            ${type_id}
+                            <span tal:content="content_info[type_id].display_name|type_id">
                         </a>
                     </tal:iterate>
                 </tal:add>
@@ -156,6 +156,10 @@
                 </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
                     <a tal:condition="context_has_permission(context, 'Edit')"
+                       class="context-tab edit"
+                       href="${request.resource_url(context, 'edit')}"
+                       i18n:translate="">Edit</a>
+                    <a tal:condition="context_has_permission(context, 'Edit')"
                        class="context-tab change_password"
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
@@ -183,7 +187,7 @@
             <div tal:condition="userid" id="path-bar">
                 <tal:iterate repeat="obj path">
                     &raquo;
-                    <a href="${resource_url(obj, request)}" tal:content="obj.title">Title</a>
+                    <a href="${request.resource_url(obj)}" tal:content="obj.title">Title</a>
                 </tal:iterate>
             </div>
 

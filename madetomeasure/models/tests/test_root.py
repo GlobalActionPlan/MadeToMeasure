@@ -3,14 +3,17 @@ import unittest
 from pyramid import testing
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.security import Authenticated
+from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
 from madetomeasure import security
+from madetomeasure.interfaces import ISiteRoot
 
 
 admin = set([security.ROLE_ADMIN])
 translator = set([security.ROLE_TRANSLATOR])
 auth = set([Authenticated])
+
 
 class RootPermissionTests(unittest.TestCase):
     """ Check permissions. """
@@ -23,39 +26,26 @@ class RootPermissionTests(unittest.TestCase):
     def tearDown(self):
         testing.tearDown()
 
-    def _make_obj(self):
+    @property
+    def _cut(self):
         from madetomeasure.models.root import SiteRoot
-        return SiteRoot()
-        
+        return SiteRoot
+
+    def test_verify_class(self):
+        self.failUnless(verifyClass(ISiteRoot, self._cut))
+
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(ISiteRoot, self._cut()))
+
     def test_permissions(self):
-        obj = self._make_obj()
-        
-        # VIEW
+        obj = self._cut()
         self.assertEqual(self.pap(obj, security.VIEW), admin | auth)
-        
-        # EDIT
         self.assertEqual(self.pap(obj, security.EDIT), admin)
-
-        # DELETE
         self.assertEqual(self.pap(obj, security.EDIT), admin)
-
-        # TRANSLATE
         self.assertEqual(self.pap(obj, security.TRANSLATE), admin)
-
-        # MANAGE_SURVEY
         self.assertEqual(self.pap(obj, security.MANAGE_SURVEY), admin)
-
-        # ADD_QUESTION
         self.assertEqual(self.pap(obj, security.ADD_QUESTION), admin)
-
-        # ADD_SURVEY
         self.assertEqual(self.pap(obj, security.ADD_SURVEY), admin)
-
-        # ADD_SURVEY_SECTION
         self.assertEqual(self.pap(obj, security.ADD_SURVEY_SECTION), admin)
-
-        # ADD_USER
         self.assertEqual(self.pap(obj, security.ADD_USER), admin)
-
-        # ADD_ORGANISATION
         self.assertEqual(self.pap(obj, security.ADD_ORGANISATION), admin)

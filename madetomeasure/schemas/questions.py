@@ -1,13 +1,12 @@
 import colander
 import deform
-from zope.component import getUtilitiesFor
 from pyramid.traversal import find_root
+from betahaus.pyracont.decorators import schema_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.common import adjust_tags
 from madetomeasure.schemas.common import deferred_tags_text_widget
 from madetomeasure.schemas.common import deferred_tags_select_widget
-from madetomeasure.interfaces import IQuestionWidget
 
 
 def question_text_node():
@@ -23,7 +22,7 @@ class TagsSequence(colander.SequenceSchema):
     text = colander.SchemaNode(
         colander.String(),
         preparer = adjust_tags,
-        validator = colander.All(colander.Length(max=100), colander.Regex('^\w*$', msg = _(u"Only letters and characters a-z allowed."))),
+        validator = colander.All(colander.Length(max=100), colander.Regex(r'^\w*$', msg = _(u"Only letters and characters a-z allowed."))),
         widget=deferred_tags_text_widget,
         description=_(u"Enter some text"))
 
@@ -42,6 +41,7 @@ def deferred_context_title(node, kw):
     return kw.get('title')
 
 
+@schema_factory('AddQuestionSchema')
 class AddQuestionSchema(colander.Schema):
     question_type = colander.SchemaNode(colander.String(),
                                         title = _(u"Question type"),
@@ -54,6 +54,7 @@ class AddQuestionSchema(colander.Schema):
     required = question_required_node()
 
 
+@schema_factory('EditQuestionSchema')
 class EditQuestionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 title=_(u"Initial question text, should be in English"),
@@ -63,6 +64,7 @@ class EditQuestionSchema(colander.Schema):
     required = question_required_node()
 
 
+@schema_factory('TranslateQuestionSchema')
 class TranslateQuestionSchema(colander.Schema):
     question_text = question_text_node()
 

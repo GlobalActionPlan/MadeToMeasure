@@ -14,7 +14,8 @@
         
         <tal:iterate repeat="item texts.items()">
         	<h4 tal:content="item[1]">Language</h4>
-	        <a tal:define="text_translate_url resource_url(context, request)+'translate?lang='+item[0]" href="${text_translate_url}" tal:content="text_translate_url"></a>
+	        <a tal:define="text_translate_url request.resource_url(context, 'translate', query = {'lang': item[0]})"
+	           href="${text_translate_url}" tal:content="text_translate_url"></a>
         </tal:iterate>
     </tal:texts>
 
@@ -24,7 +25,7 @@
         	<h4 tal:content="item[1]['name']">Language</h4>
 			<ul>
 	        	<li tal:repeat="question item[1]['questions']">
-			        <a tal:define="question_edit_url resource_url(question, request)+'translate?lang='+item[0]" href="${question_edit_url}" tal:content="question_edit_url"></a>
+			        <a tal:define="question_edit_url request.resource_url(question, 'translate', query = {'lang': item[0]})" href="${question_edit_url}" tal:content="question_edit_url"></a>
 			    </li>
 			</ul>
         </tal:iterate>

@@ -5,12 +5,12 @@ import deform
 from pyramid.security import has_permission
 from pyramid.traversal import find_root
 from zope.component import getUtility
+from betahaus.pyracont.decorators import schema_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.common import deferred_available_languages_widget
 from madetomeasure.schemas.common import time_zone_node
 from madetomeasure.schemas.validators import multiple_email_validator
-from madetomeasure.interfaces import IOrganisation
 from madetomeasure.models.fields import TZDateTime
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestionTranslations
@@ -38,6 +38,7 @@ def section_description_translations_node():
                            description=_(u"For each language")) #Send this to add_translations_schema
 
 
+@schema_factory('SurveySchema')
 class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
     heading_translations = survey_heading_translations_node()
@@ -71,7 +72,7 @@ class SurveySchema(colander.Schema):
                                               widget=deferred_available_languages_widget,
                                               title=_("Available languages"),)
 
-
+@schema_factory('SurveySectionSchema')
 class SurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 widget=deform.widget.TextInputWidget(size=80))
@@ -82,6 +83,7 @@ class SurveySectionSchema(colander.Schema):
     description_translations = section_description_translations_node()
 
 
+@schema_factory('SurveyInvitationSchema')
 class SurveyInvitationSchema(colander.Schema):
     subject = colander.SchemaNode(colander.String(),
                                   title = _(u"Email subject and text header"),
@@ -98,6 +100,7 @@ class SurveyInvitationSchema(colander.Schema):
                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
 
 
+@schema_factory('SurveyReminderSchema')
 class SurveyReminderSchema(colander.Schema):
     subject = colander.SchemaNode(colander.String(),
                                   title = _(u"Email subject and text header"),
@@ -122,13 +125,15 @@ def deferred_select_language_widget(node, kw):
     return deform.widget.RadioChoiceWidget(values=choices)
 
 
+@schema_factory('SurveyLangugageSchema')
 class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
                                           title=_("Choose language"),
                                           widget=deferred_select_language_widget,)
 
 
-class SurveyTranslate(colander.Schema):
+@schema_factory('SurveyTranslateSchema')
+class SurveyTranslateSchema(colander.Schema):
     welcome_text = colander.SchemaNode(colander.String(),
                                         widget=deform.widget.RichTextWidget(),
                                         default="",
@@ -183,7 +188,8 @@ def survey_clone_destination_widget(node, kw):
     return deform.widget.SelectWidget(values=choices)
 
 
-class SurveyClone(colander.Schema):
+@schema_factory('SurveyCloneSchema')
+class SurveyCloneSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),)
     destination = colander.SchemaNode(colander.String(),
                                       widget=survey_clone_destination_widget,

@@ -37,7 +37,7 @@ class SecurityAwareTests(unittest.TestCase):
         obj.add_groups('tester', ['group:Hipsters'])
         self.assertEqual(obj.get_groups('tester'), ('group:Hipsters',))
         obj.add_groups('tester', ('role:Admin',))
-        self.assertEqual(obj.get_groups('tester'), ('group:Hipsters','role:Admin',))
+        self.assertEqual(obj.get_groups('tester'), ('group:Hipsters', 'role:Admin',))
 
     def test_set_groups(self):
         obj = self._make_obj()
@@ -56,7 +56,7 @@ class SecurityAwareTests(unittest.TestCase):
         obj = bootstrap_root()
         self.assertEqual(obj.get_security(), [{'userid': 'admin', 'groups': ('role:Admin',)}])
         obj.set_groups('admin', ['role:Admin', 'group:Hipsters'])
-        self.assertEqual(obj.get_security(),[{'userid': 'admin', 'groups': ('group:Hipsters', 'role:Admin')}])
+        self.assertEqual(obj.get_security(), [{'userid': 'admin', 'groups': ('group:Hipsters', 'role:Admin')}])
 
     def test_update_userids_permissions(self):
         obj = self._make_obj()

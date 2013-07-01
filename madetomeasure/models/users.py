@@ -14,6 +14,7 @@ from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPForbidden
 from betahaus.pyracont import BaseFolder
+from betahaus.pyracont.decorators import content_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IUser
@@ -36,6 +37,7 @@ class Users(BaseFolder, SecurityAware):
                 return user
 
 
+@content_factory('User')
 class User(BaseFolder, SecurityAware):
     """ A system user """
     implements(IUser)
@@ -46,7 +48,9 @@ class User(BaseFolder, SecurityAware):
     custom_accessors = {'title': 'get_title',
                         'time_zone': 'get_time_zone'}
     custom_mutators = {'title': 'set_title'}
-    
+    schemas = {'add': 'AddUserSchema', 'edit': 'EditUserSchema',
+               'change_password': 'ChangePasswordSchema'}
+
     @property
     def __acl__(self):
         from madetomeasure import security

@@ -1,16 +1,16 @@
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
-from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from betahaus.pyracont import BaseFolder
+from betahaus.pyracont.decorators import content_factory
 
 from madetomeasure import MadeToMeasureTSF as _
-from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure.models.app import select_language
 from madetomeasure.models.security_aware import SecurityAware
 
 
+@content_factory('SurveySection')
 class SurveySection(BaseFolder, SecurityAware):
     implements(ISurveySection)
     content_type = 'SurveySection'
@@ -21,6 +21,8 @@ class SurveySection(BaseFolder, SecurityAware):
                        'heading_translations': 'set_heading_translations',
                        'description_translations': 'set_description_translations',
                        'question_ids': 'set_question_ids',}
+    schemas = {'add': 'SurveySectionSchema', 'edit': 'SurveySectionSchema'}
+
 
     def __init__(self, data=None, **kwargs):
         """  Init Survey section """
@@ -86,7 +88,6 @@ class SurveySection(BaseFolder, SecurityAware):
 
     def append_questions_to_schema(self, schema, request):
         """ Append all questions to a schema. """
-        
         lang = None
         if '_LOCALE_' in request.cookies:
             lang = request.cookies['_LOCALE_']
@@ -118,7 +119,6 @@ class SurveySection(BaseFolder, SecurityAware):
         """ Return a structure suitable for looking up responses for each question.
         """
         results = OOBTree()
-        
         for response in self.responses.values():
             for (k, v) in response.items():
                 if k not in results:

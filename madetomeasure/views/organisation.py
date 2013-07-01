@@ -1,26 +1,16 @@
-from uuid import uuid4
-
-import colander
 from deform import Form
-from deform import Button
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.url import resource_url
 from pyramid.traversal import find_root
-from pyramid.exceptions import Forbidden
 from pyramid.response import Response
 from pyramid.renderers import render
-from zope.component import getUtility
+from betahaus.pyracont.factories import createSchema
 
-from madetomeasure.interfaces import *
+from madetomeasure.interfaces import IOrganisation
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
-from madetomeasure.views.base import BASE_VIEW_TEMPLATE
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
-from madetomeasure.models import CONTENT_TYPES
-from madetomeasure.schemas import CONTENT_SCHEMAS
-from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure import security
 
 
@@ -41,7 +31,7 @@ class OrganisationView(BaseView):
             
         question = root['questions'][question_uid]
 
-        schema = CONTENT_SCHEMAS["Translate%s" % question.content_type]()
+        schema = createSchema(question.schemas['translate'])
         schema.title = _(u"Edit question variant for this organisation")
         schema = schema.bind(context = question, request = self.request)
         # add default locale

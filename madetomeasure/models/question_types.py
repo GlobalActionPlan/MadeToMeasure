@@ -1,11 +1,8 @@
 from copy import copy
 
 import colander
-import deform
-from zope.component import adapts
 from zope.interface import implements
 from zope.component import getAdapter
-from zope.component import getUtility
 from BTrees.OOBTree import OOBTree
 from pyramid.renderers import render
 from betahaus.pyracont.decorators import content_factory
@@ -13,12 +10,13 @@ from betahaus.pyracont import BaseFolder
 from pyramid.security import Allow
 from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
+from pyramid.threadlocal import get_current_request
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
 from madetomeasure.interfaces import IChoice
-from madetomeasure.interfaces import IQuestionNode
 from madetomeasure.interfaces import IQuestionWidget
+from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import IQuestionType
 from madetomeasure.interfaces import IQuestionTypes
 from madetomeasure.interfaces import ITextQuestionType

@@ -1,15 +1,16 @@
 import re
 
 import colander
-import deform
+from betahaus.pyracont.decorators import schema_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 
 
-HEX_COLOR = re.compile("^#[0-9a-f]{6}$", re.IGNORECASE)
-LOGO_LINK = re.compile("^http\:\/\/(.*)(gif|png|jpg|jpeg)$", re.IGNORECASE)
+HEX_COLOR = re.compile(r"^#[0-9a-f]{6}$", re.IGNORECASE)
+LOGO_LINK = re.compile(r"^http\:\/\/(.*)(gif|png|jpg|jpeg)$", re.IGNORECASE)
 
 
+@schema_factory('OrganisationSchema')
 class OrganisationSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Organisation name"),)
