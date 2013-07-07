@@ -387,11 +387,9 @@ class SurveysView(BaseView):
     @view_config(name='manage_questions', context=ISurvey, renderer='templates/manage_questions.pt', permission=security.EDIT)
     def manage_questions(self):
         post = self.request.POST
-
         if 'cancel' in self.request.POST:
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
-
         if 'save' in post:
             self.process_question_ids(self.context)
             self.add_flash_message(_('Updated'))
@@ -406,6 +404,10 @@ class SurveysView(BaseView):
             picked_questions.update(section.question_ids)
             survey_sections.append(section)
         self.response['survey_sections'] = survey_sections
+        if not survey_sections:
+            msg = _(u"no_sections_added_notice",
+                    default = u"You need to add survey sections and then use this view to manage the questions.")
+            self.add_flash_message(msg)
 
         #Load all question objects that haven't been picked
         questions = self.root['questions']
