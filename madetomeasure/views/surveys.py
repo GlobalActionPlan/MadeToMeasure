@@ -35,7 +35,15 @@ class SurveysView(BaseView):
                 self.add_flash_message(_(u"Survey has closed, you can't invite"))
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
-
+        #Make sure questions exist
+        question_count = sum([len(x.question_ids) for x in self.context.values()])
+        if not question_count:
+            msg = _(u"no_questions_notice",
+                    default = u"There aren't any questions yet. You need to add survey sections and questions, "
+                              u"otherwise invited users won't be able to do anything.")
+            self.add_flash_message(msg)
+            url = resource_url(self.context, self.request)
+            return HTTPFound(location = url)
         schema = createSchema(self.context.schemas['invitation'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['send'], self.buttons['cancel']))
@@ -54,7 +62,6 @@ class SurveysView(BaseView):
                 emails.add(email.strip())
             message = appstruct['message']
             subject = appstruct['subject']
-
             self.context.send_invitations(self.request, emails, subject, message)
             
             msg = _(u"invitations_sent_notice",
