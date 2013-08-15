@@ -152,8 +152,6 @@
                        href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
-                <tal:surveysection condition="context.content_type == 'SurveySection'">
-                </tal:surveysection>
                 <tal:user condition="context.content_type == 'User'">
                     <a tal:condition="context_has_permission(context, 'Edit')"
                        class="context-tab edit"
@@ -164,23 +162,6 @@
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
                 </tal:user>
-                <tal:question_types condition="context.content_type == 'QuestionTypes'">
-                    <a tal:condition="context_has_permission(context, 'Edit')"
-                       class="context-tab"
-                       href="${request.resource_url(context, 'add', query = {'content_type': 'TextQuestionType'})}"
-                       i18n:translate="">TextQuestionType</a>
-                    <a tal:condition="context_has_permission(context, 'Edit')"
-                       class="context-tab"
-                       href="${request.resource_url(context, 'add', query = {'content_type': 'ChoiceQuestionType'})}"
-                       i18n:translate="">ChoiceQuestionType</a>
-                    <!-- FIXME: Types must be fetched dynamic, like everything else should be -->
-                </tal:question_types>
-                <tal:choice_question condition="context.content_type == 'ChoiceQuestionType'">
-                    <a tal:condition="context_has_permission(context, 'Edit')"
-                       class="context-tab"
-                       href="${request.resource_url(context, 'add', query = {'content_type': 'Choice'})}"
-                       i18n:translate="">add Choice</a>
-                </tal:choice_question>
                 <div class="clear"><!-- --></div>
             </div>
 
