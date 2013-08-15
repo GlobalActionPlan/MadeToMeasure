@@ -110,7 +110,7 @@
                         </a>
                     </tal:iterate>
                 </tal:add>
-                <a tal:condition="context_has_permission(context, 'Edit') and context_has_schema(context, 'Edit')"
+                <a tal:condition="context_has_permission(context, 'Edit') and context_has_schema(context, 'edit')"
                    class="context-tab edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
                 <tal:organisation condition="context.content_type == 'Organisation'">
                    <a tal:condition="context_has_permission(context, 'Edit')"
