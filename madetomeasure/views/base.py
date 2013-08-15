@@ -260,7 +260,7 @@ class BaseView(object):
                 else:
                     name = obj.suggest_name(self.context)
             self.context[name] = obj
-            url = self.request.resource_url(obj)
+            url = self.request.resource_url(obj, getattr(obj, 'go_to_after_add', ''))
             return HTTPFound(location = url)
         self.response['form'] = form.render()
         return self.response

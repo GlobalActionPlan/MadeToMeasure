@@ -41,6 +41,7 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     allowed_contexts = ('QuestionTypes',)
     default_kwargs = {}
     uid_name = True
+    go_to_after_add = u'edit'
 
     @property
     def widget(self):
