@@ -48,12 +48,12 @@ class BaseQuestionType(BaseFolder, SecurityAware):
         widget_name = self.get_field_value('input_widget', '')
         return getAdapter(self, IQuestionWidget, name = widget_name)
 
-    def node(self, name, **kwargs):
+    def node(self, name, lang = None, **kwargs):
         """ Return a schema node.
         """
         kw = copy(self.default_kwargs)
         kw['name'] = name
-        kw['widget'] = self.widget() #FIXME:Request?
+        kw['widget'] = self.widget(lang = lang) #FIXME:Request?
         kw.update(kwargs)
         return colander.SchemaNode(colander.String(), **kw)
 
@@ -109,19 +109,28 @@ class ChoiceQuestionType(BaseQuestionType):
     description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema'}
 
-    def choice_values(self):
+    def node(self, name, lang = None, **kwargs):
+        """ Return a schema node.
+        """
+        kw = copy(self.default_kwargs)
+        kw['name'] = name
+        kw['widget'] = self.widget(lang = lang) #FIXME:Request?
+        kw.update(kwargs)
+        return colander.SchemaNode(colander.String(), **kw)
+
+    def choice_values(self, lang = None):
         """ Return dict of possible choices with choice id as key,
             and rendered title as value.
         """
         choices = {}
-        for (id, title) in self.widget().values:
+        for (id, title) in self.widget(lang = lang).values:
             choices[id] = title
         return choices
     
     def render_result(self, request, data):
         response = {}
         response['occurences'] = self.count_occurences(data)
-        response['choices'] = self.choice_values()
+        response['choices'] = self.choice_values(lang = request.cookies.get('_LOCALE_', None))
         return render('../views/templates/results/choice.pt', response, request=request)
         
     def csv_header(self):

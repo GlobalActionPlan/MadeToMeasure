@@ -22,7 +22,7 @@ class TextWidget(BaseQuestionWidget):
     title = u"Text string"
     adapts(ITextQuestionType)
 
-    def __call__(self):
+    def __call__(self, **kw):
         return deform.widget.TextInputWidget()
 
 
@@ -31,7 +31,7 @@ class TextAreaWidget(BaseQuestionWidget):
     title = u"Text area"
     adapts(ITextQuestionType)
 
-    def __call__(self):
+    def __call__(self, **kw):
         return deform.widget.TextAreaWidget(cols = 60, rows = 10)
 
 
@@ -40,8 +40,9 @@ class RadioWidget(BaseQuestionWidget):
     title = u"Radio choice"
     adapts(IChoiceQuestionType)
 
-    def __call__(self):
-        choices = [(name, choice.title) for (name, choice) in self.context.items()]
+    def __call__(self, **kw):
+        lang = kw.get('lang', None)
+        choices = [(name, choice.get_title(lang = lang)) for (name, choice) in self.context.items()]
         return deform.widget.RadioChoiceWidget(values=choices)
 
 

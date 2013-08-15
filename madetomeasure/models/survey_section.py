@@ -91,7 +91,6 @@ class SurveySection(BaseFolder, SecurityAware):
         lang = None
         if '_LOCALE_' in request.cookies:
             lang = request.cookies['_LOCALE_']
- 
         for id in self.question_ids:
             question = self.question_object_from_id(id)
             schema.add(question.question_schema_node(id, lang=lang, context=self))

@@ -159,7 +159,7 @@ class Question(BaseFolder, SecurityAware):
         qtype = self.get_type_object()
         if not self.is_required:
             kw['missing'] = u""
-        return qtype.node(name, title = self.get_title(lang, context=context), **kw)
+        return qtype.node(name, lang = lang, title = self.get_title(lang, context=context), **kw)
 
     def render_result(self, request, data):
         if not data:
