@@ -12,6 +12,9 @@
 
     <!-- Display choices, if any -->
     <tal:choices condition="choices">
+        <tal:reorder condition="len(choices) > 1">
+            <a href="${request.resource_url(context, 'reorder')}">Reorder</a>
+        </tal:reorder>
         <ul>
             <tal:iterate repeat="choice choices">
                 <li>

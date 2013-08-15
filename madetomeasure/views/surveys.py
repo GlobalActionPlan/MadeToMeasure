@@ -15,6 +15,7 @@ from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
 from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IChoiceQuestionType
 from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
@@ -362,21 +363,21 @@ class SurveysView(BaseView):
 
         return self.response
 
-    @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_surveysection.pt', permission=security.EDIT)
-    def reorder_surveysection(self):
+    @view_config(name='reorder', context=IChoiceQuestionType, renderer='templates/reorder_folder.pt', permission=security.EDIT)
+    @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_folder.pt', permission=security.EDIT)
+    def reorder_folder(self):
         post = self.request.POST
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)
             return HTTPFound(location = url)
         if 'save' in post:
             controls = self.request.POST.items()
-            sections = []
+            items = []
             for (k, v) in controls:
-                if k == 'sections':
-                    sections.append(v)
-            self.context.order = sections
+                if k == 'items':
+                    items.append(v)
+            self.context.order = items
             self.add_flash_message(_('Order updated'))
-
         form = Form(colander.Schema())
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()

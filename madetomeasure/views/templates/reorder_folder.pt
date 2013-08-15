@@ -11,7 +11,7 @@
     <script type="text/javascript" src="${request.application_url}/static/jquery-ui-1.8.15.custom.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function(){
-            $('#sections').sortable();
+            $('#folder_content').sortable();
         });
     </script>
 </metal:head>
@@ -21,9 +21,9 @@
         <fieldset>
             <ul>
                 <li>
-                    <ul id="sections">
-                        <li tal:repeat="section context.values()">
-                            <input type="hidden" name="sections" value="${section.__name__}" />${section.title}
+                    <ul id="folder_content">
+                        <li tal:repeat="item context.values()">
+                            <input type="hidden" name="items" value="${item.__name__}" />${item.title}
                         </li>
                     </ul>
                 </li>
