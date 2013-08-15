@@ -40,6 +40,7 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     implements(IQuestionType)
     allowed_contexts = ('QuestionTypes',)
     default_kwargs = {}
+    uid_name = True
 
     @property
     def widget(self):
@@ -76,12 +77,14 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     def csv_export(self, data):
         raise NotImplementedError()
 
+
 @content_factory('TextQuestionType')
 class TextQuestionType(BaseQuestionType):
     implements(ITextQuestionType)
     content_type = u'TextQuestionType'
     display_name = _(u"Text question")
     description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditTextQuestionSchema'}
 
     def render_result(self, request, data):
         response = {'data':data,}
@@ -103,6 +106,7 @@ class ChoiceQuestionType(BaseQuestionType):
     content_type = 'ChoiceQuestionType'
     display_name = _(u"Choice question")
     description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema'}
 
     def choice_values(self):
         """ Return dict of possible choices with choice id as key,
@@ -153,6 +157,8 @@ class Choice(BaseFolder, SecurityAware):
     description = _(u"")
     allowed_contexts = ('ChoiceQuestionType',)
     custom_mutators = {'title_translations': 'set_title_translations'}
+    schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema'}
+    uid_name = True
 
     def get_title(self, lang=None):
         if not lang:

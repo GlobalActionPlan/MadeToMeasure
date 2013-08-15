@@ -6,11 +6,6 @@ from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IQuestionWidget
 
 
-@schema_factory('AddQuestionTypeSchema', title = _(u"Add question type"))
-class AddQuestionTypeSchema(colander.Schema):
-    pass
-
-
 def title_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Title"),
@@ -36,6 +31,11 @@ def deferred_input_widget(node, kw):
     for (name, widget) in request.registry.getAdapters([context], IQuestionWidget):
         values.append((name, widget.title))
     return deform.widget.RadioChoiceWidget(values = values)
+
+
+@schema_factory('AddQuestionTypeSchema', title = _(u"Add question type"))
+class AddQuestionTypeSchema(colander.Schema):
+    title = title_node()
 
 
 @schema_factory('EditTextQuestionSchema')

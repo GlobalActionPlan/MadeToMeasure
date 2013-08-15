@@ -34,6 +34,7 @@ from madetomeasure.interfaces import ISurveySection
 from madetomeasure.interfaces import IParticipant
 from madetomeasure.interfaces import IParticipants
 from madetomeasure.interfaces import IUsers
+from madetomeasure.schemas.common import add_translations_node
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
 
@@ -223,7 +224,7 @@ class BaseView(object):
         if type_to_add not in self.addable_types:
             raise ValueError("No content type called %s addable here" % type_to_add)
 
-        schema = createSchema(self.content_info[type_to_add].schemas['add'])
+        schema = createSchema(self.content_info[type_to_add]._callable.schemas['add'])
         schema = schema.bind(context=self.context, request=self.request)
 
         #FIXME: Need better way of determining ways of adding fields to schema. After bind?
@@ -232,6 +233,8 @@ class BaseView(object):
             self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
         if type_to_add == 'Question':
             self.trans_util.add_translations_schema(schema['question_text'], self.context)
+        if type_to_add == 'Choice':
+            add_translations_node(schema, 'title_translations')
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -243,15 +246,21 @@ class BaseView(object):
                 self.response['form'] = e.render()
                 return self.response
             appstruct['creators'] = [self.userid]
+            if appstruct.get('ignore_translations', None):
+                if 'title_translations' in appstruct:
+                    del appstruct['title_translations']
             if type_to_add == 'User':
                 name = appstruct['userid']
                 del appstruct['userid']
                 obj = createContent(type_to_add, **appstruct)
             else: #All other
                 obj = createContent(type_to_add, **appstruct)
-                name = obj.suggest_name(self.context)
+                if getattr(obj, 'uid_name', False):
+                    name = obj.uid
+                else:
+                    name = obj.suggest_name(self.context)
             self.context[name] = obj
-            url = self.request.resource_url(self.context)
+            url = self.request.resource_url(obj)
             return HTTPFound(location = url)
         self.response['form'] = form.render()
         return self.response
@@ -273,6 +282,8 @@ class BaseView(object):
             self.trans_util.add_translations_schema(schema['description_translations'], self.context, richtext=True)
         if IQuestion.providedBy(self.context):
             self.trans_util.add_translations_schema(schema['question_text'], self.context)
+        if IChoice.providedBy(self.context):
+            add_translations_node(schema, 'title_translations')
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -284,6 +295,9 @@ class BaseView(object):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
+            if appstruct.get('ignore_translations', None):
+                if 'title_translations' in appstruct:
+                    del appstruct['title_translations']
             self.context.set_field_appstruct(appstruct)
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
