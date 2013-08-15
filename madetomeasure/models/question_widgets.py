@@ -26,6 +26,15 @@ class TextWidget(BaseQuestionWidget):
         return deform.widget.TextInputWidget()
 
 
+class TextAreaWidget(BaseQuestionWidget):
+    name = u'text_area_widget'
+    title = u"Text area"
+    adapts(ITextQuestionType)
+
+    def __call__(self):
+        return deform.widget.TextAreaWidget(cols = 60, rows = 10)
+
+
 class RadioWidget(BaseQuestionWidget):
     name = u'radio_widget'
     title = u"Radio choice"
@@ -38,4 +47,5 @@ class RadioWidget(BaseQuestionWidget):
 
 def includeme(config):
     config.registry.registerAdapter(TextWidget, name = TextWidget.name)
+    config.registry.registerAdapter(TextAreaWidget, name = TextAreaWidget.name)
     config.registry.registerAdapter(RadioWidget, name = RadioWidget.name)
