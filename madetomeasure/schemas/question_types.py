@@ -36,6 +36,7 @@ def deferred_input_widget(node, kw):
 @schema_factory('AddQuestionTypeSchema', title = _(u"Add question type"))
 class AddQuestionTypeSchema(colander.Schema):
     title = title_node()
+    input_widget = input_widget_node()
 
 
 @schema_factory('EditTextQuestionSchema')
