@@ -154,10 +154,6 @@
                 </tal:survey>
                 <tal:user condition="context.content_type == 'User'">
                     <a tal:condition="context_has_permission(context, 'Edit')"
-                       class="context-tab edit"
-                       href="${request.resource_url(context, 'edit')}"
-                       i18n:translate="">Edit</a>
-                    <a tal:condition="context_has_permission(context, 'Edit')"
                        class="context-tab change_password"
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
