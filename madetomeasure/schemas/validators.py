@@ -12,6 +12,9 @@ def multiple_email_validator(node, value):
     validator = colander.Email()
     invalid = []
     for email in value.splitlines():
+        email = email.strip()
+        if not email:
+            continue
         try:
             validator(node, email)
         except colander.Invalid:
