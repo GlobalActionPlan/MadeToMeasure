@@ -10,6 +10,7 @@ from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.response import Response
+from pyramid.security import NO_PERMISSION_REQUIRED
 from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
@@ -327,7 +328,43 @@ class SurveysView(BaseView):
         self.response['languages'] = self.context.untranslated_languages()
         return self.response
 
-    @view_config(context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.VIEW)
+    @view_config(context = ISurvey, renderer = 'templates/survey_view.pt', permission = NO_PERMISSION_REQUIRED)
+    def survey_view(self):
+        if self.userid:
+            return HTTPFound(location = self.request.resource_url(self.context, 'view'))
+        try:
+            self.context.check_open()
+            self.response['survey_open'] = True
+        except SurveyUnavailableError:
+            self.response['survey_open'] = False
+        self.response['allow_anonymous_to_participate'] = self.context.get_field_value('allow_anonymous_to_participate', False)
+        if self.response['allow_anonymous_to_participate']:
+            schema = createSchema('SurveySelfInvitationSchema')
+            schema = schema.bind(context = self.context, request = self.request)
+            form = Form(schema, buttons=(self.buttons['send'],))
+            self.response['form_resources'] = form.get_widget_resources()
+            if 'send' in self.request.POST:
+                controls = self.request.POST.items()
+                try:
+                    appstruct = form.validate(controls)
+                except ValidationFailure, e:
+                    self.response['form'] = e.render()
+                    return self.response
+                subject = self.localizer.translate(_(u"Invitation to survey '${s_title}'", mapping = {'s_title': self.context.title}))
+                msg = _(u"self_added_invitation_text",
+                        default = u"You receive this email since someone (hopefully you) entered "
+                        u"your email address as a participant of this survey. Simply follow the link to participate in the survey. "
+                        u"In case you didn't ask for this email, or you've changed your mind about participating, simply do nothing. "
+                        u"The survey will expire by itself.")
+                self.context.send_invitations(self.request, emails = [appstruct['email']],
+                                              subject = subject, message = msg)
+                msg = _(u"invitation_sent_notice",
+                        default = u"Invitation sent. Check your inbox in a few minutes. If it hasn't arrived within 15 minutes, check your spam folder.")
+                self.add_flash_message(msg)
+            self.response['form'] = form.render()
+        return self.response
+
+    @view_config(name = 'view', context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.EDIT)
     def survey_admin_view(self):
         start_time = self.context.get_field_value('start_time', None)
         end_time = self.context.get_field_value('end_time', None)
@@ -341,11 +378,9 @@ class SurveysView(BaseView):
         try:
             self.context.check_open()
             msg = _(u"The survey is currently open.")
-            self.response['survey_state_msg'] = msg
         except SurveyUnavailableError as e:
             msg = self._survey_error_msg(e)
-            self.response['survey_state_msg'] = msg
-
+        self.response['survey_state_msg'] = msg
         return self.response
 
     @view_config(name='reorder', context=IChoiceQuestionType, renderer='templates/reorder_folder.pt', permission=security.EDIT)

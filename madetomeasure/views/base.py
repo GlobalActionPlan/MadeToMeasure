@@ -10,6 +10,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.i18n import get_locale_name
 from pyramid.location import lineage
 from pyramid.security import has_permission
+from pyramid.i18n import get_localizer
 from deform import Button
 from deform import Form
 from colander import Schema
@@ -65,13 +66,17 @@ class BaseView(object):
             footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
             context_has_permission = self.context_has_permission,
-            context_has_schema = self.context_has_schema
+            context_has_schema = self.context_has_schema,
         )
         if self.organisation:
             self.response['hex_color'] = self.organisation.get_field_value('hex_color')
             self.response['logo_link'] = self.organisation.get_field_value('logo_link')
 
         self.trans_util = self.request.registry.getUtility(IQuestionTranslations)
+
+    @reify
+    def localizer(self):
+        return get_localizer(self.request)
 
     @reify
     def userid(self):

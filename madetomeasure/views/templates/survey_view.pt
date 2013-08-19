@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="main_macro"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="MadeToMeasure">
+<body>
+
+<div metal:fill-slot="content">
+    <tal:open condition="survey_open" i18n:translate="">
+        <p i18n:translate="">This survey currently ongoing.</p>
+        <tal:anonymous condition="allow_anonymous_to_participate">
+            <tal:form replace="structure form">Form</tal:form>
+        </tal:anonymous>
+    </tal:open>
+    <tal:open condition="not survey_open">
+        <p i18n:translate="">This survey is closed.</p>
+    </tal:open>
+    Hw!
+</div>
+</body>
+</html>
+

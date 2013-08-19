@@ -71,6 +71,15 @@ class SurveySchema(colander.Schema):
     available_languages = colander.SchemaNode(deform.Set(),
                                               widget=deferred_available_languages_widget,
                                               title=_("Available languages"),)
+    allow_anonymous_to_participate = colander.SchemaNode(colander.Bool(),
+        title = _(u"allow_anonymous_to_participate_title",
+                  default = u"Allow anonymous people to participate in the survey?"),
+        description = _(u"allow_anonymous_to_participate_description",
+                        default = u"When someone reaches the survey link, allow them to enter "
+                            u"their email address to get an invitation and participate in the survey."),
+        missing = False,
+    )
+
 
 @schema_factory('SurveySectionSchema')
 class SurveySectionSchema(colander.Schema):
@@ -98,6 +107,13 @@ class SurveyInvitationSchema(colander.Schema):
                                                  default = u"Remember to only add users who should recieve the message in this language."),
                                  validator = multiple_email_validator,
                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
+
+
+@schema_factory('SurveySelfInvitationSchema')
+class SurveySelfInvitationSchema(colander.Schema):
+    email = colander.SchemaNode(colander.String(),
+                                title = _(u"Your email"),
+                                validator = colander.Email())
 
 
 @schema_factory('SurveyReminderSchema')
