@@ -7,7 +7,6 @@ from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPFound
-from pyramid.url import resource_url
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.response import Response
@@ -34,7 +33,7 @@ class SurveysView(BaseView):
         if 'cancel' in post or closed_survey:
             if closed_survey:
                 self.add_flash_message(_(u"Survey has closed, you can't invite"))
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         #Make sure questions exist
         question_count = sum([len(x.question_ids) for x in self.context.values()])
@@ -43,7 +42,7 @@ class SurveysView(BaseView):
                     default = u"There aren't any questions yet. You need to add survey sections and questions, "
                               u"otherwise invited users won't be able to do anything.")
             self.add_flash_message(msg)
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         schema = createSchema(self.context.schemas['invitation'])
         schema = schema.bind(context = self.context, request = self.request)
@@ -57,22 +56,18 @@ class SurveysView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-
             emails = set()
             for email in appstruct['emails'].splitlines():
                 emails.add(email.strip())
             message = appstruct['message']
             subject = appstruct['subject']
             self.context.send_invitations(self.request, emails, subject, message)
-            
             msg = _(u"invitations_sent_notice",
                     default = u"${count} Invitation(s) sent",
                     mapping = {'count': len(emails)})
             self.add_flash_message(msg)
-
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
-
         self.response['form'] = form.render()
         return self.response
 
@@ -145,7 +140,7 @@ class SurveysView(BaseView):
         except SurveyUnavailableError as e:
             msg = self._survey_error_msg(e)
             self.add_flash_message(msg)
-            url = resource_url(self.context, self.request) + 'unavailable'
+            url = self.request.resource_url(self.context, 'unavailable')
             return HTTPFound(location=url)
 
         selected_language = None
@@ -172,13 +167,10 @@ class SurveysView(BaseView):
         # redirect to first section if language is selected
         if selected_language:
             self.request.response.set_cookie('_LOCALE_', value=selected_language)
-
             participant_uid = self.context.start_survey(self.request)
             self.context.set_participant_language(participant_uid, selected_language)
-
             #All good so far, let's redirect to welcome screen of the survey
-            url = resource_url(self.context, self.request)
-            url += "welcome?uid=%s" % participant_uid
+            url = self.request.resource_url(self.context, 'welcome', query = {'uid': participant_uid})
             # adding header so cookie is set
             return HTTPFound(location=url, headers=self.request.response.headers)
             
@@ -204,13 +196,10 @@ class SurveysView(BaseView):
             # url for the first section
             if len(self.context.order) > 0:
                 section_id = self.context.order[0]
-                url = resource_url(self.context[section_id], self.request)
-                url += "do?uid=%s" % participant_uid
+                url = self.request.resource_url(self.context[section_id], 'do', query = {'uid': participant_uid})
             else:
-                url = resource_url(self.context, self.request)
-                url += "finished"
-            return HTTPFound(location=url)
-
+                url = self.request.resource_url(self.context, 'finished')
+            return HTTPFound(location = url)
         form = Form(colander.Schema(), buttons=(self.buttons['next'],))
         self.response['form_resources'] = form.get_widget_resources()
         self.response['form'] = form.render()
@@ -275,16 +264,12 @@ class SurveysView(BaseView):
                 return self.response
             self.context.update_question_responses(participant_uid, appstruct)
             if next_section:
-                url = resource_url(next_section, self.request)
-                url += "do?uid=%s" % participant_uid
+                url = self.request.resource_url(next_section, 'do', query = {'uid': participant_uid})
             else:
-                url = resource_url(self.context.__parent__, self.request)
-                url += "finished"
+                url = self.request.resource_url(self.context.__parent__, 'finished')
             return HTTPFound(location=url)
-
         if 'previous' in post:
-            url = resource_url(previous_section, self.request)
-            url += "do?uid=%s" % participant_uid
+            url = self.request.resource_url(previous_section, 'do', query = {'uid': participant_uid})
             return HTTPFound(location=url)
 
         appstruct = self.context.response_for_uid(participant_uid)
@@ -368,7 +353,7 @@ class SurveysView(BaseView):
     def reorder_folder(self):
         post = self.request.POST
         if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         if 'save' in post:
             controls = self.request.POST.items()
@@ -440,7 +425,7 @@ class SurveysView(BaseView):
             
             self.context.set_welcome_text(appstruct['welcome_text'], lang)
             self.context.set_finished_text(appstruct['finished_text'], lang)
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
 
         appstruct = {}
@@ -514,7 +499,7 @@ class SurveysView(BaseView):
         """ Cloning survey
         """
         if 'cancel' in self.request.POST:
-            url = resource_url(self.context, self.request)
+            url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         schema = createSchema(self.context.schemas['clone'])
         schema = schema.bind(context = self.context, request = self.request)
