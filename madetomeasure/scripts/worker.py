@@ -27,6 +27,9 @@ class ScriptWorker(object):
         me = sys.argv[0]
         me = os.path.abspath(me)        
         self.buildoutpath = os.path.dirname(os.path.dirname(me))
+        if len(sys.argv) < 2:
+            sys.exit("Must specify paster.ini file to run")
+
 
         #setup logging
         #self._setup_log()
@@ -44,7 +47,7 @@ class ScriptWorker(object):
             
         
         #Start wsgi stuff
-        config = os.path.join(self.buildoutpath, 'development.ini') #FIXME: buildout info for script?
+        config = os.path.join(self.buildoutpath, sys.argv[1])
         config = os.path.abspath(os.path.normpath(config))
         self.app = loadapp('config:%s' % config, name='MadeToMeasure')
         self.root, self.closer = get_root(self.app)
