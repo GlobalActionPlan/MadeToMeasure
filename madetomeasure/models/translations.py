@@ -58,7 +58,7 @@ class QuestionTranslations(object):
         """
         survey = find_interface(context, ISurvey)
         if survey:
-            langs = list(context.get_field_value('available_languages', ()))
+            langs = list(survey.get_field_value('available_languages', ()))
             if self.default_locale_name in langs:
                 langs.remove(self.default_locale_name)
         else:
