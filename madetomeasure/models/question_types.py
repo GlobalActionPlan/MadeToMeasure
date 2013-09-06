@@ -178,7 +178,8 @@ class Choice(BaseFolder, SecurityAware):
             lang = trans_util.default_locale_name
         #Check for local language
         translations = self.get_field_value('title_translations', {})
-        return translations.get(lang, self.title)
+        tr_title = translations.get(lang, None)
+        return tr_title and tr_title or self.title
 
     def set_title_translations(self, value, **kw):
         if 'title_translations' not in self.field_storage:
