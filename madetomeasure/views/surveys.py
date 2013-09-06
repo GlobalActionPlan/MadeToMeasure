@@ -368,6 +368,13 @@ class SurveysView(BaseView):
                     self.send_invitation(appstruct['email'])
 
                 if appstruct['participant_actions'] == u"start_anon" and self.context.get_field_value('allow_anonymous_to_start', False):
+                    if appstruct['email'] in self.context.tickets.values():
+                        msg = _(u"email_already_used_notice",
+                                default = u"Your email address has already been used within this survey. "
+                                        u"If you need to change your replies, use the access link provided when you started "
+                                        u"the survey, or resend the link by using the form below.")
+                        self.add_flash_message(msg)
+                        return HTTPFound(location = self.request.resource_url(self.context))
                     invitation_uid = self.context.create_ticket(appstruct['email'])
                     access_link = self.request.resource_url(self.context, 'do', query = {'uid': invitation_uid})
                     msg = _(u"participant_unverified_link_notice",
