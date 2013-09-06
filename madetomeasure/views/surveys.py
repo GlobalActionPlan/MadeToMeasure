@@ -369,12 +369,19 @@ class SurveysView(BaseView):
 
                 if appstruct['participant_actions'] == u"start_anon" and self.context.get_field_value('allow_anonymous_to_start', False):
                     if appstruct['email'] in self.context.tickets.values():
-                        msg = _(u"email_already_used_notice",
-                                default = u"Your email address has already been used within this survey. "
-                                        u"If you need to change your replies, use the access link provided when you started "
-                                        u"the survey, or resend the link by using the form below.")
-                        self.add_flash_message(msg)
-                        return HTTPFound(location = self.request.resource_url(self.context))
+                        #Check if participant actually started the survey, or was just invited
+                        #FIXME: We're looping twice - we should use a reverse key registry instead.
+                        for (participant_uid, email) in self.context.tickets.items():
+                            #This will of course be true, since we already know email is in there.
+                            if appstruct['email'] == email:
+                                if self.root['participants'].participant_by_ids(self.context.__name__,  participant_uid):
+                                    #Abort if survey data founds
+                                    msg = _(u"email_already_used_notice",
+                                            default = u"Your email address has already been used within this survey. "
+                                                    u"If you need to change your replies, use the access link provided when you started "
+                                                    u"the survey, or resend the link by using the form below.")
+                                    self.add_flash_message(msg)
+                                    return HTTPFound(location = self.request.resource_url(self.context))
                     invitation_uid = self.context.create_ticket(appstruct['email'])
                     access_link = self.request.resource_url(self.context, 'do', query = {'uid': invitation_uid})
                     msg = _(u"participant_unverified_link_notice",
