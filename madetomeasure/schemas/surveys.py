@@ -79,6 +79,13 @@ class SurveySchema(colander.Schema):
                             u"their email address to get an invitation and participate in the survey."),
         missing = False,
     )
+    allow_anonymous_to_start = colander.SchemaNode(colander.Bool(),
+        title = _(u"allow_anonymous_to_start_title",
+                  default = u"Allow anonymous people to start the survey without validating their email."),
+        description = _(u"allow_anonymous_to_start_description",
+                        default = u"Last resort - only allow this if there's major email problems with outgoing email!"),
+        missing = False,
+    )
 
 
 @schema_factory('SurveySectionSchema')
@@ -109,11 +116,27 @@ class SurveyInvitationSchema(colander.Schema):
                                  widget=deform.widget.TextAreaWidget(rows=10, cols=50),)
 
 
-@schema_factory('SurveySelfInvitationSchema')
-class SurveySelfInvitationSchema(colander.Schema):
+@colander.deferred
+def deferred_participant_actions(node, kw):
+    request = kw['request']
+    context = kw['context']
+    choices = []
+    if context.get_field_value('allow_anonymous_to_participate', False):
+        choices.append((u'send_anon_invitation', u"I want to participate in the survey - send me a link."))
+    choices.append((u'resend_access', u"I lost my access link - send me a new one."))
+    if context.get_field_value('allow_anonymous_to_start', False):
+        choices.append((u'start_anon', u"Start my survey without verifying my email."))
+    return deform.widget.RadioChoiceWidget(values = choices)
+
+
+@schema_factory('ParticipantControlsSchema')
+class ParticipantControlsSchema(colander.Schema):
     email = colander.SchemaNode(colander.String(),
                                 title = _(u"Your email"),
                                 validator = colander.Email())
+    participant_actions = colander.SchemaNode(colander.String(),
+                                              title = _(u"Actions"),
+                                              widget = deferred_participant_actions,)
 
 
 @schema_factory('SurveyReminderSchema')

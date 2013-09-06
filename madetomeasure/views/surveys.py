@@ -328,6 +328,19 @@ class SurveysView(BaseView):
         self.response['languages'] = self.context.untranslated_languages()
         return self.response
 
+    def send_invitation(self, email):
+        subject = self.localizer.translate(_(u"Invitation to survey '${s_title}'", mapping = {'s_title': self.context.title}))
+        msg = _(u"self_added_invitation_text",
+                default = u"You receive this email since someone (hopefully you) entered "
+                u"your email address as a participant of this survey. Simply follow the link to participate in the survey. "
+                u"In case you didn't ask for this email, or you've changed your mind about participating, simply do nothing. "
+                u"The survey will expire by itself.")
+        self.context.send_invitations(self.request, emails = [email],
+                                      subject = subject, message = msg)
+        msg = _(u"invitation_sent_notice",
+                default = u"Invitation sent. Check your inbox in a few minutes. If it hasn't arrived within 15 minutes, check your spam folder.")
+        self.add_flash_message(msg)
+
     @view_config(context = ISurvey, renderer = 'templates/survey_view.pt', permission = NO_PERMISSION_REQUIRED)
     def survey_view(self):
         if self.userid:
@@ -338,9 +351,9 @@ class SurveysView(BaseView):
         except SurveyUnavailableError:
             self.response['survey_open'] = False
         self.response['allow_anonymous_to_participate'] = self.context.get_field_value('allow_anonymous_to_participate', False)
-        if self.response['allow_anonymous_to_participate']:
-            schema = createSchema('SurveySelfInvitationSchema')
-            schema = schema.bind(context = self.context, request = self.request)
+        if self.response['survey_open']:
+            schema = createSchema('ParticipantControlsSchema')
+            schema = schema.bind(context = self.context, request = self.request)            
             form = Form(schema, buttons=(self.buttons['send'],))
             self.response['form_resources'] = form.get_widget_resources()
             if 'send' in self.request.POST:
@@ -350,17 +363,28 @@ class SurveysView(BaseView):
                 except ValidationFailure, e:
                     self.response['form'] = e.render()
                     return self.response
-                subject = self.localizer.translate(_(u"Invitation to survey '${s_title}'", mapping = {'s_title': self.context.title}))
-                msg = _(u"self_added_invitation_text",
-                        default = u"You receive this email since someone (hopefully you) entered "
-                        u"your email address as a participant of this survey. Simply follow the link to participate in the survey. "
-                        u"In case you didn't ask for this email, or you've changed your mind about participating, simply do nothing. "
-                        u"The survey will expire by itself.")
-                self.context.send_invitations(self.request, emails = [appstruct['email']],
-                                              subject = subject, message = msg)
-                msg = _(u"invitation_sent_notice",
-                        default = u"Invitation sent. Check your inbox in a few minutes. If it hasn't arrived within 15 minutes, check your spam folder.")
-                self.add_flash_message(msg)
+
+                if appstruct['participant_actions'] == u"send_anon_invitation" and self.response['allow_anonymous_to_participate']:
+                    self.send_invitation(appstruct['email'])
+
+                if appstruct['participant_actions'] == u"start_anon" and self.context.get_field_value('allow_anonymous_to_start', False):
+                    invitation_uid = self.context.create_ticket(appstruct['email'])
+                    access_link = self.request.resource_url(self.context, 'do', query = {'uid': invitation_uid})
+                    msg = _(u"participant_unverified_link_notice",
+                            default = u"Important! Since you're starting this survey without a verified email, please copy this "
+                                    u"link in case you need to access the survey again: ${link}",
+                            mapping = {'link': access_link})
+                    self.add_flash_message(msg)
+                    return HTTPFound(location = access_link)
+
+                if appstruct['participant_actions'] == u"resend_access":
+                    if appstruct['email'] not in self.context.tickets.values() and not self.response['allow_anonymous_to_participate']:
+                        msg = _(u"cant_resend_access_error",
+                                default = u"Unable to resend access code - your email wasn't found among the invited.")
+                        self.add_flash_message(msg)
+                        return HTTPFound(location = self.request.resource_url(self.context))
+                    self.send_invitation(appstruct['email'])
+
             self.response['form'] = form.render()
         return self.response
 
