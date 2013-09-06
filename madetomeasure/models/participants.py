@@ -30,16 +30,16 @@ class Participants(BaseFolder, SecurityAware):
                 results.add(obj)
         return results
 
-    def participant_by_ids(self, survey_uid, participant_uid):
-        """ Return a participant that matches survey_uid and particpant_uid in that survey.
+    def participant_by_ids(self, survey_id, participant_uid):
+        """ Return a participant that matches survey_id and particpant_uid in that survey.
             Returns None if a participant doesn't exist.
             This method is used do check if someone has participated in a survey before.
         """
         for obj in self.values():
             if not IParticipant.providedBy(obj):
                 continue
-            if survey_uid in obj.surveys:
-                if participant_uid in obj.surveys[survey_uid]:
+            if survey_id in obj.surveys:
+                if participant_uid in obj.surveys[survey_id]:
                     return obj
 
 
