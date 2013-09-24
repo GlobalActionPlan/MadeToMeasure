@@ -1,3 +1,4 @@
+import colander
 from zope.interface import implements
 from BTrees.OOBTree import OOBTree
 from pyramid.threadlocal import get_current_request
@@ -158,7 +159,7 @@ class Question(BaseFolder, SecurityAware):
     def question_schema_node(self, name, lang=None, context=None, **kw):
         qtype = self.get_type_object()
         if not self.is_required:
-            kw['missing'] = u""
+            kw['missing'] = colander.null
         return qtype.node(name, lang = lang, title = self.get_title(lang, context=context), **kw)
 
     def render_result(self, request, data):
