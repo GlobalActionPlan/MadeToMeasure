@@ -5,6 +5,7 @@ from zope.interface import implements
 from madetomeasure.interfaces import IChoiceQuestionType
 from madetomeasure.interfaces import ITextQuestionType
 from madetomeasure.interfaces import IQuestionWidget
+from madetomeasure import MadeToMeasureTSF as _
 
 
 class BaseQuestionWidget(object):
@@ -46,7 +47,20 @@ class RadioWidget(BaseQuestionWidget):
         return deform.widget.RadioChoiceWidget(values=choices)
 
 
+class DropdownWidget(BaseQuestionWidget):
+    name = u'dropdown_widget'
+    title = u"Dropdown choice"
+    adapts(IChoiceQuestionType)
+
+    def __call__(self, **kw):
+        lang = kw.get('lang', None)
+        choices = [('', _(u"<Select>"))]
+        choices.extend([(name, choice.get_title(lang = lang)) for (name, choice) in self.context.items()])
+        return deform.widget.SelectWidget(values=choices)
+
+
 def includeme(config):
     config.registry.registerAdapter(TextWidget, name = TextWidget.name)
     config.registry.registerAdapter(TextAreaWidget, name = TextAreaWidget.name)
     config.registry.registerAdapter(RadioWidget, name = RadioWidget.name)
+    config.registry.registerAdapter(DropdownWidget, name = DropdownWidget.name)
