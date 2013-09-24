@@ -67,6 +67,11 @@ class ITextQuestionType(IBaseFolder):
     """
 
 
+class IIntegerQuestionType(IBaseFolder):
+    """ Similar to text question, but stores an integer value.
+    """
+
+
 class IChoice(IBaseFolder):
     """ Base object that makes the choices of a IQuestionType.
     

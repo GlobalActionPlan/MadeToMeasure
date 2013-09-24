@@ -2,7 +2,7 @@ from copy import copy
 
 import colander
 from zope.interface import implements
-from zope.component import getAdapter
+from zope.component import queryAdapter
 from BTrees.OOBTree import OOBTree
 from pyramid.renderers import render
 from betahaus.pyracont.decorators import content_factory
@@ -20,6 +20,7 @@ from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import IQuestionType
 from madetomeasure.interfaces import IQuestionTypes
 from madetomeasure.interfaces import ITextQuestionType
+from madetomeasure.interfaces import IIntegerQuestionType
 from madetomeasure.interfaces import IChoiceQuestionType
 from madetomeasure.models.security_aware import SecurityAware
 
@@ -46,14 +47,15 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     @property
     def widget(self):
         widget_name = self.get_field_value('input_widget', '')
-        return getAdapter(self, IQuestionWidget, name = widget_name)
+        return queryAdapter(self, IQuestionWidget, name = widget_name)
 
     def node(self, name, lang = None, **kwargs):
         """ Return a schema node.
         """
         kw = copy(self.default_kwargs)
         kw['name'] = name
-        kw['widget'] = self.widget(lang = lang) #FIXME:Request?
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
         kw.update(kwargs)
         return colander.SchemaNode(colander.String(), **kw)
 
@@ -70,13 +72,17 @@ class BaseQuestionType(BaseFolder, SecurityAware):
         return "<%s '%s'>" % (self.__class__.__module__, self.title)
 
     def render_result(self, request, data):
-        raise NotImplementedError()
-        
+        response = {'data':data,}
+        return render('../views/templates/results/basic.pt', response, request=request)
+
     def csv_header(self):
-        raise NotImplementedError()
-        
+        return [self.title]
+
     def csv_export(self, data):
-        raise NotImplementedError()
+        response = []
+        for reply in data:
+            response.append(['', reply.encode('utf-8')])
+        return response
 
 
 @content_factory('TextQuestionType')
@@ -87,18 +93,24 @@ class TextQuestionType(BaseQuestionType):
     description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditTextQuestionSchema'}
 
-    def render_result(self, request, data):
-        response = {'data':data,}
-        return render('../views/templates/results/basic.pt', response, request=request)
-        
-    def csv_header(self):
-        return [self.title]
-        
-    def csv_export(self, data):
-        response = []
-        for reply in data:
-            response.append(['', reply.encode('utf-8')])
-        return response
+
+@content_factory('IntegerQuestionType')
+class IntegerQuestionType(BaseQuestionType):
+    implements(IIntegerQuestionType)
+    content_type = u'IntegerQuestionType'
+    display_name = _(u"Integer question")
+    description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditIntegerQuestionSchema'}
+
+    def node(self, name, lang = None, **kwargs):
+        """ Return a schema node.
+        """
+        kw = copy(self.default_kwargs)
+        kw['name'] = name
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
+        kw.update(kwargs)
+        return colander.SchemaNode(colander.Int(), **kw)
 
 
 @content_factory('ChoiceQuestionType')
@@ -114,7 +126,8 @@ class ChoiceQuestionType(BaseQuestionType):
         """
         kw = copy(self.default_kwargs)
         kw['name'] = name
-        kw['widget'] = self.widget(lang = lang) #FIXME:Request?
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
         kw.update(kwargs)
         return colander.SchemaNode(colander.String(), **kw)
 

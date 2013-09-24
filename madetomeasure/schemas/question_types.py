@@ -20,6 +20,7 @@ def description_node():
 def input_widget_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Input widget"),
+                               missing = u"",
                                widget = deferred_input_widget,)
 
 
@@ -40,6 +41,13 @@ class AddQuestionTypeSchema(colander.Schema):
 
 @schema_factory('EditTextQuestionSchema')
 class EditTextQuestionSchema(colander.Schema):
+    title = title_node()
+    description = description_node()
+    input_widget = input_widget_node()
+
+
+@schema_factory('EditIntegerQuestionSchema')
+class EditIntegerQuestionSchema(colander.Schema):
     title = title_node()
     description = description_node()
     input_widget = input_widget_node()
