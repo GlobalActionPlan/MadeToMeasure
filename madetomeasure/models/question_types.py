@@ -21,6 +21,7 @@ from madetomeasure.interfaces import IQuestionType
 from madetomeasure.interfaces import IQuestionTypes
 from madetomeasure.interfaces import ITextQuestionType
 from madetomeasure.interfaces import IIntegerQuestionType
+from madetomeasure.interfaces import INumberQuestionType
 from madetomeasure.interfaces import IChoiceQuestionType
 from madetomeasure.models.security_aware import SecurityAware
 
@@ -111,6 +112,25 @@ class IntegerQuestionType(BaseQuestionType):
             kw['widget'] = self.widget(lang = lang)
         kw.update(kwargs)
         return colander.SchemaNode(colander.Int(), **kw)
+
+
+@content_factory('NumberQuestionType')
+class NumberQuestionType(BaseQuestionType):
+    implements(INumberQuestionType)
+    content_type = u'NumberQuestionType'
+    display_name = _(u"Number question")
+    description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditNumberQuestionSchema'}
+
+    def node(self, name, lang = None, **kwargs):
+        """ Return a schema node.
+        """
+        kw = copy(self.default_kwargs)
+        kw['name'] = name
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
+        kw.update(kwargs)
+        return colander.SchemaNode(colander.Decimal(), **kw)
 
 
 @content_factory('ChoiceQuestionType')

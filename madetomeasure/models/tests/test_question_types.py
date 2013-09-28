@@ -7,6 +7,7 @@ from zope.interface.verify import verifyObject
 from madetomeasure.interfaces import IQuestionType
 from madetomeasure.interfaces import IQuestionTypes
 from madetomeasure.interfaces import ITextQuestionType
+from madetomeasure.interfaces import INumberQuestionType
 from madetomeasure.interfaces import IChoiceQuestionType
 
 
@@ -105,6 +106,28 @@ class TextQuestionTypeTests(unittest.TestCase):
 #         obj = BasicQuestionNode('test_node', text_area_widget, title="Hello")
 #         node = obj.node('test_node', title="Goodbye!")
 #         self.assertEqual(node.title, "Goodbye!")
+
+
+class NumberQuestionTypeTests(unittest.TestCase):
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from madetomeasure.models.question_types import NumberQuestionType
+        return NumberQuestionType
+
+    def test_verify_class(self):
+        self.failUnless(verifyClass(IQuestionType, self._cut))
+        self.failUnless(verifyClass(INumberQuestionType, self._cut))
+
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(IQuestionType, self._cut(None)))
+        self.failUnless(verifyObject(INumberQuestionType, self._cut(None)))
+
 
 
 class ChoiceQuestionTypeTests(unittest.TestCase):

@@ -53,6 +53,13 @@ class EditIntegerQuestionSchema(colander.Schema):
     input_widget = input_widget_node()
 
 
+@schema_factory('EditNumberQuestionSchema')
+class EditNumberQuestionSchema(colander.Schema):
+    title = title_node()
+    description = description_node()
+    input_widget = input_widget_node()
+
+
 @schema_factory('EditChoiceQuestionSchema')
 class EditChoiceQuestionSchema(colander.Schema):
     title = title_node()
