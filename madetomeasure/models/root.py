@@ -16,6 +16,7 @@ class SiteRoot(BaseFolder, SecurityAware):
     content_type = 'SiteRoot'
     display_name = _(u"Site root")
     allowed_contexts = () #Not manually addable
+    schemas = {'edit': 'EditSiteRoot'}
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                (Allow, Authenticated, security.VIEW),
