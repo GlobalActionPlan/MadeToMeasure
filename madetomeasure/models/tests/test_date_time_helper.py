@@ -38,7 +38,7 @@ class DateTimeHelperTests(unittest.TestCase):
     def test_dt_format(self):
         obj = self._make_obj()
         date_and_time = obj.timezone.localize(datetime.strptime('1999-12-14 19:12', "%Y-%m-%d %H:%M"))
-        self.assertEqual(obj.dt_format(date_and_time), '12/14/99 7:12 PM')
+        self.assertEqual(obj.dt_format(date_and_time), '12/14/99, 7:12 PM')
 
     def test_datetime_localize(self):
         obj = self._make_obj()
