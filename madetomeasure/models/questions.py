@@ -16,6 +16,8 @@ from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
 from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.interfaces import ISurvey
+from madetomeasure.interfaces import ISurveySection
 from madetomeasure.models.security_aware import SecurityAware
 
 
@@ -53,7 +55,7 @@ class Question(BaseFolder, SecurityAware):
                         'tags': '_get_tags'}
     custom_mutators = {'question_text': 'set_question_text',
                        'tags': '_set_tags',}
-    schemas = {'add': 'AddQuestionSchema', 'edit': 'EditQuestionSchema',
+    schemas = {'add': 'AddQuestionSchema', 'edit': 'EditQuestionSchema', 'delete': 'DeleteQuestionSchema',
                'translate': 'TranslateQuestionSchema'}
 
     def __init__(self, data = None, **kwargs):
@@ -173,3 +175,22 @@ class Question(BaseFolder, SecurityAware):
             return ()
         qtype = self.get_type_object()
         return qtype.csv_export(data)
+
+    def check_safe_delete(self, request):
+        root = find_root(self)
+        results = []
+        #This code is ugly and could probably be done in a better way.
+        for org in [x for x in root.values() if IOrganisation.providedBy(x)]:
+            for surv in [x for x in org['surveys'].values() if ISurvey.providedBy(x)]:
+                for surv_sect in [x for x in surv.values() if ISurveySection.providedBy(x)]:
+                    if self.__name__ in surv_sect.question_ids:
+                        results.append(surv_sect)
+        if not results:
+            return True
+        #FIXME: Only flash messages can handle html right now
+        out = u"<br/><br/>"
+        rurl = request.resource_url
+        out += ",<br/>".join([u'<a href="%s">%s</a>' % (rurl(x), x.title) for x in results])
+        request.session.flash(_(u"Can't delete this since it's used in the following survey sections: ${out}",
+                                mapping = {'out': out}))
+        return False

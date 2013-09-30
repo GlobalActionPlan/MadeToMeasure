@@ -64,6 +64,11 @@ class EditQuestionSchema(colander.Schema):
     required = question_required_node()
 
 
+@schema_factory('DeleteQuestionSchema', title = _(u"Really delete question?"))
+class DeleteQuestionSchema(colander.Schema):
+    pass
+
+
 @schema_factory('TranslateQuestionSchema')
 class TranslateQuestionSchema(colander.Schema):
     question_text = question_text_node()
