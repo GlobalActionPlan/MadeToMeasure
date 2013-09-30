@@ -11,6 +11,7 @@ from pyramid.security import Allow
 from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
 from pyramid.threadlocal import get_current_request
+from pyramid.traversal import find_root
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure import security
@@ -44,6 +45,19 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     default_kwargs = {}
     uid_name = True
     go_to_after_add = u'edit'
+
+    def check_safe_delete(self, request):
+        root = find_root(self)
+        results = root['questions'].questions_by_type(self.uid)
+        if not results:
+            return True
+        #FIXME: Only flash messages can handle html right now
+        out = u"<br/><br/>"
+        rurl = request.resource_url
+        out += ",<br/>".join([u'<a href="%s">%s</a>' % (rurl(x), x.title) for x in results])
+        request.session.flash(_(u"Can't delete this since it's used in: ${out}",
+                                mapping = {'out': out}))
+        return False
 
     @property
     def widget(self):
@@ -92,7 +106,7 @@ class TextQuestionType(BaseQuestionType):
     content_type = u'TextQuestionType'
     display_name = _(u"Text question")
     description = _(u"")
-    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditTextQuestionSchema'}
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditTextQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
 
 @content_factory('IntegerQuestionType')
@@ -101,7 +115,7 @@ class IntegerQuestionType(BaseQuestionType):
     content_type = u'IntegerQuestionType'
     display_name = _(u"Integer question")
     description = _(u"")
-    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditIntegerQuestionSchema'}
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditIntegerQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
         """ Return a schema node.
@@ -120,7 +134,7 @@ class NumberQuestionType(BaseQuestionType):
     content_type = u'NumberQuestionType'
     display_name = _(u"Number question")
     description = _(u"")
-    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditNumberQuestionSchema'}
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditNumberQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
         """ Return a schema node.
@@ -139,7 +153,7 @@ class ChoiceQuestionType(BaseQuestionType):
     content_type = 'ChoiceQuestionType'
     display_name = _(u"Choice question")
     description = _(u"")
-    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema'}
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
         """ Return a schema node.
@@ -200,7 +214,7 @@ class Choice(BaseFolder, SecurityAware):
     description = _(u"")
     allowed_contexts = ('ChoiceQuestionType',)
     custom_mutators = {'title_translations': 'set_title_translations'}
-    schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema'}
+    schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema',}
     uid_name = True
 
     def get_title(self, lang=None):

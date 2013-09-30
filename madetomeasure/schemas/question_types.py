@@ -39,6 +39,11 @@ class AddQuestionTypeSchema(colander.Schema):
     title = title_node()
 
 
+@schema_factory('DeleteQuestionTypeSchema', title = _(u"Really delete question type?"))
+class DeleteQuestionTypeSchema(colander.Schema):
+    pass
+
+
 @schema_factory('EditTextQuestionSchema')
 class EditTextQuestionSchema(colander.Schema):
     title = title_node()

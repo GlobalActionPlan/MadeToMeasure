@@ -201,6 +201,9 @@ class BaseView(object):
         """ This form is a generic delete form. It's up to the delete schema (which must exist to use this)
             whether it must have some sort of validation.
         """
+        if hasattr(self.context, 'check_safe_delete') and not self.context.check_safe_delete(self.request):
+            #Abort - it's not safe to delete. Flash message will contain details from check_delete function
+            return HTTPFound(location = self.request.resource_url(self.context))
         schema = createSchema(self.context.schemas['delete'])
         schema = schema.bind(context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['delete'], self.buttons['cancel'], ))

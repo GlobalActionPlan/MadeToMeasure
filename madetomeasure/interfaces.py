@@ -52,6 +52,8 @@ class IQuestionType(IBaseFolder):
     """ Question type object. Contains information on a specific question type. Like "True or False"
         or a "Free text question".
     """
+    def check_safe_delete(request):
+        "Investigate if it's safe to delete this question. Returns True/False + will append to request flash message if it isn't safe."
 
 
 class IChoiceQuestionType(IBaseFolder):
