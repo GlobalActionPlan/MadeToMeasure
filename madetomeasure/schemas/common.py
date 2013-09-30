@@ -17,7 +17,7 @@ def time_zone_node():
         description = _(u"Try start typing a timezone"),
         validator = colander.OneOf(common_timezones),
         widget = deform.widget.AutocompleteInputWidget(size=60,
-                                                   values = common_timezones,
+                                                   values = list(common_timezones), #Conversion due to API change in pytz
                                                    min_length=1),
     )
 
