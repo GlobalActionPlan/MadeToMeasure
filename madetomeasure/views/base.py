@@ -173,7 +173,7 @@ class BaseView(object):
         buttons['cancel'] = Button('cancel', _(u"Cancel"))
         buttons['request'] = Button('request', _(u"Request"))
         buttons['change'] = Button('change', _(u"Change"))
-        
+        buttons['delete'] = Button('delete', _(u"Delete"))
         return buttons
 
     @view_config(context=IUsers, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
@@ -198,16 +198,27 @@ class BaseView(object):
 
     @view_config(name="delete", renderer="templates/form.pt", permission=security.DELETE)
     def delete_form(self):
-        #FIXME: This is temporary!
-        schema = Schema()
-        form = Form(schema, buttons=('delete',))
+        """ This form is a generic delete form. It's up to the delete schema (which must exist to use this)
+            whether it must have some sort of validation.
+        """
+        schema = createSchema(self.context.schemas['delete'])
+        schema = schema.bind(context = self.context, request = self.request)
+        form = Form(schema, buttons=(self.buttons['delete'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
-        post = self.request.POST
-        if 'delete' in post:
+        if self.request.method == 'POST':
             parent = self.context.__parent__
-            del parent[self.context.__name__]
-            url = self.request.resource_url(parent)
-            return HTTPFound(location=url)
+            if 'delete' in self.request.POST:
+                controls = self.request.POST.items()
+                try:
+                    form.validate(controls)
+                except ValidationFailure, e:
+                    self.response['form'] = e.render()
+                    return self.response
+                del parent[self.context.__name__]
+                self.add_flash_message(_(u"Deleted"))
+            if 'cancel' in self.request.POST:
+                self.add_flash_message(_(u"Canceled"))
+            return HTTPFound(location = self.request.resource_url(parent))
         self.response['form'] = form.render()
         return self.response
 

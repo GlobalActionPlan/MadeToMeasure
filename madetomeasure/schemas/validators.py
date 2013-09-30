@@ -47,3 +47,20 @@ class UseridOrEmailValidator(object):
             user = self.context.get(value)
         if not IUser.providedBy(user):
             raise colander.Invalid(node, _(u"Login incorrect"))
+
+
+@colander.deferred
+def deferred_confirm_delete_with_title_validator(node, kw):
+    context = kw['context']
+    return ConfirmDeleteWithTitleValidator(context)
+
+
+class ConfirmDeleteWithTitleValidator(object):
+
+    def __init__(self, context, msg = None):
+        self.context = context
+        self.msg = msg and msg or _(u"Doesn't match")
+    
+    def __call__(self, node, value):
+        if self.context.title != value:
+            raise colander.Invalid(node, self.msg)

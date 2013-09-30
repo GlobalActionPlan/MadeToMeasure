@@ -21,7 +21,7 @@ class SurveySection(BaseFolder, SecurityAware):
                        'heading_translations': 'set_heading_translations',
                        'description_translations': 'set_description_translations',
                        'question_ids': 'set_question_ids',}
-    schemas = {'add': 'SurveySectionSchema', 'edit': 'SurveySectionSchema'}
+    schemas = {'add': 'SurveySectionSchema', 'edit': 'SurveySectionSchema', 'delete': 'DeleteSurveySectionSchema'}
 
 
     def __init__(self, data=None, **kwargs):

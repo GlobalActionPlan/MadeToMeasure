@@ -86,6 +86,14 @@ def deferred_tags_select_widget(node, kw):
                 values = tuple(results),
             )
 
+@colander.deferred
+def deferred_delete_title(node, kw):
+    context = kw['context']
+    msg = _(u"If you're absolutely sure you wish to delete this, type this objects title in the field below: '${obj_title}'",
+            mapping = {'obj_title': context.title})
+    return msg
+
+
 def add_translations_node(schema, translations_key, title = _(u"Translations"), description = u""):
     """ Add a section for translations. English will be omitted, since it's the default langauge.
         

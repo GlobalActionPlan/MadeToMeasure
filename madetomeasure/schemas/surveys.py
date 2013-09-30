@@ -9,7 +9,9 @@ from betahaus.pyracont.decorators import schema_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.schemas.common import deferred_available_languages_widget
+from madetomeasure.schemas.common import deferred_delete_title
 from madetomeasure.schemas.common import time_zone_node
+from madetomeasure.schemas.validators import deferred_confirm_delete_with_title_validator
 from madetomeasure.schemas.validators import multiple_email_validator
 from madetomeasure.models.fields import TZDateTime
 from madetomeasure.interfaces import IOrganisation
@@ -97,6 +99,21 @@ class SurveySectionSchema(colander.Schema):
                                       widget=deform.widget.RichTextWidget(),
                                       missing=u"",)
     description_translations = section_description_translations_node()
+
+
+@colander.deferred
+def deferred_delete_survey_section_desc(node, kw):
+    context = kw['context']
+    if len(context.responses):
+        return _(u"WARNING! This section has response data. If you delete it, it will be lost forever!")
+    return u""
+
+
+@schema_factory('DeleteSurveySectionSchema', title = _(u"Really delete object?"), description = deferred_delete_survey_section_desc)
+class DeleteSurveySectionSchema(colander.Schema):
+    confirm = colander.SchemaNode(colander.String(),
+                                  title = deferred_delete_title,
+                                  validator = deferred_confirm_delete_with_title_validator,)
 
 
 @schema_factory('SurveyInvitationSchema')

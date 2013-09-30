@@ -21,7 +21,7 @@ requires = [
     'lingua',
     'webhelpers',
     'pytz',
-    'betahaus.pyracont',
+    'betahaus.pyracont >= 0.1a3',
     'iso8601',
     ]
 

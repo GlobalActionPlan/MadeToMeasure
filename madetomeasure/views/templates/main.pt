@@ -112,6 +112,8 @@
                 </tal:add>
                 <a tal:condition="context_has_permission(context, 'Edit') and context_has_schema(context, 'edit')"
                    class="context-tab edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
+                <a tal:condition="context_has_permission(context, 'Delete') and context_has_schema(context, 'delete')"
+                   class="context-tab delete" href="${request.resource_url(context) + 'delete'}" i18n:translate="">Delete</a>
                 <tal:organisation condition="context.content_type == 'Organisation'">
                    <a tal:condition="context_has_permission(context, 'Edit')"
                       class="context-tab variants"

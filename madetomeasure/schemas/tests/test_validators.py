@@ -92,3 +92,29 @@ class OrganisationValidator(TestCase):
         self.assertRaises(colander.Invalid, self._fut, self.dummy_node, "")
         
     #FIXME: do thest with proper permissionsystem
+
+
+class ConfirmDeleteWithTitleValidatorTests(TestCase):
+
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+
+    @property
+    def _cut(self):
+        from madetomeasure.schemas.validators import ConfirmDeleteWithTitleValidator
+        return ConfirmDeleteWithTitleValidator
+
+    def test_correct_title(self):
+        context = testing.DummyModel()
+        context.title = u"One title"
+        obj = self._cut(context)
+        self.assertEqual(obj(None, u"One title"), None)
+
+    def test_wrong_title(self):
+        context = testing.DummyModel()
+        context.title = u"One title"
+        obj = self._cut(context)
+        self.assertRaises(colander.Invalid, obj, None, "other title")
