@@ -52,11 +52,36 @@ class IQuestionType(IBaseFolder):
     """ Question type object. Contains information on a specific question type. Like "True or False"
         or a "Free text question".
     """
+    allowed_contexts = Attribute("Contexts where this is allowed.")
+    default_kwargs = Attribute("Default kwargs to pass along when constructing a question schema node.")
+    uid_name = Attribute("Boolean - if true use UID as __name__ rather than trying to generate one from the title.")
+    go_to_after_add = Attribute("String - Where to go after add. Usually something like 'edit'.")
+    widget = Attribute("The currently set widget adapter or Nones")
+
     def check_safe_delete(request):
-        "Investigate if it's safe to delete this question. Returns True/False + will append to request flash message if it isn't safe."
+        """ Investigate if it's safe to delete this question. Returns True/False + will append
+            to request flash message if it isn't safe.
+        """
+
+    def node(name, lang = None, **kwargs):
+        """ Return a colander.SchemaNode with the name specified. kwargs will be used when the SchemaNode
+            is instantiated.
+        """
+
+    def count_occurences(data):
+        """ Count occurences. Specific for each question type. """
+
+    def render_result(request, data):
+        """ Render result template. """
+
+    def csv_header():
+        """ CSV header when exporting. Called when an export is being performed."""
+
+    def csv_export(data):
+        """ Export this section as CSV. Called when an export is being performed."""
 
 
-class IChoiceQuestionType(IBaseFolder):
+class IChoiceQuestionType(IQuestionType):
     """ All the different choice based questions must implement this interface.
 
         i.e. Both classes that implement single choice with radio buttons multi choice
@@ -64,19 +89,19 @@ class IChoiceQuestionType(IBaseFolder):
     """
 
 
-class ITextQuestionType(IBaseFolder):
+class ITextQuestionType(IQuestionType):
     """ All the different text based questions must implement this interface.
     """
 
 
-class IIntegerQuestionType(IBaseFolder):
+class IIntegerQuestionType(IQuestionType):
     """ Similar to text question, but stores an integer value.
     
         WILL BE REMOVED
     """
 
 
-class INumberQuestionType(IBaseFolder):
+class INumberQuestionType(IQuestionType):
     """ Similar to text question, but stores a decimal value.
     """
 
