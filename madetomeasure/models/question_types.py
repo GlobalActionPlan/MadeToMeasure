@@ -48,7 +48,7 @@ class BaseQuestionType(BaseFolder, SecurityAware):
 
     def check_safe_delete(self, request):
         root = find_root(self)
-        results = root['questions'].questions_by_type(self.uid)
+        results = root['questions'].questions_by_type(self.__name__)
         if not results:
             return True
         #FIXME: Only flash messages can handle html right now
