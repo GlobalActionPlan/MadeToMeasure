@@ -116,6 +116,14 @@ class DeleteSurveySectionSchema(colander.Schema):
                                   validator = deferred_confirm_delete_with_title_validator,)
 
 
+@schema_factory('SurveyDeleteSchema', title = _(u"Really delete this survey?"),
+                description = _(u"WARNING: There's no undo if you do this!"))
+class SurveyDeleteSchema(colander.Schema):
+    confirm = colander.SchemaNode(colander.String(),
+                                  title = deferred_delete_title,
+                                  validator = deferred_confirm_delete_with_title_validator,)
+
+
 @schema_factory('SurveyInvitationSchema')
 class SurveyInvitationSchema(colander.Schema):
     subject = colander.SchemaNode(colander.String(),

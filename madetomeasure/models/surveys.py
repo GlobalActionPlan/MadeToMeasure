@@ -52,7 +52,8 @@ class Survey(BaseFolder, SecurityAware):
                        'finished_text': 'set_finished_text',}
     schemas = {'add': 'SurveySchema', 'edit': 'SurveySchema', 'invitation': 'SurveyInvitationSchema',
                'reminder': 'SurveyReminderSchema', 'language': 'SurveyLangugageSchema',
-               'translate': 'SurveyTranslateSchema', 'clone': 'SurveyCloneSchema'}
+               'translate': 'SurveyTranslateSchema', 'clone': 'SurveyCloneSchema',
+               'delete': 'SurveyDeleteSchema'}
     
     def __init__(self, data=None, **kwargs):
         """  Init Survey """
