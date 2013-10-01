@@ -58,11 +58,6 @@ class IQuestionType(IBaseFolder):
     go_to_after_add = Attribute("String - Where to go after add. Usually something like 'edit'.")
     widget = Attribute("The currently set widget adapter or Nones")
 
-    def check_safe_delete(request):
-        """ Investigate if it's safe to delete this question. Returns True/False + will append
-            to request flash message if it isn't safe.
-        """
-
     def node(name, lang = None, **kwargs):
         """ Return a colander.SchemaNode with the name specified. kwargs will be used when the SchemaNode
             is instantiated.
@@ -79,6 +74,11 @@ class IQuestionType(IBaseFolder):
 
     def csv_export(data):
         """ Export this section as CSV. Called when an export is being performed."""
+
+    def check_safe_delete(request):
+        """ Investigate if it's safe to delete this question. Returns True/False + will append
+            to request flash message if it isn't safe.
+        """
 
 
 class IChoiceQuestionType(IQuestionType):

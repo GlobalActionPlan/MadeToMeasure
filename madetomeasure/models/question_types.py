@@ -42,31 +42,23 @@ class QuestionTypes(BaseFolder, SecurityAware):
 class BaseQuestionType(BaseFolder, SecurityAware):
     implements(IQuestionType)
     allowed_contexts = ('QuestionTypes',)
-    default_kwargs = {}
     uid_name = True
     go_to_after_add = u'edit'
-
-    def check_safe_delete(self, request):
-        root = find_root(self)
-        results = root['questions'].questions_by_type(self.__name__)
-        if not results:
-            return True
-        #FIXME: Only flash messages can handle html right now
-        out = u"<br/><br/>"
-        rurl = request.resource_url
-        out += ",<br/>".join([u'<a href="%s">%s</a>' % (rurl(x), x.title) for x in results])
-        request.session.flash(_(u"Can't delete this since it's used in: ${out}",
-                                mapping = {'out': out}))
-        return False
 
     @property
     def widget(self):
         widget_name = self.get_field_value('input_widget', '')
         return queryAdapter(self, IQuestionWidget, name = widget_name)
 
+    @property
+    def default_kwargs(self):
+        return self.get_field_value('default_kwargs', {})
+
+    @default_kwargs.setter
+    def default_kwargs(self, value):
+        self.set_field_value('default_kwargs', dict(value))
+
     def node(self, name, lang = None, **kwargs):
-        """ Return a schema node.
-        """
         kw = copy(self.default_kwargs)
         kw['name'] = name
         if self.widget:
@@ -96,8 +88,24 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     def csv_export(self, data):
         response = []
         for reply in data:
-            response.append(['', reply.encode('utf-8')])
+            if isinstance(reply, basestring):
+                response.append(['', reply.encode('utf-8')])
+            else:
+                response.append(['', reply])
         return response
+
+    def check_safe_delete(self, request):
+        root = find_root(self)
+        results = root['questions'].questions_by_type(self.__name__)
+        if not results:
+            return True
+        #FIXME: Only flash messages can handle html right now
+        out = u"<br/><br/>"
+        rurl = request.resource_url
+        out += ",<br/>".join([u'<a href="%s">%s</a>' % (rurl(x), x.title) for x in results])
+        request.session.flash(_(u"Can't delete this since it's used in: ${out}",
+                                mapping = {'out': out}))
+        return False
 
 
 @content_factory('TextQuestionType')
