@@ -82,10 +82,12 @@ class IQuestionType(IBaseFolder):
 
 
 class IChoiceQuestionType(IQuestionType):
-    """ All the different choice based questions must implement this interface.
+    """ Single choice question type - stores strings.
+    """
 
-        i.e. Both classes that implement single choice with radio buttons multi choice
-        with checkboxes must implement this interface but not full text answers.
+
+class IMultiChoiceQuestionType(IQuestionType):
+    """ Multi choice question type - stores iterables with strings.
     """
 
 
@@ -177,7 +179,6 @@ class IQuestionNode(Interface):
 
 class IQuestionWidget(Interface):
     """ Selectable question widgets. """
-    valid_for = Attribute("A list of question type names this widget is valid for.")
 
 
 class IQuestionTranslations(Interface):

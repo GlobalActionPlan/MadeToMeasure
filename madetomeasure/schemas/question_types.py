@@ -72,6 +72,13 @@ class EditChoiceQuestionSchema(colander.Schema):
     input_widget = input_widget_node()
 
 
+@schema_factory('EditMultipleChoiceQuestionSchema')
+class EditMultipleChoiceQuestionSchema(colander.Schema):
+    title = title_node()
+    description = description_node()
+    input_widget = input_widget_node()
+
+
 @schema_factory('ChoiceSchema')
 class ChoiceSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),

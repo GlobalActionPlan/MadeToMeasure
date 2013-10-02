@@ -14,6 +14,7 @@ from madetomeasure.interfaces import IQuestionWidget
 from madetomeasure.interfaces import ITextQuestionType
 from madetomeasure.interfaces import INumberQuestionType
 from madetomeasure.interfaces import IChoiceQuestionType
+from madetomeasure.interfaces import IMultiChoiceQuestionType
 
 
 class QuestionTypesTests(unittest.TestCase):
@@ -186,7 +187,6 @@ class NumberQuestionTypeTests(unittest.TestCase):
         self.assertIsInstance(result.typ, colander.Decimal)
 
 
-
 class ChoiceQuestionTypeTests(unittest.TestCase):
     def setUp(self):
         self.config = testing.setUp()
@@ -204,6 +204,27 @@ class ChoiceQuestionTypeTests(unittest.TestCase):
 
     def test_verify_obj(self):
         self.failUnless(verifyObject(IChoiceQuestionType, self._cut(None)))
+
+
+class MultiChoiceQuestionTypeTests(unittest.TestCase):
+    def setUp(self):
+        self.config = testing.setUp()
+
+    def tearDown(self):
+        testing.tearDown()
+    
+    @property
+    def _cut(self):
+        from madetomeasure.models.question_types import MultiChoiceQuestionType
+        return MultiChoiceQuestionType
+
+    def test_verify_class(self):
+        self.failUnless(verifyClass(IMultiChoiceQuestionType, self._cut))
+
+    def test_verify_obj(self):
+        self.failUnless(verifyObject(IMultiChoiceQuestionType, self._cut(None)))
+
+#FIXME: Once again, proper testing
 
 
 class _DummyWidgetAdapter(object):

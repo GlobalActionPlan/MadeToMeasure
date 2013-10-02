@@ -3,6 +3,7 @@ from zope.component import adapts
 from zope.interface import implements
 
 from madetomeasure.interfaces import IChoiceQuestionType
+from madetomeasure.interfaces import IMultiChoiceQuestionType
 from madetomeasure.interfaces import ITextQuestionType
 from madetomeasure.interfaces import IIntegerQuestionType
 from madetomeasure.interfaces import INumberQuestionType
@@ -14,7 +15,6 @@ class BaseQuestionWidget(object):
     implements(IQuestionWidget)
     name = u''
     title = u''
-    valid_for = ()
 
     def __init__(self, context):
         self.context = context
@@ -79,6 +79,18 @@ class DropdownWidget(BaseQuestionWidget):
         return deform.widget.SelectWidget(values=choices)
 
 
+class CheckboxWidget(BaseQuestionWidget):
+    name = u"checkbox_widget"
+    title = _(u"Checkbox multichoice")
+    adapts(IMultiChoiceQuestionType)
+
+    def __call__(self, **kw):
+        lang = kw.get('lang', None)
+        choices = []
+        choices.extend([(name, choice.get_title(lang = lang)) for (name, choice) in self.context.items()])
+        return deform.widget.CheckboxChoiceWidget(values=choices)
+
+
 def includeme(config):
     config.registry.registerAdapter(TextWidget, name = TextWidget.name)
     config.registry.registerAdapter(IntegerWidget, name = IntegerWidget.name)
@@ -86,3 +98,4 @@ def includeme(config):
     config.registry.registerAdapter(TextAreaWidget, name = TextAreaWidget.name)
     config.registry.registerAdapter(RadioWidget, name = RadioWidget.name)
     config.registry.registerAdapter(DropdownWidget, name = DropdownWidget.name)
+    config.registry.registerAdapter(CheckboxWidget, name = CheckboxWidget.name)

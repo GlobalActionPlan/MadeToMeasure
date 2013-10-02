@@ -1,6 +1,7 @@
 from copy import copy
 
 import colander
+import deform
 from zope.interface import implements
 from zope.component import queryAdapter
 from BTrees.OOBTree import OOBTree
@@ -24,6 +25,7 @@ from madetomeasure.interfaces import ITextQuestionType
 from madetomeasure.interfaces import IIntegerQuestionType
 from madetomeasure.interfaces import INumberQuestionType
 from madetomeasure.interfaces import IChoiceQuestionType
+from madetomeasure.interfaces import IMultiChoiceQuestionType
 from madetomeasure.models.security_aware import SecurityAware
 
 
@@ -40,6 +42,7 @@ class QuestionTypes(BaseFolder, SecurityAware):
 
 
 class BaseQuestionType(BaseFolder, SecurityAware):
+    """ See interfaces for docs """
     implements(IQuestionType)
     allowed_contexts = ('QuestionTypes',)
     uid_name = True
@@ -145,8 +148,6 @@ class NumberQuestionType(BaseQuestionType):
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditNumberQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
-        """ Return a schema node.
-        """
         kw = copy(self.default_kwargs)
         kw['name'] = name
         if self.widget:
@@ -155,39 +156,29 @@ class NumberQuestionType(BaseQuestionType):
         return colander.SchemaNode(colander.Decimal(), **kw)
 
 
-@content_factory('ChoiceQuestionType')
-class ChoiceQuestionType(BaseQuestionType):
-    implements(IChoiceQuestionType)
-    content_type = 'ChoiceQuestionType'
-    display_name = _(u"Choice question")
-    description = _(u"")
-    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
+class BaseChoiceQuestionType(BaseQuestionType):
 
-    def node(self, name, lang = None, **kwargs):
-        """ Return a schema node.
-        """
-        kw = copy(self.default_kwargs)
-        kw['name'] = name
-        if self.widget:
-            kw['widget'] = self.widget(lang = lang)
-        kw.update(kwargs)
-        return colander.SchemaNode(colander.String(), **kw)
+    def count_occurences(self, data):
+        results = OOBTree()
+        for item in data:
+            if item not in results:
+                results[item] = 1
+            else:
+                results[item]+=1
+        return results
 
     def choice_values(self, lang = None):
-        """ Return dict of possible choices with choice id as key,
-            and rendered title as value.
-        """
         choices = {}
         for (id, title) in self.widget(lang = lang).values:
             choices[id] = title
         return choices
-    
+
     def render_result(self, request, data):
         response = {}
         response['occurences'] = self.count_occurences(data)
         response['choices'] = self.choice_values(lang = request.cookies.get('_LOCALE_', None))
         return render('../views/templates/results/choice.pt', response, request=request)
-        
+
     def csv_header(self):
         response = []
         response.append(self.title)
@@ -195,7 +186,7 @@ class ChoiceQuestionType(BaseQuestionType):
         for (id, title) in self.widget().values:
             response.append(title.encode('utf-8'))
         return response
-        
+
     def csv_export(self, data):
         response = []
         occurences = []
@@ -212,6 +203,50 @@ class ChoiceQuestionType(BaseQuestionType):
         return [response]
 
 
+@content_factory('ChoiceQuestionType')
+class ChoiceQuestionType(BaseChoiceQuestionType):
+    implements(IChoiceQuestionType)
+    content_type = 'ChoiceQuestionType'
+    display_name = _(u"Choice question")
+    description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
+
+    def node(self, name, lang = None, **kwargs):
+        kw = copy(self.default_kwargs)
+        kw['name'] = name
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
+        kw.update(kwargs)
+        return colander.SchemaNode(colander.String(), **kw)
+
+
+@content_factory('MultiChoiceQuestionType')
+class MultiChoiceQuestionType(BaseChoiceQuestionType):
+    implements(IMultiChoiceQuestionType)
+    content_type = 'MultiChoiceQuestionType'
+    display_name = _(u"Multiple choice question")
+    description = _(u"")
+    schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditMultipleChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
+
+    def node(self, name, lang = None, **kwargs):
+        kw = copy(self.default_kwargs)
+        kw['name'] = name
+        if self.widget:
+            kw['widget'] = self.widget(lang = lang)
+        kw.update(kwargs)
+        return colander.SchemaNode(deform.Set(allow_empty=True), **kw)
+
+    def count_occurences(self, data):
+        results = OOBTree()
+        for item in data:
+            for subitem in item:
+                if subitem not in results:
+                    results[subitem] = 1
+                else:
+                    results[subitem] += 1
+        return results
+
+
 @content_factory('Choice')
 class Choice(BaseFolder, SecurityAware):
     """Documentation found in interfaces/IChoice
@@ -220,7 +255,7 @@ class Choice(BaseFolder, SecurityAware):
     content_type = u'Choice'
     display_name = _(u"Choice")
     description = _(u"")
-    allowed_contexts = ('ChoiceQuestionType',)
+    allowed_contexts = ('ChoiceQuestionType', 'MultiChoiceQuestionType')
     custom_mutators = {'title_translations': 'set_title_translations'}
     schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema',}
     uid_name = True
