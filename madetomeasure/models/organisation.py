@@ -34,9 +34,11 @@ class Organisation(BaseFolder, SecurityAware):
 
     @property
     def variants(self):
-        if not hasattr(self, '__variants__'):
+        try:
+            return self.__variants__
+        except AttributeError:
             self.__variants__ = OOBTree()
-        return self.__variants__
+            return self.__variants__
         
     def get_variant(self, question_uid, lang):
         """ Returns variant of question for language if there is one """
