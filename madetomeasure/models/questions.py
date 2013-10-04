@@ -50,6 +50,7 @@ class Question(BaseFolder, SecurityAware):
     content_type = 'Question'
     display_name = _(u"Question")
     allowed_contexts = ('Questions', )
+    uid_name = True
     custom_accessors = {'title': 'get_title',
                         'question_text': 'get_question_text',
                         'tags': '_get_tags'}
