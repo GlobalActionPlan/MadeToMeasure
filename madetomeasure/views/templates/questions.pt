@@ -28,7 +28,7 @@
                     <a tal:condition="context_has_permission(question, 'View')" href="${request.resource_url(question)}" i18n:translate="">View </a>
                     <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question </a>
                     <a tal:condition="show_edit_variants"
-                       href="${request.resource_url(context, 'variant' , query={'question_uid': question.uid})}"
+                       href="${request.resource_url(context, 'variant' , query={'question_name': question.__name__})}"
                        i18n:translate="">Edit local variant </a>
                     ${question.get_type_object().title|u'error!'}
                 </td>
@@ -41,7 +41,7 @@
                     <tal:lang replace="', '.join(question.get_question_text().keys())"></tal:lang>
                 </td>
                 <td tal:condition="is_org">
-                    <tal:lang_variants replace="', '.join(context.variants.get(question.uid, {}).keys())">sv, de</tal:lang_variants>
+                    <tal:lang_variants replace="', '.join(context.variants.get(question.__name__, {}).keys())">sv, de</tal:lang_variants>
                 </td>
             </tr>
         </tbody>

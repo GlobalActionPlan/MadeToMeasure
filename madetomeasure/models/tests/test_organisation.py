@@ -35,16 +35,13 @@ class OrganisationTests(unittest.TestCase):
     def test_variants(self):
         obj = self._cut()
         self.assertEqual(len(obj.variants), 0)
-        
-        question_uid = 'q1'
+        question_name = 'q1'
         lang = 'sv'
         value = 'Testing variants'
-        
-        obj.set_variant(question_uid, lang, value)
-        self.assertEqual(obj.get_variant(question_uid, lang), value)
-        
+        obj.set_variant(question_name, lang, value)
+        self.assertEqual(obj.get_variant(question_name, lang), value)
         self.assertEqual(obj.get_variant('q2', lang), None)
-        self.assertEqual(obj.get_variant(question_uid, 'ru'), None)
+        self.assertEqual(obj.get_variant(question_name, 'ru'), None)
         self.assertEqual(obj.get_variant('q2', 'ru'), None)
 
 #Test schema and expected usage

@@ -22,14 +22,14 @@ class OrganisationView(BaseView):
     @view_config(name='variant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def variant(self):
         root = find_root(self.context)
-        question_uid = self.request.GET.get('question_uid', None)
+        question_name = self.request.GET.get('question_name', None)
 
-        if question_uid is None and not question_uid in root['questions']:
-            self.add_flash_message(_(u"Invalid question uid."))
+        if question_name is None and not question_name in root['questions']:
+            self.add_flash_message(_(u"Invalid question name."))
             url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
-            
-        question = root['questions'][question_uid]
+
+        question = root['questions'][question_name]
 
         schema = createSchema(question.schemas['translate'])
         schema.title = _(u"Edit question variant for this organisation")
@@ -50,10 +50,8 @@ class OrganisationView(BaseView):
             except ValidationFailure, e:
                 self.response['form'] = e.render()
                 return self.response
-            
             for (lang, value) in appstruct['question_text'].items():
-                self.context.set_variant(question_uid, lang, value)
-
+                self.context.set_variant(question_name, lang, value)
             url = self.request.resource_url(self.context, 'variants')
             return HTTPFound(location = url)
         
@@ -64,8 +62,8 @@ class OrganisationView(BaseView):
         appstruct = {'question_text': {}}
         # load local variants
         for lang in self.trans_util.available_languages:
-            if question_uid in self.context.variants and lang in self.context.variants[question_uid]:
-                appstruct['question_text'][lang] = self.context.variants[question_uid][lang]
+            if question_name in self.context.variants and lang in self.context.variants[question_name]:
+                appstruct['question_text'][lang] = self.context.variants[question_name][lang]
         
         self.response['form'] = form.render(appstruct)
         return self.response
@@ -75,8 +73,8 @@ class OrganisationView(BaseView):
         response = self.variant()
         if isinstance(response, HTTPFound):
             #Override redirect
-            question_uid = self.request.GET.get('question_uid', None)
-            question = self.root['questions'][question_uid]
+            question_name = self.request.GET.get('question_name', None)
+            question = self.root['questions'][question_name]
             response = {'question_text': question.get_title(context = self.context),
                         'is_variant': question.is_variant}
             return Response(render("json", response, request = self.request))

@@ -142,10 +142,10 @@ class IOrganisation(IBaseFolder):
     """ An organisation model. """
     variants = Attribute("Question variants storage")
 
-    def get_variant(question_uid, lang):
+    def get_variant(question_name, lang):
         """ Returns variant of question for language if there is one """
 
-    def set_variant(question_uid, lang, value):
+    def set_variant(question_name, lang, value):
         """ Sets variants """
 
 

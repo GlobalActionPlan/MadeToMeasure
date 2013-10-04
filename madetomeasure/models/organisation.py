@@ -40,19 +40,19 @@ class Organisation(BaseFolder, SecurityAware):
             self.__variants__ = OOBTree()
             return self.__variants__
         
-    def get_variant(self, question_uid, lang):
+    def get_variant(self, question_name, lang):
         """ Returns variant of question for language if there is one """
-        if question_uid in self.variants:
-            if lang in self.variants[question_uid]:
-                return self.variants[question_uid][lang]
+        if question_name in self.variants:
+            if lang in self.variants[question_name]:
+                return self.variants[question_name][lang]
         return None
         
-    def set_variant(self, question_uid, lang, value):
+    def set_variant(self, question_name, lang, value):
         # with an empty value remove the variant
         if not value.strip():
-            if question_uid in self.variants and lang in self.variants[question_uid]:
-                del self.variants[question_uid][lang]
+            if question_name in self.variants and lang in self.variants[question_name]:
+                del self.variants[question_name][lang]
         else:
-            if not question_uid in self.variants:
-                self.variants[question_uid] = OOBTree()
-            self.variants[question_uid][lang] = value
+            if not question_name in self.variants:
+                self.variants[question_name] = OOBTree()
+            self.variants[question_name][lang] = value
