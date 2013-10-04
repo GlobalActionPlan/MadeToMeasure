@@ -141,6 +141,7 @@ class IChoice(IBaseFolder):
 class IOrganisation(IBaseFolder):
     """ An organisation model. """
     variants = Attribute("Question variants storage")
+    questions = Attribute("Easy way to get a dict of all valid questions - local variants override global if there's a collision.")
 
     def get_variant(question_name, lang):
         """ Returns variant of question for language if there is one """

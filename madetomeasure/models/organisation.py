@@ -2,6 +2,7 @@ from BTrees.OOBTree import OOBTree
 from pyramid.security import Allow
 from pyramid.security import ALL_PERMISSIONS
 from pyramid.security import DENY_ALL
+from pyramid.traversal import find_root
 from zope.interface import implements
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
@@ -30,7 +31,9 @@ class Organisation(BaseFolder, SecurityAware):
         super(Organisation, self).__init__(data=data, **kwargs)
         #FIXME: Should be done by factories instead
         from madetomeasure.models.surveys import Surveys
-        self['surveys'] = Surveys(title = _(u"Surveys"))
+        self['surveys'] = Surveys()
+        from madetomeasure.models.questions import Questions
+        self['questions'] = Questions()
 
     @property
     def variants(self):
@@ -56,3 +59,10 @@ class Organisation(BaseFolder, SecurityAware):
             if not question_name in self.variants:
                 self.variants[question_name] = OOBTree()
             self.variants[question_name][lang] = value
+
+    @property
+    def questions(self):
+        root = find_root(self)
+        questions = dict(root['questions'].items())
+        questions.update(dict(self['questions'].items()))
+        return questions

@@ -25,7 +25,7 @@ class Questions(BaseFolder, SecurityAware):
     """ Question container """
     implements(IQuestions)
     content_type = 'Questions'
-    display_name = _(u"Questions")
+    title = display_name = _(u"Questions")
     allowed_contexts = ()
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),

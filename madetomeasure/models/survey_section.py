@@ -1,10 +1,12 @@
 from BTrees.OOBTree import OOBTree
 from zope.interface import implements
+from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure.models.app import select_language
 from madetomeasure.models.security_aware import SecurityAware
@@ -111,6 +113,9 @@ class SurveySection(BaseFolder, SecurityAware):
             Will global question pool but IDs shouldn't be the same
             anyway so that's probably not a concern
         """
+        org = find_interface(self, IOrganisation)
+        if id in org['questions']:
+            return org['questions'][id]
         root = find_root(self)
         return root['questions'][id]
 

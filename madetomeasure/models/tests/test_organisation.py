@@ -8,6 +8,7 @@ from zope.interface.verify import verifyClass
 
 from madetomeasure import security
 from madetomeasure.interfaces import IOrganisation
+from madetomeasure.models.app import bootstrap_root
 
 
 admin = set([security.ROLE_ADMIN])
@@ -44,9 +45,17 @@ class OrganisationTests(unittest.TestCase):
         self.assertEqual(obj.get_variant(question_name, 'ru'), None)
         self.assertEqual(obj.get_variant('q2', 'ru'), None)
 
+    def test_questions(self):
+        from madetomeasure.models.questions import Question
+        self.config.scan('betahaus.pyracont.fields.password')
+        root = bootstrap_root()
+        root['o'] = obj = self._cut()
+        obj['questions']['q1'] = Question()
+        root['questions']['q2'] = Question()
+        self.assertEqual(obj.questions.keys(), [u'q1', u'q2'])
+
+
 #Test schema and expected usage
-
-
 class OrganisationPermissionTests(unittest.TestCase):
     """ Check permissions. """
 

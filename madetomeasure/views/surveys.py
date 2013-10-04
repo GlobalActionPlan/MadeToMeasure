@@ -460,7 +460,7 @@ class SurveysView(BaseView):
             self.process_question_ids(self.context)
             self.add_flash_message(_('Updated'))
 
-        self.response['organisation'] = find_interface(self.context, IOrganisation)
+        self.response['organisation'] = org = find_interface(self.context, IOrganisation)
 
         picked_questions = set()
         survey_sections = []
@@ -474,10 +474,9 @@ class SurveysView(BaseView):
             msg = _(u"no_sections_added_notice",
                     default = u"You need to add survey sections and then use this view to manage the questions.")
             self.add_flash_message(msg)
-
         #Load all question objects that haven't been picked
-        questions = self.root['questions']
-        self.response['available_questions'] = [questions[x] for x in questions.keys() if x not in picked_questions]
+        questions = org.questions
+        self.response['available_questions'] = [questions[x] for x in questions if x not in picked_questions]
         return self.response
 
     @view_config(name='translate', context=ISurvey, renderer='templates/survey_translate.pt', permission=security.TRANSLATE)

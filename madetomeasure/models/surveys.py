@@ -32,7 +32,7 @@ class Surveys(BaseFolder, SecurityAware):
     """ Container for Survey models """
     implements(ISurveys)
     content_type = 'Surveys'
-    display_name = _(u"Surveys")
+    title = display_name = _(u"Surveys")
     allowed_contexts = () #Not manually addable
 
 
