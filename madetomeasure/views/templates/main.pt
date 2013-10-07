@@ -88,8 +88,9 @@
 
                 <div tal:condition="organisation and context_has_permission(organisation, 'View')|False" id="organisation">
                     <span tal:content="organisation.title">Title</span>:
-                    <a href="${request.resource_url(organisation['questions'])}" i18n:translate="">Questions</a>
-                    <a href="${request.resource_url(organisation['surveys'])}" i18n:translate="">Surveys</a>
+                    <tal:iterate repeat="obj organisation.values()">
+                        <a href="${request.resource_url(obj)}">${obj.title}</a>
+                    </tal:iterate>
                     <a href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a>
                     <a href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
                 </div>
