@@ -32,8 +32,8 @@ class Organisation(BaseFolder, SecurityAware):
         #FIXME: Should be done by factories instead
         from madetomeasure.models.surveys import Surveys
         self['surveys'] = Surveys()
-        from madetomeasure.models.questions import Questions
-        self['questions'] = Questions()
+        from madetomeasure.models.questions import LocalQuestions
+        self['questions'] = LocalQuestions()
 
     @property
     def variants(self):

@@ -15,6 +15,7 @@ from madetomeasure import security
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
+from madetomeasure.interfaces import ILocalQuestions
 from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import ISurvey
 from madetomeasure.interfaces import ISurveySection
@@ -43,13 +44,21 @@ class Questions(BaseFolder, SecurityAware):
         return results
 
 
+class LocalQuestions(Questions):
+    """ Local question container. """
+    implements(ILocalQuestions)
+    content_type = 'LocalQuestions'
+    title = display_name = _(u"Local questions")
+    allowed_contexts = ()
+
+
 @content_factory('Question')
 class Question(BaseFolder, SecurityAware):
     """ Question model """
     implements(IQuestion)
     content_type = 'Question'
     display_name = _(u"Question")
-    allowed_contexts = ('Questions', )
+    allowed_contexts = ('Questions', 'LocalQuestions')
     uid_name = True
     custom_accessors = {'title': 'get_title',
                         'question_text': 'get_question_text',

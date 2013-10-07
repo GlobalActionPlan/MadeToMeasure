@@ -39,6 +39,10 @@ class IQuestions(IBaseFolder):
     """ A questions model - contains question objects. """
 
 
+class ILocalQuestions(IBaseFolder):
+    """ A questions model - contains question objects. """
+
+
 class IQuestion(IBaseFolder):
     """ A question model. """
     tags = Attribute("A frozenset of used tags")
