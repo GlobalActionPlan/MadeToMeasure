@@ -35,7 +35,8 @@ class QuestionsView(BaseView):
         self.response['is_org'] = IOrganisation.providedBy(self.context)
         self.response['show_edit_variants'] = self.response['is_org'] and \
             security.context_has_permission(self.context, security.MANAGE_SURVEY, self.userid)
-        self.response['show_edit'] = security.context_has_permission(self.root['questions'], security.EDIT, self.userid)
+        self.response['show_edit'] = IQuestions.providedBy(self.context) and \
+            security.context_has_permission(self.context, security.EDIT, self.userid) or False
         return self.response
     
     @view_config(context=IQuestion, renderer='templates/survey_form.pt', permission=security.VIEW)
