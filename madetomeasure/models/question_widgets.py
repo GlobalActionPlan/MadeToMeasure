@@ -5,7 +5,6 @@ from zope.interface import implements
 from madetomeasure.interfaces import IChoiceQuestionType
 from madetomeasure.interfaces import IMultiChoiceQuestionType
 from madetomeasure.interfaces import ITextQuestionType
-from madetomeasure.interfaces import IIntegerQuestionType
 from madetomeasure.interfaces import INumberQuestionType
 from madetomeasure.interfaces import IQuestionWidget
 from madetomeasure import MadeToMeasureTSF as _
@@ -28,15 +27,6 @@ class TextWidget(BaseQuestionWidget):
     def __call__(self, **kw):
         return deform.widget.TextInputWidget()
 
-
-class IntegerWidget(BaseQuestionWidget):
-    #DEPRECATED - WILL BE REMOVED
-    name = u'integer_widget'
-    title = _(u"Integer number field")
-    adapts(IIntegerQuestionType)
-
-    def __call__(self, **kw):
-        return deform.widget.TextInputWidget()
 
 class NumberWidget(BaseQuestionWidget):
     name = u'number_widget'
@@ -93,7 +83,6 @@ class CheckboxWidget(BaseQuestionWidget):
 
 def includeme(config):
     config.registry.registerAdapter(TextWidget, name = TextWidget.name)
-    config.registry.registerAdapter(IntegerWidget, name = IntegerWidget.name)
     config.registry.registerAdapter(NumberWidget, name = NumberWidget.name)
     config.registry.registerAdapter(TextAreaWidget, name = TextAreaWidget.name)
     config.registry.registerAdapter(RadioWidget, name = RadioWidget.name)

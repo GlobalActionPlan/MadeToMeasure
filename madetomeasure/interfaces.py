@@ -103,13 +103,6 @@ class ITextQuestionType(IQuestionType):
     """
 
 
-class IIntegerQuestionType(IQuestionType):
-    """ Similar to text question, but stores an integer value.
-    
-        WILL BE REMOVED
-    """
-
-
 class INumberQuestionType(IQuestionType):
     """ Similar to text question, but stores a decimal value.
     """
