@@ -127,6 +127,10 @@ class Question(BaseFolder, SecurityAware):
         return False
 
     @property
+    def is_local(self):
+        return find_interface(self, ILocalQuestions) and True or False
+
+    @property
     def is_required(self):
         return self.get_field_value('required', True)
 

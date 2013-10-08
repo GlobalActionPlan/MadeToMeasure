@@ -229,6 +229,12 @@ ul.ui-sortable li.variant {
 ul.ui-sortable li.variant:hover {
     background-color: #DDCCEE;
 }
+ul.ui-sortable li.local {
+    background-color: #EEEECC;
+}
+ul.ui-sortable li.local:hover {
+    background-color: #EEEEAA;
+}
 ul.survey_section {
     margin: 1em 0;
 }

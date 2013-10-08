@@ -46,6 +46,9 @@ class ILocalQuestions(IBaseFolder):
 class IQuestion(IBaseFolder):
     """ A question model. """
     tags = Attribute("A frozenset of used tags")
+    is_variant = Attribute("Bool - Does this question have a variant?")
+    is_local = Attribute("Bool - is this a local question?")
+    is_required = Attribute("Bool - is this required?")
 
 
 class IQuestionTypes(IBaseFolder):

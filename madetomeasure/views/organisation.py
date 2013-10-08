@@ -21,16 +21,15 @@ class OrganisationView(BaseView):
 
     @view_config(name='variant', context=IOrganisation, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
     def variant(self):
-        root = find_root(self.context)
         question_name = self.request.GET.get('question_name', None)
+        globalquestions = self.root['questions']
 
-        if question_name is None and not question_name in root['questions']:
+        if question_name not in globalquestions:
             self.add_flash_message(_(u"Invalid question name."))
             url = self.request.resource_url(self.context)
             return HTTPFound(location=url)
 
-        question = root['questions'][question_name]
-
+        question = globalquestions[question_name]
         schema = createSchema(question.schemas['translate'])
         schema.title = _(u"Edit question variant for this organisation")
         schema = schema.bind(context = question, request = self.request)
@@ -70,6 +69,7 @@ class OrganisationView(BaseView):
 
     @view_config(name='variant', context=IOrganisation, permission=security.EDIT, xhr=True)
     def variant_ajax(self):
+        """ Variants should only work for global questions! """
         response = self.variant()
         if isinstance(response, HTTPFound):
             #Override redirect
