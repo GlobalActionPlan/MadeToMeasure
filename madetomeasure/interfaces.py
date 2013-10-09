@@ -38,8 +38,15 @@ class IParticipant(IBaseFolder):
 class IQuestions(IBaseFolder):
     """ A questions model - contains question objects. """
 
+    def questions_by_type(question_type):
+        """ Return available question objects according to a specific type. """
 
-class ILocalQuestions(IBaseFolder):
+    def translation_count(lang):
+        """ Return translated count for a specific language. Will also make sure the text isn't empty. """
+
+
+
+class ILocalQuestions(IQuestions):
     """ A questions model - contains question objects. """
 
 
@@ -190,7 +197,11 @@ class IQuestionTranslations(Interface):
     
     def title_for_code(lang):
         """ Return readable name from a country code. """
-    
+
+    def title_for_code_default(lang):
+        """ Title for a language using the default language set. Ie sending the language
+            code for Swedish with default lang set to English will return 'Swedish'. """
+
     def add_translations_schema(schema, context, richtext=False):
         """ Fetch all possible translations (according to settings)
             and create a shecma with each lang as a node.

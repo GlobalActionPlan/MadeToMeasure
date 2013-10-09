@@ -23,7 +23,13 @@
 		</li>
 		<li><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</li>
    </ul>
-    
+   
+   <h2 i18n:translate="">Translations</h2>
+   <ul>
+       <li>(not implemented yet!)</li>
+   </ul>
+
+    <h2 i18n:translate="">Sections</h2>
     <tal:listing replace="structure listing_sniplet()"></tal:listing>
 
 

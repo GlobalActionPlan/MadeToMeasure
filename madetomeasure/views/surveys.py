@@ -11,7 +11,6 @@ from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
 from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED
-from betahaus.pyracont.factories import createContent
 from betahaus.pyracont.factories import createSchema
 
 from madetomeasure.interfaces import IOrganisation
@@ -319,15 +318,6 @@ class SurveysView(BaseView):
         self.response['dummy_form'] = form.render()
         return self.response
 
-    @view_config(name="translations", context=ISurvey, renderer='templates/survey_translations.pt', permission=security.VIEW)
-    def translations(self):
-        """ Shows the amount of translations
-        """
-        self.response['context'] = self.context
-        self.response['texts'] = self.context.untranslated_texts()
-        self.response['languages'] = self.context.untranslated_languages()
-        return self.response
-
     def send_invitation(self, email):
         subject = self.localizer.translate(_(u"Invitation to survey '${s_title}'", mapping = {'s_title': self.context.title}))
         msg = _(u"self_added_invitation_text",
@@ -477,36 +467,6 @@ class SurveysView(BaseView):
         #Load all question objects that haven't been picked
         questions = org.questions
         self.response['available_questions'] = [questions[x] for x in questions if x not in picked_questions]
-        return self.response
-
-    @view_config(name='translate', context=ISurvey, renderer='templates/survey_translate.pt', permission=security.TRANSLATE)
-    def translate_view(self):
-        lang = self.request.GET['lang']
-        schema = createContent(self.context.schemas['translate'])
-        schema = schema.bind(context = self.context, request = self.request)
-        form = Form(schema, buttons=(self.buttons['cancel'], self.buttons['save'],))
-        self.response['form_resources'] = form.get_widget_resources()
-
-        if 'save' in self.request.POST:
-            controls = self.request.POST.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            
-            self.context.set_welcome_text(appstruct['welcome_text'], lang)
-            self.context.set_finished_text(appstruct['finished_text'], lang)
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location = url)
-
-        appstruct = {}
-        appstruct['welcome_text'] = self.context.get_welcome_text(lang=lang, default=False)
-        appstruct['finished_text'] = self.context.get_finished_text(lang=lang, default=False)
-
-        self.response['form'] = form.render(appstruct)
-        self.response['welcome_text'] = self.context.get_welcome_text()
-        self.response['finished_text'] = self.context.get_finished_text()
         return self.response
         
     @view_config(name='export.csv', context=ISurvey, permission=security.VIEW)

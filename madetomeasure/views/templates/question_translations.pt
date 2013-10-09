@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      metal:use-macro="main_macro"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="MadeToMeasure">
+<body>
+
+<div metal:fill-slot="content">
+    <div>
+        <tal:iterate repeat="lang trans_util.translatable_languages">
+            <a href="${request.resource_url(context, 'translations', query = {'lang': lang})}">
+                ${trans_util.title_for_code(lang)}
+                (${trans_util.title_for_code_default(lang)})
+            </a>
+        </tal:iterate>
+        | <a href="${request.resource_url(context, 'translations')}">All</a>
+    </div>
+
+    <tal:selected_lang condition="selected_lang">
+    <h1>
+        Translations to 
+        ${trans_util.title_for_code(selected_lang)}
+        (${trans_util.title_for_code_default(selected_lang)})
+    </h1>
+    <table class="listing">
+        <thead>
+            <tr>
+                <th>${trans_util.title_for_code(trans_util.default_locale_name)}</th>
+                <th>
+                    ${trans_util.title_for_code(selected_lang)}
+                    (${trans_util.title_for_code_default(selected_lang)})
+                </th>
+                <th i18n:translate="">Controls</th>
+            </tr>
+        </thead>
+        <tbody tal:define="back_url request.resource_url(context, 'translations', query = {'lang': selected_lang})">
+            <tr tal:repeat="question context.values()">
+                <td>
+                    ${question.get_original_title()}
+                </td>
+                <td>${question.is_translated_to(selected_lang) and question.get_title(selected_lang) or u''}</td>
+                <td>
+                    <a href="${request.resource_url(question, 'translate', query = {'lang': selected_lang, 'came_from': back_url})}">
+                        <img src="/static/editpen.png" alt="edit" />
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+    </tal:selected_lang>
+    
+    <tal:all_langs condition="not selected_lang">
+    <table class="listing">
+        <thead>
+            <tr>
+                <th i18n:translate="">Language</th>
+                <th i18n:translate="">Translated</th>
+                <th i18n:translate="">Untranslated</th>
+            </tr>
+        </thead>
+        <tbody tal:define="total_questions len(context)">
+            <tr tal:repeat="lang trans_util.translatable_languages">
+            <tal:def define="trans_count context.translation_count(lang)">
+                <td>
+                    ${trans_util.title_for_code(lang)}
+                    (${trans_util.title_for_code_default(lang)})
+                </td>
+                <td>${trans_count}</td>
+                <td>${total_questions - trans_count}</td>
+            </tal:def>
+            </tr>
+        </tbody>
+    </table>
+    </tal:all_langs>
+
+</div>
+</body>
+</html>
+

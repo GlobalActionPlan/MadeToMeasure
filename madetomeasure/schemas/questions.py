@@ -74,6 +74,7 @@ class TranslateQuestionSchema(colander.Schema):
     question_text = question_text_node()
 
 
+@schema_factory('QuestionSearchSchema')
 class QuestionSearchSchema(colander.Schema):
     query = colander.SchemaNode(
         colander.String(),

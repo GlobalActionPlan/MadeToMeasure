@@ -34,7 +34,6 @@ class Questions(BaseFolder, SecurityAware):
                DENY_ALL]
 
     def questions_by_type(self, question_type):
-        """ Return available question objects according to a specific type. """
         results = set()
         for obj in self.values():
             if not IQuestion.providedBy(obj):
@@ -42,6 +41,16 @@ class Questions(BaseFolder, SecurityAware):
             if obj.get_question_type() == question_type:
                 results.add(obj)
         return results
+
+    def translation_count(self, lang):
+        translated = 0
+        for question in self.values():
+            if not IQuestion.providedBy(question):
+                continue
+            question_texts = question.get_question_text()
+            if question_texts.get(lang, u"").strip():
+                translated += 1
+        return translated
 
 
 class LocalQuestions(Questions):
@@ -133,6 +142,10 @@ class Question(BaseFolder, SecurityAware):
     @property
     def is_required(self):
         return self.get_field_value('required', True)
+
+    def is_translated_to(self, lang):
+        question_texts = self.get_question_text()
+        return question_texts.get(lang, u"").strip() and True or False
 
     def _get_tags(self, **kw):
         return self._field_storage.get('tags', frozenset())

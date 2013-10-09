@@ -146,6 +146,7 @@ class Survey(BaseFolder, SecurityAware):
         return getattr(self, '__finished_text__', '')
         
     def set_finished_text(self, value, lang=None, **kwargs):
+        #FIXME: This should use standard setters and getters. Remove!
         #FIXME: This method sets both translation and default. Is that correct?
         if lang:
             self.set_translation('__finished_text__', lang, value)
@@ -281,16 +282,13 @@ class Survey(BaseFolder, SecurityAware):
         
     def untranslated_languages(self):
         trans_util = getUtility(IQuestionTranslations)
-        
         # get available for survey
         available_languages = list(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
-            
         organisation = find_interface(self, IOrganisation)
         variants = organisation.variants
-            
         languages = {}
         for language in available_languages:
             questions = []
@@ -304,23 +302,19 @@ class Survey(BaseFolder, SecurityAware):
                         'name': "%s (%s)" % (trans_util.title_for_code_default(language), trans_util.title_for_code(language)),
                         'questions': questions,
                     }
-
         return languages
         
     def untranslated_texts(self):
         trans_util = getUtility(IQuestionTranslations)
-        
         # get available for survey
         available_languages = list(self.get_available_languages())
         # remove default language
         if trans_util.default_locale_name in available_languages:
             available_languages.remove(trans_util.default_locale_name)
-            
         languages = {}
         for language in available_languages:
             if not self.get_welcome_text(lang=language) or not self.get_finished_text(lang=language):
                 languages[language] = "%s (%s)" % (trans_util.title_for_code_default(language), trans_util.title_for_code(language))
-
         return languages
         
     @property
