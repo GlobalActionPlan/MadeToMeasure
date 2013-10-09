@@ -159,7 +159,7 @@ class BaseView(object):
             response['contents'] = [x for x in self.context.values() if security.context_has_permission(x, security.VIEW, self.userid)]
         else:
             response['contents'] = contents
-            
+        response['context_has_permission'] = self.context_has_permission
         return render('templates/sniplets/listing.pt', response, request=self.request)
 
     @reify

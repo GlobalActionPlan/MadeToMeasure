@@ -18,6 +18,7 @@ DELETE = 'Delete'
 TRANSLATE = 'Translate'
 MANAGE_SURVEY = 'Manage survey'
 MANAGE_SERVER = 'Manage server'
+MANAGE_ORGANISATION = 'Manage organisation'
 
 #Add permissions
 ADD_QUESTION = 'Add Question'

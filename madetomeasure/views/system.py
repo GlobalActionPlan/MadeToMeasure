@@ -158,7 +158,7 @@ class SystemView(BaseView):
         return self.response
 
     @view_config(context=ISiteRoot, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    @view_config(context=IOrganisation, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+    @view_config(context=IOrganisation, name="permissions", renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_ORGANISATION)
     def permissions_form(self):
         if 'cancel' in self.request.POST:
             url = resource_url(self.context, self.request)

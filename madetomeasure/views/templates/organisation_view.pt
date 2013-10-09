@@ -8,10 +8,7 @@
 <body>
 
 <div metal:fill-slot="content">
-
     <tal:listing replace="structure listing_sniplet(contents=context['surveys'].values())"></tal:listing>
-
-
 </div>
 </body>
 </html>

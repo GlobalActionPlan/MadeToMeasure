@@ -402,7 +402,7 @@ class SurveysView(BaseView):
             self.response['form'] = form.render()
         return self.response
 
-    @view_config(name = 'view', context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.EDIT)
+    @view_config(name = 'view', context=ISurvey, renderer='templates/survey_admin_view.pt', permission=security.VIEW)
     def survey_admin_view(self):
         start_time = self.context.get_field_value('start_time', None)
         end_time = self.context.get_field_value('end_time', None)

@@ -13,6 +13,7 @@ from madetomeasure.models.app import bootstrap_root
 
 admin = set([security.ROLE_ADMIN])
 organisation_manager = set([security.ROLE_ORGANISATION_MANAGER])
+translator = set([security.ROLE_TRANSLATOR])
 
 
 class OrganisationTests(unittest.TestCase):
@@ -75,7 +76,7 @@ class OrganisationPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         # VIEW
-        self.assertEqual(self.pap(obj, security.VIEW), admin | organisation_manager)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | organisation_manager | translator)
         
         # EDIT
         self.assertEqual(self.pap(obj, security.EDIT), admin | organisation_manager)
@@ -84,7 +85,7 @@ class OrganisationPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.EDIT), admin | organisation_manager)
 
         # TRANSLATE
-        self.assertEqual(self.pap(obj, security.TRANSLATE), admin | organisation_manager)
+        self.assertEqual(self.pap(obj, security.TRANSLATE), admin | organisation_manager | translator)
 
         # MANAGE_SURVEY
         self.assertEqual(self.pap(obj, security.MANAGE_SURVEY), admin | organisation_manager)

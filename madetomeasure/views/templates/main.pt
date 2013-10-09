@@ -91,12 +91,12 @@
                     <tal:iterate repeat="obj organisation.values()">
                         <a href="${request.resource_url(obj)}">${obj.title}</a>
                     </tal:iterate>
-                    <a href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a>
-                    <a href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
+                    <a tal:condition="context_has_permission(organisation, 'Manage organisation')"
+                       href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a>
+                    <a tal:condition="context_has_permission(organisation, 'Edit')"
+                       href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
                 </div>
-                
             </div>
-            
         </div>
         
         <div id="main-area-wrapper"><div id="main-area">
