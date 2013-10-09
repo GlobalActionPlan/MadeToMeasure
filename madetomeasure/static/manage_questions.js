@@ -2,6 +2,16 @@
 var unsaved = false;
 var edit_variant = "";
 
+
+$('#deformsave').live('click', function() {
+    unsaved = false;
+})
+$(window).on('beforeunload', function() {
+    if (unsaved) {
+        return "You have unsaved changes"
+    }
+});
+
 $(document).ready(function(){
     /* Attach sort function */
     $('.pickable_questions').sortable({
@@ -13,9 +23,6 @@ $(document).ready(function(){
         update: function(event, ui) {
           if (! unsaved) {
             unsaved = true;
-            $(window).on('beforeunload', function() {
-                return "You have unsaved changes"
-            });
           }
         }
     });
