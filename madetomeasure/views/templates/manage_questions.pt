@@ -31,9 +31,11 @@
                         <h3><a href="javascript:" class="toggle_minimize">${section.title}</a></h3>
                         <ul class="survey_section pickable_questions minimizable_area" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                                <li id="${question.__name__}" class="question${('',' variant')[question.is_variant]}">
+                                <li id="${question.__name__}"
+                                    class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
                                     <span class="question_text">${question.title}</span>
-                                    <a href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
+                                    <a tal:condition="not question.is_local"
+                                       href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
                                        class="edit_variant" target="_blank"><img src="/static/editpen.png"></a>
                                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
