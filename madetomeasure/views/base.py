@@ -10,6 +10,7 @@ from pyramid.httpexceptions import HTTPForbidden
 from pyramid.i18n import get_locale_name
 from pyramid.location import lineage
 from pyramid.security import has_permission
+from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.i18n import get_localizer
 from deform import Button
 from deform import Form
@@ -186,8 +187,8 @@ class BaseView(object):
         self.response['listing'] = self.listing_sniplet()
         return self.response
 
-    @view_config(context=ISiteRoot, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
-    def admin_root_listing(self):
+    @view_config(context=ISiteRoot, renderer="templates/root_view.pt", permission = NO_PERMISSION_REQUIRED)
+    def root_view(self):
         contents = []
         for obj in self.context.values():
             if IOrganisation.providedBy(obj) and security.context_has_permission(obj, security.VIEW, self.userid):
