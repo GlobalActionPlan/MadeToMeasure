@@ -2,29 +2,25 @@ from pyramid.view import view_config
 from pyramid.httpexceptions import HTTPForbidden
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.httpexceptions import HTTPFound
-from pyramid.interfaces import ISettings
 
 from madetomeasure import MadeToMeasureTSF as _
+from madetomeasure.views.base import BaseView
 
+class ExceptionsView(BaseView):
 
-class ExceptionsView(object):
-
-    def __init__(self, exception, request):
-        self.exception = exception
-        self.request = request
-        self.response = {}
-
-    @view_config(context=HTTPForbidden)
+    @view_config(context=HTTPForbidden, renderer="templates/exceptions.pt")
     def forbidden_view(self):
-        settings = self.request.registry.getUtility(ISettings)
-        if settings.get('debug_templates', False):
-            raise self.exception
+        if self.userid:
+            msg = _(u"not_allowed_error_txt",
+                    default = u"You did something that the server didn't allow. (Error 403)")
         else:
-            return HTTPFound(location = "/login")
+            msg = _(u"not_allowed_error_anon_txt",
+                    default = u"You did something that the server didn't allow. If you are a manager, perhaps you need to log in? (Error 403)")
+        self.response['msg'] = msg
+        return self.response
 
     @view_config(context=HTTPNotFound, renderer="templates/exceptions.pt")
     def not_found_view(self):
-        #FIXME: Write a proper 404 page
         self.response['msg'] = _(u"not_found_error_text",
-                                 u"Couldn't find that page.")
+                                 default = u"Couldn't find anything with this URL. (Error 404)")
         return self.response

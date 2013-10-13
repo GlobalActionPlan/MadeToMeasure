@@ -3,12 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="main_macro"
       i18n:domain="MadeToMeasure">
 <body>
-
-<div>
+<div metal:fill-slot="content">
     <div tal:content="msg"></div>
 </div>
 </body>
 </html>
-

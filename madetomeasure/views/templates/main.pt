@@ -188,7 +188,7 @@
         </div></div><!-- main area and wrapper -->
     
     </div>
-    <div id="footer" tal:condition="footer_html" tal:content="structure footer_html">
+    <div id="footer" tal:condition="root" tal:content="structure root.get_field_value('footer_html', u'')">
         Footer html code
     </div>
 

@@ -14,7 +14,6 @@ from pyramid.security import NO_PERMISSION_REQUIRED
 from pyramid.i18n import get_localizer
 from deform import Button
 from deform import Form
-from colander import Schema
 from deform.exception import ValidationFailure
 from zope.component import createObject
 from betahaus.pyracont.interfaces import IBaseFolder
@@ -50,8 +49,6 @@ class BaseView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        path = [x for x in lineage(self.context)]
-        path.reverse()
         self.response = dict(
             userid = self.userid,
             user = self.user_profile,
@@ -63,17 +60,22 @@ class BaseView(object):
             organisation = self.organisation,
             survey_dt = self.survey_dt,
             user_dt = self.user_dt,
-            path = tuple(path),
-            footer_html = self.root.get_field_value('footer_html'),
             listing_sniplet = self.listing_sniplet,
             context_has_permission = self.context_has_permission,
             context_has_schema = self.context_has_schema,
+            path = self.path,
         )
         if self.organisation:
             self.response['hex_color'] = self.organisation.get_field_value('hex_color')
             self.response['logo_link'] = self.organisation.get_field_value('logo_link')
 
         self.trans_util = self.request.registry.getUtility(IQuestionTranslations)
+
+    @reify
+    def path(self):
+        path = [x for x in lineage(self.context)]
+        path.reverse()
+        return tuple(path)
 
     @reify
     def localizer(self):
@@ -91,7 +93,10 @@ class BaseView(object):
 
     @reify
     def root(self):
-        return find_root(self.context)
+        try:
+            return find_root(self.context)
+        except AttributeError:
+            return None
     
     @reify
     def organisation(self):
