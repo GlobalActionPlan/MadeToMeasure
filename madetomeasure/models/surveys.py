@@ -340,30 +340,34 @@ class Survey(BaseFolder, SecurityAware):
         return self.participant_language.get(participant_uid, None)
         
     def clone(self, title, destination):
+        root = find_root(self)
+        local_questions = find_interface(self, IOrganisation)['questions']
         new_survey = deepcopy(self)
         new_survey.set_field_value('title', title)
         new_survey.set_field_value('uid', unicode(uuid4()))
-        # remove start and time
-        del new_survey.field_storage['start_time']
-        del new_survey.field_storage['end_time']
+        # remove any attrs that shuldn't be transfered
+        to_remove = ('start_time', 'end_time',) #...
+        for attr in to_remove:
+            if attr in new_survey.field_storage:
+                del new_survey.field_storage[attr]
         # remove participant languages
         new_survey.participant_language.clear()
         # remove invitation tickets
         new_survey.tickets.clear()
-
-        # remove participant responses
+        # remove participant responses and find local questions to clone
         for section in new_survey.values():
             section.set_field_value('uid', unicode(uuid4()))
-            del section.__responses__
             section.__responses__ = OOBTree()
-
+            for name in section.question_ids:
+                if name not in root['questions']:
+                    new_lq = deepcopy(local_questions[name])
+                    new_lq.set_field_value('uid', unicode(uuid4()))
+                    root[destination]['questions'][name] = new_lq
+                    print "Cloning %s" % new_lq
         # place survey in destination
-        root = find_root(self)
         if destination not in root:
             raise ValueError('No organisation with that name')
-
         surveys = root[destination]['surveys']
         name = new_survey.suggest_name(surveys)
         surveys[name] = new_survey
-
         return new_survey

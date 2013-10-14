@@ -177,6 +177,33 @@ class SurveyTests(unittest.TestCase):
         # two participants
         self.assertEqual(len(results), 2)
 
+    def test_clone(self):
+        from madetomeasure.models.organisation import Organisation
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        root = _fixture(self.config)
+        root['dest'] = Organisation()
+        orig_surv = root['o1']['surveys']['s1']
+        orig_surv.clone("A clone", 'dest')
+        self.assertEqual(len(root['dest']['surveys']), 1)
+
+    def test_clone_with_local_questions(self):
+        from madetomeasure.models.organisation import Organisation
+        from madetomeasure.models.questions import Question
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        root = _fixture(self.config)
+        root['dest'] = Organisation()
+        orig_surv = root['o1']['surveys']['s1']
+        #Add local questions
+        orig_local = root['o1']['questions']
+        orig_local['lq1'] = Question()
+        orig_surv['ss1'].set_field_value('question_ids', ['q1', 'q2', 'lq1'])
+        cloned = orig_surv.clone("A clone", 'dest')
+        self.assertEqual(len(root['dest']['surveys']), 1)
+        self.assertIn('lq1', root['dest']['questions'])
+        self.failUnless(cloned['ss1'].question_object_from_id(orig_local['lq1'].__name__))
+
 
 def _fixture(config):
     config.scan('betahaus.pyracont.fields.password')
