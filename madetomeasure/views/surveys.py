@@ -15,6 +15,7 @@ from betahaus.pyracont.factories import createSchema
 
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IChoiceQuestionType
+from madetomeasure.interfaces import IMultiChoiceQuestionType
 from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
@@ -412,6 +413,7 @@ class SurveysView(BaseView):
         return self.response
 
     @view_config(name='reorder', context=IChoiceQuestionType, renderer='templates/reorder_folder.pt', permission=security.EDIT)
+    @view_config(name='reorder', context=IMultiChoiceQuestionType, renderer='templates/reorder_folder.pt', permission=security.EDIT)
     @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_folder.pt', permission=security.EDIT)
     def reorder_folder(self):
         post = self.request.POST
