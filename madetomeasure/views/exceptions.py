@@ -8,7 +8,7 @@ from madetomeasure.views.base import BaseView
 
 class ExceptionsView(BaseView):
 
-    @view_config(context=HTTPForbidden, renderer="templates/exceptions.pt")
+    @view_config(context = HTTPForbidden, renderer="templates/exceptions.pt")
     def forbidden_view(self):
         if self.userid:
             msg = _(u"not_allowed_error_txt",
@@ -19,7 +19,7 @@ class ExceptionsView(BaseView):
         self.response['msg'] = msg
         return self.response
 
-    @view_config(context=HTTPNotFound, renderer="templates/exceptions.pt")
+    @view_config(context = HTTPNotFound, renderer="templates/exceptions.pt")
     def not_found_view(self):
         self.response['msg'] = _(u"not_found_error_text",
                                  default = u"Couldn't find anything with this URL. (Error 404)")

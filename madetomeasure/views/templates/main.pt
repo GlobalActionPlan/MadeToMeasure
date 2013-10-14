@@ -101,8 +101,7 @@
         
         <div id="main-area-wrapper"><div id="main-area">
 
-            <div id="context-toolbar" tal:condition="userid|False">
-        
+            <div id="context-toolbar" tal:condition="userid and not exception|False">
                 <tal:add tal:condition="addable_types">
                     <tal:iterate repeat="type_id addable_types">
                         <a class="context-tab add"

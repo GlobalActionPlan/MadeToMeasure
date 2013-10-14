@@ -47,7 +47,12 @@ BASE_FORM_TEMPLATE = 'templates/form.pt'
 class BaseView(object):
 
     def __init__(self, context, request):
-        self.context = context
+        if isinstance(context, Exception):
+            self.context = request.context
+            self.exception = context
+        else:
+            self.context = context
+            self.exception = None
         self.request = request
         self.response = dict(
             userid = self.userid,
@@ -64,6 +69,7 @@ class BaseView(object):
             context_has_permission = self.context_has_permission,
             context_has_schema = self.context_has_schema,
             path = self.path,
+            exception = self.exception,
         )
         if self.organisation:
             self.response['hex_color'] = self.organisation.get_field_value('hex_color')
@@ -73,9 +79,12 @@ class BaseView(object):
 
     @reify
     def path(self):
-        path = [x for x in lineage(self.context)]
-        path.reverse()
-        return tuple(path)
+        try:
+            path = [x for x in lineage(self.context)]
+            path.reverse()
+            return tuple(path)
+        except:
+            return ()
 
     @reify
     def localizer(self):
@@ -87,7 +96,7 @@ class BaseView(object):
 
     @reify
     def user_profile(self):
-        if self.userid is None:
+        if self.userid is None or self.root is None:
             return
         return self.root['users'].get(self.userid)
 
