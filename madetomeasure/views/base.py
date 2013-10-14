@@ -168,13 +168,14 @@ class BaseView(object):
                 results[name] = factory
         return results
 
-    def listing_sniplet(self, contents=None):
+    def listing_sniplet(self, contents=None, display_type = False):
         response = {}
         if contents is None:
             response['contents'] = [x for x in self.context.values() if security.context_has_permission(x, security.VIEW, self.userid)]
         else:
             response['contents'] = contents
         response['context_has_permission'] = self.context_has_permission
+        response['display_type'] = display_type
         return render('templates/sniplets/listing.pt', response, request=self.request)
 
     @reify
@@ -195,10 +196,14 @@ class BaseView(object):
     @view_config(context=ISurveys, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipant, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     @view_config(context=IParticipants, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
-    @view_config(context=IQuestionTypes, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
     def admin_listing_view(self):
         #FIXME: move when implemented
         self.response['listing'] = self.listing_sniplet()
+        return self.response
+
+    @view_config(context=IQuestionTypes, renderer=BASE_VIEW_TEMPLATE, permission=security.VIEW)
+    def question_type_listing(self):
+        self.response['listing'] = self.listing_sniplet(display_type = True)
         return self.response
 
     @view_config(context=ISiteRoot, renderer="templates/root_view.pt", permission = NO_PERMISSION_REQUIRED)
