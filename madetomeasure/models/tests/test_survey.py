@@ -82,43 +82,22 @@ class SurveyTests(unittest.TestCase):
         self.assertEqual(obj.check_open(), True)
         
     def test_untranslated_languages(self):
-        self.config.scan('betahaus.pyracont.fields.password')
         from pyramid.interfaces import ISettings
         settings = self.config.registry.getUtility(ISettings)
         settings['default_locale_name'] = 'en'
         settings['available_languages'] = 'sv de'
         self.config.include('madetomeasure.models.translations')
-        
-        from madetomeasure.models.app import bootstrap_root
-        self.root = bootstrap_root()
-        
-        from madetomeasure.models.questions import Question
-        q1 = Question()
-        q2 = Question()
-        self.root['questions']['q1'] = q1
-        self.root['questions']['q2'] = q2
-        
-        from madetomeasure.models.organisation import Organisation
-        o1 = Organisation()
-        self.root['questions']['o1'] = o1
-        
-        from madetomeasure.models.surveys import Survey
-        from madetomeasure.models.survey_section import SurveySection
-        s1 = Survey()
+        root = _fixture(self.config)
+        s1 = root['o1']['surveys']['s1']
         s1.set_available_languages(['sv', 'de'])
-        o1['surveys']['s1'] = s1
-
-        ss1 = SurveySection()
-        s1['ss1'] = ss1
+        ss1 = s1['ss1']
         ss1.set_field_value('question_ids', ['q1', 'q2'])
-        
         langs = s1.untranslated_languages()
         self.assertEqual(len(langs.keys()), 2)
         self.assertEqual(len(langs['de']['questions']), 2)
         self.assertEqual(len(langs['sv']['questions']), 2)
-        
+        q1 = root['questions']['q1']
         q1.set_question_text_lang('bla bla bla', 'sv')
-        
         langs = s1.untranslated_languages()
         self.assertEqual(len(langs.keys()), 2)
         self.assertEqual(len(langs['de']['questions']), 2)
@@ -127,9 +106,7 @@ class SurveyTests(unittest.TestCase):
     def test_translations(self):
         obj = self._cut()
         self.assertEqual(len(obj.translations), 0)
-        
         obj.set_translation('__welcome_text__', 'en', 'Welcome to the survey')
-        
         self.assertTrue('__welcome_text__' in obj.translations)
         self.assertTrue('en' in obj.translations['__welcome_text__'])
         self.assertEqual(obj.translations['__welcome_text__']['en'], 'Welcome to the survey')
@@ -144,16 +121,12 @@ class SurveyTests(unittest.TestCase):
     def test_get_translated_title(self):
         request = testing.DummyRequest(cookies={'_LOCALE_': 'sv'})
         self.config = testing.setUp(request=request)
-        
         from madetomeasure.models.surveys import Surveys
         surveys = Surveys()
-        
         obj = self._cut()
         surveys['s1'] = obj
-        
         translations = {'en': 'h_en', 'sv': 'h_sv', 'dk': 'h_dk', }
         obj.set_heading_translations(translations)
-
         self.assertEqual(obj.get_translated_title(), 'h_sv')
         
     def test_create_ticket(self):
@@ -164,81 +137,59 @@ class SurveyTests(unittest.TestCase):
     def test_recreate_ticket(self):
         obj = self._cut()
         ticket_uid = obj.create_ticket('test@test.com')
-        
         self.assertEqual(obj.create_ticket('test@test.com'), ticket_uid)
         
     def test_send_invitation_email(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
         self.config.include('pyramid_mailer.testing')
-
         obj = self._cut()
-
         obj.send_invitation_email(request, 'test@test.com', 'dumuid', 'Test subject', 'Message')
-        
         mailer = get_mailer(request)
         self.assertEqual(len(mailer.outbox), 1)
-        
         msg = mailer.outbox[0]
         self.failUnless('dumuid' in msg.html)
     
     def test_start_survey(self):
         request = testing.DummyRequest()
         self.config = testing.setUp(request=request)
-        
-        from madetomeasure.models.root import SiteRoot
-        root = SiteRoot()
-        
-        from madetomeasure.models.participants import Participants
-        participants = Participants()
-        root['participants'] = participants
-        
+        root = _fixture(self.config)
+        participants = root['participants']
         obj = self._cut()
-        root['s1'] = obj
-        
+        obj = root['o1']['surveys']['s1']
         ticket_uid = obj.create_ticket('test@test.com')
         request = testing.DummyRequest(params = {'uid':ticket_uid})
         self.config = testing.setUp(request=request)
-        
         participant_uid = obj.start_survey(request)
-        
         # participant is in sites participant list
         participant = participants.participant_by_ids(obj.__name__, participant_uid)
         self.assertIsNotNone(participants)
-        
         # participant has the survey in its survey list
         self.assertTrue(obj.__name__ in participant.surveys)
         
     def test_get_participants_data(self):
-        self.config.scan('betahaus.pyracont.fields.password')
-        
-        from madetomeasure.models.app import bootstrap_root
-        root = bootstrap_root()
-        
-        from madetomeasure.models.questions import Question
-        q1 = Question()
-        q2 = Question()
-        root['questions']['q1'] = q1
-        root['questions']['q2'] = q2
-        
-        from madetomeasure.models.organisation import Organisation
-        o1 = Organisation()
-        root['questions']['o1'] = o1
-        
-        from madetomeasure.models.surveys import Survey
-        from madetomeasure.models.survey_section import SurveySection
-        s1 = Survey()
-        o1['surveys']['s1'] = s1
-
-        ss1 = SurveySection()
-        s1['ss1'] = ss1
-        ss1.set_field_value('question_ids', ['q1', 'q2'])
-        
-        s1.create_ticket('1@test.com')
-        ticket_uid = s1.create_ticket('2@test.com')
-        ss1.update_question_responses(ticket_uid, {'q1': 'dummy'})
-        
-        results = s1.get_participants_data()
-        
+        root = _fixture(self.config)
+        survey = root['o1']['surveys']['s1']
+        survey.create_ticket('1@test.com')
+        ticket_uid = survey.create_ticket('2@test.com')
+        survey['ss1'].update_question_responses(ticket_uid, {'q1': 'dummy'})
+        results = survey.get_participants_data()
         # two participants
         self.assertEqual(len(results), 2)
+
+
+def _fixture(config):
+    config.scan('betahaus.pyracont.fields.password')
+    from madetomeasure.models.app import bootstrap_root
+    from madetomeasure.models.questions import Question
+    from madetomeasure.models.organisation import Organisation
+    from madetomeasure.models.surveys import Survey
+    from madetomeasure.models.survey_section import SurveySection
+    root = bootstrap_root()
+    root['questions']['q1'] = Question()
+    root['questions']['q2'] = Question()
+    root['o1'] = o1 = Organisation()
+    o1['surveys']['s1'] = s1 = Survey()
+    s1['ss1'] = ss1 = SurveySection()
+    ss1.set_field_value('question_ids', ['q1', 'q2'])
+    return root

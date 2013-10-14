@@ -339,7 +339,6 @@ class Survey(BaseFolder, SecurityAware):
     def get_participant_language(self, participant_uid):
         return self.participant_language.get(participant_uid, None)
         
-    # clone survey
     def clone(self, title, destination):
         new_survey = deepcopy(self)
         new_survey.set_field_value('title', title)
