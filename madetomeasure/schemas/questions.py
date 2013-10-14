@@ -33,7 +33,8 @@ def deferred_question_type_widget(node, kw):
     root = find_root(context)
     choices = []
     for (name, obj) in root['question_types'].items():
-        choices.append((name, obj.title))
+        title = obj.description and "%s - %s" % (obj.title, obj.description) or obj.title
+        choices.append((name, title))
     return deform.widget.RadioChoiceWidget(values=choices)
 
 @colander.deferred

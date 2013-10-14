@@ -60,6 +60,10 @@ class BaseQuestionType(BaseFolder, SecurityAware):
     def default_kwargs(self, value):
         self.set_field_value('default_kwargs', dict(value))
 
+    @property
+    def description(self):
+        return self.get_field_value('description', u'')
+
     def node(self, name, lang = None, **kwargs):
         kw = copy(self.default_kwargs)
         kw['name'] = name
@@ -115,7 +119,6 @@ class TextQuestionType(BaseQuestionType):
     implements(ITextQuestionType)
     content_type = u'TextQuestionType'
     display_name = _(u"Text question")
-    description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditTextQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
 
@@ -124,7 +127,6 @@ class NumberQuestionType(BaseQuestionType):
     implements(INumberQuestionType)
     content_type = u'NumberQuestionType'
     display_name = _(u"Number question")
-    description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditNumberQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
@@ -188,7 +190,6 @@ class ChoiceQuestionType(BaseChoiceQuestionType):
     implements(IChoiceQuestionType)
     content_type = 'ChoiceQuestionType'
     display_name = _(u"Choice question")
-    description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
@@ -205,7 +206,6 @@ class MultiChoiceQuestionType(BaseChoiceQuestionType):
     implements(IMultiChoiceQuestionType)
     content_type = 'MultiChoiceQuestionType'
     display_name = _(u"Multiple choice question")
-    description = _(u"")
     schemas = {'add': 'AddQuestionTypeSchema', 'edit': 'EditMultipleChoiceQuestionSchema', 'delete': 'DeleteQuestionTypeSchema'}
 
     def node(self, name, lang = None, **kwargs):
