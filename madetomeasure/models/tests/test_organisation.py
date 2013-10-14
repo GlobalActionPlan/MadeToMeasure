@@ -76,7 +76,7 @@ class OrganisationPermissionTests(unittest.TestCase):
         obj = self._make_obj()
         
         # VIEW
-        self.assertEqual(self.pap(obj, security.VIEW), admin | organisation_manager | translator)
+        self.assertEqual(self.pap(obj, security.VIEW), admin | organisation_manager)
         
         # EDIT
         self.assertEqual(self.pap(obj, security.EDIT), admin | organisation_manager)
@@ -85,7 +85,7 @@ class OrganisationPermissionTests(unittest.TestCase):
         self.assertEqual(self.pap(obj, security.EDIT), admin | organisation_manager)
 
         # TRANSLATE
-        self.assertEqual(self.pap(obj, security.TRANSLATE), admin | organisation_manager | translator)
+        self.assertEqual(self.pap(obj, security.TRANSLATE), admin | organisation_manager)
 
         # MANAGE_SURVEY
         self.assertEqual(self.pap(obj, security.MANAGE_SURVEY), admin | organisation_manager)

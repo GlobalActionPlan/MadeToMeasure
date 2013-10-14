@@ -23,7 +23,6 @@ class Organisation(BaseFolder, SecurityAware):
 
     __acl__ = [(Allow, security.ROLE_ADMIN, ALL_PERMISSIONS),
                (Allow, security.ROLE_ORGANISATION_MANAGER, ALL_PERMISSIONS),
-               (Allow, security.ROLE_TRANSLATOR, (security.TRANSLATE, security.VIEW)),
                DENY_ALL,
               ]
     
