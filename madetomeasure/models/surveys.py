@@ -359,11 +359,10 @@ class Survey(BaseFolder, SecurityAware):
             section.set_field_value('uid', unicode(uuid4()))
             section.__responses__ = OOBTree()
             for name in section.question_ids:
-                if name not in root['questions'] and name not in local_questions:
+                if name not in root['questions'] and name not in root[destination]['questions']:
                     new_lq = deepcopy(local_questions[name])
                     new_lq.set_field_value('uid', unicode(uuid4()))
                     root[destination]['questions'][name] = new_lq
-                    print "Cloning %s" % new_lq
         # place survey in destination
         if destination not in root:
             raise ValueError('No organisation with that name')

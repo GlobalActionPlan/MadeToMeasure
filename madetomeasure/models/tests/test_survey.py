@@ -187,7 +187,7 @@ class SurveyTests(unittest.TestCase):
         orig_surv.clone("A clone", 'dest')
         self.assertEqual(len(root['dest']['surveys']), 1)
 
-    def test_clone_with_local_questions(self):
+    def test_clone_with_local_questions_to_new_org(self):
         from madetomeasure.models.organisation import Organisation
         from madetomeasure.models.questions import Question
         request = testing.DummyRequest()
@@ -201,8 +201,23 @@ class SurveyTests(unittest.TestCase):
         orig_surv['ss1'].set_field_value('question_ids', ['q1', 'q2', 'lq1'])
         cloned = orig_surv.clone("A clone", 'dest')
         self.assertEqual(len(root['dest']['surveys']), 1)
-        self.assertIn('lq1', root['dest']['questions'])
-        self.failUnless(cloned['ss1'].question_object_from_id(orig_local['lq1'].__name__))
+        #self.assertIn('lq1', root['dest']['questions'])
+        self.failUnless(cloned['ss1'].question_object_from_id('lq1'))
+
+    def test_clone_with_local_questions_to_same_org(self):
+        from madetomeasure.models.questions import Question
+        request = testing.DummyRequest()
+        self.config = testing.setUp(request = request)
+        root = _fixture(self.config)
+        survey = root['o1']['surveys']['s1']
+        #Add local questions
+        local_questions = root['o1']['questions']
+        local_questions['lq1'] = Question()
+        survey['ss1'].set_field_value('question_ids', ['q1', 'q2', 'lq1'])
+        cloned = survey.clone("A clone", 'o1')
+        self.assertEqual(len(root['o1']['surveys']), 2)
+        self.assertIn('lq1', root['o1']['questions'])
+        self.failUnless(cloned['ss1'].question_object_from_id(local_questions['lq1'].__name__))
 
 
 def _fixture(config):
