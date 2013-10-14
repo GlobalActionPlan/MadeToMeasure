@@ -359,7 +359,7 @@ class Survey(BaseFolder, SecurityAware):
             section.set_field_value('uid', unicode(uuid4()))
             section.__responses__ = OOBTree()
             for name in section.question_ids:
-                if name not in root['questions']:
+                if name not in root['questions'] and name not in local_questions:
                     new_lq = deepcopy(local_questions[name])
                     new_lq.set_field_value('uid', unicode(uuid4()))
                     root[destination]['questions'][name] = new_lq
