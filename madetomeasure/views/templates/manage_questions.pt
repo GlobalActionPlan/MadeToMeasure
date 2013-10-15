@@ -36,7 +36,7 @@
                                     <span class="question_text">${question.title}</span>
                                     <a tal:condition="not question.is_local"
                                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
-                                       class="edit_variant" target="_blank"><img src="/static/editpen.png"></a>
+                                       class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
                                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
                                 </li>
                             </tal:questions>
@@ -63,7 +63,7 @@
                     <span class="question_text">${question.title}</span>
                     <a tal:condition="not question.is_local"
                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
-                       class="edit_variant" target="_blank"><img src="/static/editpen.png"></a>
+                       class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
                     <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" value="${question.__name__}" />
                 </li>
             </tal:questions>

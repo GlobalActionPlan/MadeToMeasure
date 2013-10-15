@@ -51,7 +51,6 @@ setup(name='MadeToMeasure',
       [console_scripts]
       debug_instance = madetomeasure.scripts.debug:debug_instance
       """,
-      paster_plugins=['pyramid'],
       message_extractors = { '.': [
           ('**.py',   'lingua_python', None ),
           ('**.pt',   'lingua_xml', None ),

@@ -33,7 +33,7 @@ def bootstrap_root():
     from madetomeasure.models.question_types import TextQuestionType
     from madetomeasure import security
 
-    root = SiteRoot(creators=['admin'], title=_(u"Made To Measure"))
+    root = SiteRoot(creators=['admin'], title = u"Made To Measure")
     root['users'] = Users(title = _(u"Users"))
     #Create admin user with password admin as standard
     admin = User(password='admin', first_name="M2M", last_name="Administrator")

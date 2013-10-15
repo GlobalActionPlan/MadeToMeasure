@@ -8,7 +8,7 @@
 <body>
 
 <div metal:fill-slot="content">
-    <tal:open condition="survey_open" i18n:translate="">
+    <tal:open condition="survey_open">
         <p i18n:translate="">This survey currently ongoing.</p>
         <tal:form replace="structure form">Form</tal:form>
     </tal:open>

@@ -26,14 +26,15 @@
     </ul>
 	
 	<div tal:condition="not participants">
-		<span i18n:translate="">There aren't any particpants invited yet. Try clicking the invitations link and invite some.</span>
+		<span i18n:translate="no_participants_invited">
+		    There aren't any particpants invited yet. Try clicking the invitations link and invite some.
+		</span>
 		<a href="./invitation_emails" i18n:translate="">Invitations</a>
 	</div>
     
 	<tal:resend condition="not_finished and not closed_survey">
 	    <h2 i18n:translate="">Send reminder</h2>
-		<div i18n:translate="">Will only be sent to participants who haven't done 100 percent of the survey.</div>
-
+		<div i18n:translate="send_reminder_description_text">Will only be sent to participants who haven't done 100 percent of the survey.</div>
 	    <tal:form content="structure form">Form here</tal:form>
 	</tal:resend>
 

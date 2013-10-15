@@ -87,4 +87,5 @@ class RenameSchema(colander.Schema):
     """ Rename object schema """
     #FIXME: Needs validation etc
     name = colander.SchemaNode(colander.String(),
-                               title = _(u"New name, must be unique in this context and can only contain 'a-z' and '-'."),)
+                               title = _(u"rename_schema_name_description",
+                                         default = u"New name, must be unique in this context and can only contain 'a-z' and '-'."),)

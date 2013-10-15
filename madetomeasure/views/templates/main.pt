@@ -107,7 +107,7 @@
                         <a class="context-tab add"
                            href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
-                            <span tal:content="content_info[type_id].display_name|type_id">
+                            <span tal:content="content_info[type_id].display_name|type_id">Type</span>
                         </a>
                     </tal:iterate>
                 </tal:add>

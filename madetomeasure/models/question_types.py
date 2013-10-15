@@ -234,7 +234,6 @@ class Choice(BaseFolder, SecurityAware):
     implements(IChoice)
     content_type = u'Choice'
     display_name = _(u"Choice")
-    description = _(u"")
     allowed_contexts = ('ChoiceQuestionType', 'MultiChoiceQuestionType')
     custom_mutators = {'title_translations': 'set_title_translations'}
     schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema',}
