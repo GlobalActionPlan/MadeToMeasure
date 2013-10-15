@@ -502,7 +502,11 @@ class SurveysView(BaseView):
 
             #Sort all questions according to which type they are
             results = {}
+            errors = 0
             for question in self._get_questions(section):
+                if question is None:
+                    errors += 1
+                    continue
                 q_type = question.get_question_type()
                 if q_type not in results:
                     results[q_type] = dict(
@@ -510,7 +514,13 @@ class SurveysView(BaseView):
                         questions = [],
                      )
                 results[q_type]['questions'].append(question)
-            
+            if errors:
+                msg = _(u"unexportable_response_data_due_to_missing_question ",
+                        default = _(u"Export encountered problem(s). "
+                                    u"The response information contain data that can't be linked to any question. "
+                                    u"They were probably deleted after the completion of the survey. This happend ${count} time(s)."),
+                        mapping = {'count': errors})
+                self.add_flash_message(msg)
             #Loop trough all sorted questions
             for type_questions in results.values():
                 writer.writerow(type_questions['obj'].csv_header())
@@ -521,7 +531,6 @@ class SurveysView(BaseView):
                         qrow.extend(qresult)
                         writer.writerow(qrow)
                         title = ""
-
         contents = output.getvalue()
         output.close()
         response = Response(content_type='text/csv',

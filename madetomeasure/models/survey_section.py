@@ -117,7 +117,7 @@ class SurveySection(BaseFolder, SecurityAware):
         if id in org['questions']:
             return org['questions'][id]
         root = find_root(self)
-        return root['questions'][id]
+        return root['questions'].get(id)
 
     def question_format_results(self):
         """ Return a structure suitable for looking up responses for each question.
