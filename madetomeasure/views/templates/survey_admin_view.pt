@@ -29,6 +29,12 @@
        <li>(not implemented yet!)</li>
    </ul>
 
+    <h2 i18n:translate="">Preview</h2>
+    <ul>
+        <li><a href="${request.resource_url(context, 'welcome')}" i18n:translate="">Welcome screen</a></li>
+        <li><a href="${request.resource_url(context, 'finished')}" i18n:translate="">Finish screen</a></li>
+    </ul>
+
     <h2 i18n:translate="">Sections</h2>
     <tal:listing replace="structure listing_sniplet()"></tal:listing>
 

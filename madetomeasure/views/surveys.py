@@ -182,12 +182,15 @@ class SurveysView(BaseView):
     def welcome(self):
         self.context.check_open()
         participant_uid = self.request.params.get('uid')
+        readonly_view = False
         if not participant_uid in self.context.tickets:
-            raise Forbidden("Invalid ticket")
+            if self.context_has_permission(self.context, security.MANAGE_SURVEY):
+                readonly_view = True
+            else:
+                raise Forbidden("Invalid ticket")
         lang = self.get_lang()
         welcome_text = self.context.get_welcome_text(lang=lang)
         post = self.request.POST
-
         # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
         if not welcome_text or 'next' in post:
             # url for the first section
@@ -197,7 +200,11 @@ class SurveysView(BaseView):
             else:
                 url = self.request.resource_url(self.context, 'finished')
             return HTTPFound(location = url)
-        form = Form(colander.Schema(), buttons=(self.buttons['next'],))
+        if readonly_view:
+            buttons = ()
+        else:
+            buttons = (self.buttons['next'],)
+        form = Form(colander.Schema(), buttons = buttons)
         self.response['form_resources'] = form.get_widget_resources()
         self.response['form'] = form.render()
         self.response['text'] = welcome_text
