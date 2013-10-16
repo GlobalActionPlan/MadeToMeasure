@@ -167,7 +167,7 @@ class SurveysView(BaseView):
 
         # redirect to first section if language is selected
         if selected_language:
-            self.request.response.set_cookie('_LOCALE_', value=selected_language)
+            self.set_lang(selected_language)
             participant_uid = self.context.start_survey(self.request)
             self.context.set_participant_language(participant_uid, selected_language)
             #All good so far, let's redirect to welcome screen of the survey
@@ -184,11 +184,7 @@ class SurveysView(BaseView):
         participant_uid = self.request.params.get('uid')
         if not participant_uid in self.context.tickets:
             raise Forbidden("Invalid ticket")
-
-        lang = None
-        if '_LOCALE_' in self.request.cookies:
-            lang = self.request.cookies['_LOCALE_']
-
+        lang = self.get_lang()
         welcome_text = self.context.get_welcome_text(lang=lang)
         post = self.request.POST
 

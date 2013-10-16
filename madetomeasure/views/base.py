@@ -1,3 +1,5 @@
+from urllib import unquote
+
 from pyramid.decorator import reify
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
@@ -70,12 +72,16 @@ class BaseView(object):
             context_has_schema = self.context_has_schema,
             path = self.path,
             exception = self.exception,
+            trans_util = self.trans_util,
+            user_lang = self.get_lang(),
         )
         if self.organisation:
             self.response['hex_color'] = self.organisation.get_field_value('hex_color')
             self.response['logo_link'] = self.organisation.get_field_value('logo_link')
 
-        self.trans_util = self.request.registry.getUtility(IQuestionTranslations)
+    @reify
+    def trans_util(self):
+        return self.request.registry.getUtility(IQuestionTranslations)
 
     @reify
     def path(self):
@@ -137,15 +143,6 @@ class BaseView(object):
             return None
         return get_users_dt_helper(request = self.request)
 
-    def context_has_permission(self, context, permission):
-        """ Check if a user has view permission on a specific context. """
-        return security.context_has_permission(context, permission, self.userid)
-
-    def context_has_schema(self, context, schema_name):
-        """ Check if a schema is available named given schema + given context. """
-        if hasattr(context, 'schemas'):
-            return schema_name in context.schemas
-
     @reify
     def content_info(self):
         """ Return a dict with classes registered as a content factory. """
@@ -160,6 +157,15 @@ class BaseView(object):
                 if self.context_has_permission(self.context, "Add %s" % type):
                     addable.append(type)
         return addable
+
+    def context_has_permission(self, context, permission):
+        """ Check if a user has view permission on a specific context. """
+        return security.context_has_permission(context, permission, self.userid)
+    
+    def context_has_schema(self, context, schema_name):
+        """ Check if a schema is available named given schema + given context. """
+        if hasattr(context, 'schemas'):
+            return schema_name in context.schemas
 
     def question_types_info(self):
         results = {}
@@ -177,6 +183,15 @@ class BaseView(object):
         response['context_has_permission'] = self.context_has_permission
         response['display_type'] = display_type
         return render('templates/sniplets/listing.pt', response, request=self.request)
+
+    def set_lang(self, value):
+        """ Set language cookie in response headers. They must still be passed to the view. Example:
+            return HTTPFound(location = url, headers=self.request.response.headers)
+        """
+        self.request.response.set_cookie('_LOCALE_', value = value)
+
+    def get_lang(self):
+        return self.request.cookies.get('_LOCALE_', None)
 
     @reify
     def buttons(self):
@@ -348,3 +363,13 @@ class BaseView(object):
     def redirect_to_parent_view(self):
         url = self.request.resource_url(self.context.__parent__)
         return HTTPFound(location = url)
+
+    @view_config(name = 'select_lang', context = ISiteRoot, permission = NO_PERMISSION_REQUIRED)
+    def select_lang_view(self):
+        lang = self.request.GET.get('lang', None)
+        msg = _(u"Language set to ${selected_lang}",
+                mapping = {'selected_lang': self.trans_util.title_for_code(lang)})
+        self.add_flash_message(msg)
+        self.set_lang(lang)
+        url = self.request.GET.get('return_url', self.request.resource_url(self.root))
+        return HTTPFound(location = url, headers = self.request.response.headers)

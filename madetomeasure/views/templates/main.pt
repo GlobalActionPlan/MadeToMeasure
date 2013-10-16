@@ -65,6 +65,12 @@
                     <span i18n:translate="">Your time</span>
                     <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
                     |
+                    <span i18n:translate="">Language</span>
+                    <tal:iterate repeat="lang trans_util.available_languages">
+                        <a tal:omit-tag="lang == user_lang"
+                            href="${request.resource_url(root, 'select_lang', query = {'lang': lang, 'return_url': request.url})}">${lang}</a>
+                    </tal:iterate>
+                    |
                     <a href="${request.resource_url(user)}"
                        title="Click to go to profile. There you can make changes as well."
                        i18n:attributes="title">${user.title} (${userid})</a>
