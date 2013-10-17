@@ -16,11 +16,13 @@ class OrganisationSchema(colander.Schema):
                                 title = _(u"Organisation name"),)
     logo_link = colander.SchemaNode(colander.String(),
                                     title = _(u"Logo link"),
-                                    description = _(u"Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height: 50/300 px."),
+                                    description = _(u"logo_link_description_text",
+                                                    default = u"Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height: 50/300 px."),
                                     validator = colander.Regex(LOGO_LINK),
                                     missing=u"",)
     hex_color = colander.SchemaNode(colander.String(),
                                     title = _(u"Color value"),
-                                    description = _(u"Must be a hex rgb value, same as all websites. Example: '#FF0000' for red."),
+                                    description = _(u"hex_color__description_text",
+                                                    default = u"Must be a hex rgb value, same as all websites. Example: '#FF0000' for red."),
                                     validator = colander.Regex(HEX_COLOR),
                                     missing=u"",)

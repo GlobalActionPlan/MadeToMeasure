@@ -21,7 +21,8 @@ from madetomeasure.security import EDIT
 
 def survey_heading_translations_node():
     return colander.Schema(title=_("Survey heading translations"),
-                           description=_(u"For each language - but will not be available until the languages have been set and saved!")) #Send this to add_translations_schema
+                           description=_(u"survey_heading_translation_description",
+                                         default = u"For each language - but will not be available until the languages have been set and saved!")) #Send this to add_translations_schema
 
 def survey_welcome_translations_node():
     return colander.Schema(title=_("Survey welcome translations"),

@@ -89,7 +89,8 @@ def deferred_tags_select_widget(node, kw):
 @colander.deferred
 def deferred_delete_title(node, kw):
     context = kw['context']
-    msg = _(u"If you're absolutely sure you wish to delete this, type this objects title in the field below: '${obj_title}'",
+    msg = _(u"delete_confirmation_by_typing_title_text",
+            default = u"If you're absolutely sure you wish to delete this, type this objects title in the field below: '${obj_title}'",
             mapping = {'obj_title': context.title})
     return msg
 

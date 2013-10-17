@@ -1,17 +1,19 @@
-# Swedish translations for PROJECT.
-# Copyright (C) 2011 ORGANIZATION
-# This file is distributed under the same license as the PROJECT project.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
-# #, fuzzy
+# Russian translations for MadeToMeasure.
+# Copyright (C) 2013 ORGANIZATION
+# This file is distributed under the same license as the MadeToMeasure
+# project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
+"Project-Id-Version: MadeToMeasure 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2013-10-17 14:37+0200\n"
-"PO-Revision-Date: 2011-12-21 13:07+0100\n"
-"Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
-"Language-Team: sv <LL@li.org>\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"PO-Revision-Date: 2013-10-17 14:30+0200\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,12 +21,11 @@ msgstr ""
 
 #: madetomeasure/security.py:30
 msgid "Administrator"
-msgstr "Administratör"
+msgstr ""
 
 #: madetomeasure/security.py:31
-#, fuzzy
 msgid "Translator"
-msgstr "Översättningar"
+msgstr ""
 
 #: madetomeasure/security.py:32
 msgid "Organisation manager"
@@ -32,46 +33,43 @@ msgstr ""
 
 #: madetomeasure/models/app.py:37 madetomeasure/models/users.py:31
 msgid "Users"
-msgstr "Användare"
+msgstr ""
 
 #: madetomeasure/models/app.py:43 madetomeasure/models/participants.py:19
 #: madetomeasure/views/templates/main.pt:83
 #: madetomeasure/views/templates/main.pt:137
 msgid "Participants"
-msgstr "Deltagare"
+msgstr ""
 
 #: madetomeasure/models/app.py:44 madetomeasure/models/questions.py:29
 #: madetomeasure/views/templates/main.pt:85
 msgid "Questions"
-msgstr "Frågor"
+msgstr ""
 
 #: madetomeasure/models/organisation.py:20
 msgid "Organisation"
-msgstr "Organisation"
+msgstr ""
 
 #: madetomeasure/models/participants.py:51
 msgid "Participant"
-msgstr "Deltagare"
+msgstr ""
 
 #: madetomeasure/models/question_types.py:34
 #: madetomeasure/views/templates/main.pt:87
-#, fuzzy
 msgid "Question types"
-msgstr "Frågetyp"
+msgstr ""
 
 #: madetomeasure/models/question_types.py:112
 msgid "Can't delete this since it's used in: ${out}"
 msgstr ""
 
 #: madetomeasure/models/question_types.py:121
-#, fuzzy
 msgid "Text question"
-msgstr "Fritextfråga"
+msgstr ""
 
 #: madetomeasure/models/question_types.py:129
-#, fuzzy
 msgid "Number question"
-msgstr "Ändra ordning på frågor"
+msgstr ""
 
 #: madetomeasure/models/question_types.py:167
 #: madetomeasure/views/surveys.py:485
@@ -79,9 +77,8 @@ msgid "Total"
 msgstr ""
 
 #: madetomeasure/models/question_types.py:192
-#, fuzzy
 msgid "Choice question"
-msgstr "Ja / Nej fråga"
+msgstr ""
 
 #: madetomeasure/models/question_types.py:208
 msgid "Multiple choice question"
@@ -92,9 +89,8 @@ msgid "Choice"
 msgstr ""
 
 #: madetomeasure/models/question_widgets.py:24
-#, fuzzy
 msgid "Text string"
-msgstr "Fritextfråga"
+msgstr ""
 
 #: madetomeasure/models/question_widgets.py:33
 msgid "Number field"
@@ -121,17 +117,16 @@ msgid "Checkbox multichoice"
 msgstr ""
 
 #: madetomeasure/models/questions.py:60
-#, fuzzy
 msgid "Local questions"
-msgstr "Ändra ordning på frågor"
+msgstr ""
 
 #: madetomeasure/models/questions.py:74
 msgid "Question"
-msgstr "Fråga"
+msgstr ""
 
 #: madetomeasure/models/questions.py:201
 msgid "(Nothing)"
-msgstr "(Inget)"
+msgstr ""
 
 #: madetomeasure/models/questions.py:226
 msgid "Can't delete this since it's used in the following survey sections: ${out}"
@@ -139,45 +134,45 @@ msgstr ""
 
 #: madetomeasure/models/root.py:17
 msgid "Site root"
-msgstr "Site rot"
+msgstr ""
 
 #: madetomeasure/models/survey_section.py:19
 msgid "Survey Section"
-msgstr "Undersökningssektion"
+msgstr ""
 
 #: madetomeasure/models/surveys.py:35
 msgid "Surveys"
-msgstr "Undersökningar"
+msgstr ""
 
 #: madetomeasure/models/surveys.py:44
 msgid "Survey"
-msgstr "Undersökning"
+msgstr ""
 
 #: madetomeasure/models/translations.py:48
 #: madetomeasure/models/translations.py:53
 msgid "Country code: ${country_code}"
-msgstr "Landskod: ${country_code}"
+msgstr ""
 
 #: madetomeasure/models/users.py:45
 msgid "User"
-msgstr "Användare"
+msgstr ""
 
 #. Default: password link: ${pw_link}
 #: madetomeasure/models/users.py:99
 msgid "request_new_password_text"
-msgstr "lösenordslänk: ${pw_link}"
+msgstr ""
 
 #: madetomeasure/models/users.py:105
 msgid "Password reset request from MadeToMeasure"
-msgstr "Begäran om ändring av lösenord från MadeToMeasure"
+msgstr ""
 
 #: madetomeasure/schemas/common.py:16
 msgid "Timezone"
-msgstr "Tidszon"
+msgstr ""
 
 #: madetomeasure/schemas/common.py:17
 msgid "Try start typing a timezone"
-msgstr "Prova med att börja skriva en tidszon"
+msgstr ""
 
 #: madetomeasure/schemas/common.py:63 madetomeasure/schemas/common.py:84
 msgid "Tags"
@@ -196,15 +191,15 @@ msgstr ""
 #: madetomeasure/schemas/common.py:98 madetomeasure/views/templates/main.pt:124
 #: madetomeasure/views/templates/survey_admin_view.pt:27
 msgid "Translations"
-msgstr "Översättningar"
+msgstr ""
 
 #: madetomeasure/schemas/organisation.py:16
 msgid "Organisation name"
-msgstr "Organisationsnamn"
+msgstr ""
 
 #: madetomeasure/schemas/organisation.py:18
 msgid "Logo link"
-msgstr "Logolänk"
+msgstr ""
 
 #. Default: Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height:
 #. 50/300 px.
@@ -214,7 +209,7 @@ msgstr ""
 
 #: madetomeasure/schemas/organisation.py:24
 msgid "Color value"
-msgstr "Färgvärde"
+msgstr ""
 
 #. Default: Must be a hex rgb value, same as all websites. Example: '#FF0000'
 #. for red.
@@ -224,39 +219,35 @@ msgstr ""
 
 #: madetomeasure/schemas/participants.py:8
 msgid "Change email address"
-msgstr "Ändra epostadress"
+msgstr ""
 
 #: madetomeasure/schemas/question_types.py:11
 msgid "Title"
 msgstr ""
 
 #: madetomeasure/schemas/question_types.py:16
-#, fuzzy
 msgid "Description"
-msgstr "Fråga"
+msgstr ""
 
 #: madetomeasure/schemas/question_types.py:22
 msgid "Input widget"
 msgstr ""
 
 #: madetomeasure/schemas/question_types.py:37
-#, fuzzy
 msgid "Add question type"
-msgstr "Frågetyp"
+msgstr ""
 
 #: madetomeasure/schemas/question_types.py:42
-#, fuzzy
 msgid "Really delete question type?"
-msgstr "Fritextfråga"
+msgstr ""
 
 #: madetomeasure/schemas/question_types.py:78
 msgid "Base choice value - visible to users"
 msgstr ""
 
 #: madetomeasure/schemas/question_types.py:81
-#, fuzzy
 msgid "Ignore translations"
-msgstr "Översättningar"
+msgstr ""
 
 #. Default: If the title is numerical for instance, there's no reason to handle
 #. translations. Translations won't be stored if this is checked.
@@ -266,40 +257,37 @@ msgstr ""
 
 #: madetomeasure/schemas/questions.py:13
 msgid "Question translations"
-msgstr "Frågeöversättningar"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:14 madetomeasure/schemas/surveys.py:29
 #: madetomeasure/schemas/surveys.py:33 madetomeasure/schemas/surveys.py:37
 #: madetomeasure/schemas/surveys.py:41
 msgid "For each language"
-msgstr "För varje språk"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:18
-#, fuzzy
 msgid "Required question"
-msgstr "Ändra ordning på frågor"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:25
 msgid "Only letters and characters a-z allowed."
 msgstr ""
 
 #: madetomeasure/schemas/questions.py:27
-#, fuzzy
 msgid "Enter some text"
-msgstr "Standardtext välkommen"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:48
 msgid "Question type"
-msgstr "Frågetyp"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:51 madetomeasure/schemas/questions.py:61
 msgid "Initial question text, should be in English"
-msgstr "Initial frågetext, bör vara på engelska"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:68
-#, fuzzy
 msgid "Really delete question?"
-msgstr "Fritextfråga"
+msgstr ""
 
 #: madetomeasure/schemas/questions.py:82
 msgid "Free text"
@@ -307,7 +295,7 @@ msgstr ""
 
 #: madetomeasure/schemas/root.py:11
 msgid "Footer HTML code"
-msgstr "HTML för sidfot"
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:23
 msgid "Survey heading translations"
@@ -337,11 +325,11 @@ msgstr ""
 
 #: madetomeasure/schemas/surveys.py:50
 msgid "Start time for survey"
-msgstr "Starttid för undersökningen"
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:58
 msgid "End time for survey"
-msgstr "Sluttid för undersökningen"
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:65
 msgid "Email to send system mail from"
@@ -349,11 +337,11 @@ msgstr ""
 
 #: madetomeasure/schemas/surveys.py:72
 msgid "Thanks a lot for filling out the survey."
-msgstr "Tack så mycket för att du har fyllt i undersökningen."
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:76
 msgid "Available languages"
-msgstr "Tillgängliga språk"
+msgstr ""
 
 #. Default: Allow anonymous people to participate in the survey?
 #: madetomeasure/schemas/surveys.py:78
@@ -416,7 +404,7 @@ msgstr ""
 
 #: madetomeasure/schemas/surveys.py:138
 msgid "Participant email addresses - add one per row."
-msgstr "Deltagares epostadresser - lägg till en per rad."
+msgstr ""
 
 #. Default: Remember to only add users who should recieve the message in this
 #. language.
@@ -429,38 +417,37 @@ msgid "Your email"
 msgstr ""
 
 #: madetomeasure/schemas/surveys.py:164
-#, fuzzy
 msgid "Actions"
-msgstr "Inbjudningar"
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:174
 msgid "Reminder message"
-msgstr "Påminnelse meddelande"
+msgstr ""
 
 #: madetomeasure/schemas/surveys.py:196
 msgid "Choose language"
-msgstr "Välj språk"
+msgstr ""
 
 #: madetomeasure/schemas/system.py:19 madetomeasure/schemas/system.py:32
 msgid "UserID or email address."
-msgstr "AnvändarID eller epostadress."
+msgstr ""
 
 #: madetomeasure/schemas/system.py:22 madetomeasure/schemas/system.py:45
 #: madetomeasure/schemas/users.py:41 madetomeasure/schemas/users.py:73
 msgid "Password"
-msgstr "Lösenord"
+msgstr ""
 
 #: madetomeasure/schemas/system.py:73
 msgid "Role"
-msgstr "Roll"
+msgstr ""
 
 #: madetomeasure/schemas/system.py:79
 msgid "Roles for user"
-msgstr "Roller för användare"
+msgstr ""
 
 #: madetomeasure/schemas/system.py:82
 msgid "Role settings for users"
-msgstr "Roll inställningar för användare"
+msgstr ""
 
 #. Default: New name, must be unique in this context and can only contain 'a-z'
 #. and '-'.
@@ -470,11 +457,11 @@ msgstr ""
 
 #: madetomeasure/schemas/users.py:15
 msgid "Too short. At least 6 chars required."
-msgstr "För kort. Minst 6 tecken krävs."
+msgstr ""
 
 #: madetomeasure/schemas/users.py:17
 msgid "Less than 100 chars please."
-msgstr "Mindre än 100 tecken tack."
+msgstr ""
 
 #: madetomeasure/schemas/users.py:21
 msgid "I am a translator and translate to the following languages"
@@ -494,23 +481,23 @@ msgstr ""
 
 #: madetomeasure/schemas/users.py:38
 msgid "UserID"
-msgstr "AnvändarID"
+msgstr ""
 
 #: madetomeasure/schemas/users.py:45 madetomeasure/schemas/users.py:59
 msgid "First name"
-msgstr "Förnamn"
+msgstr ""
 
 #: madetomeasure/schemas/users.py:47 madetomeasure/schemas/users.py:61
 msgid "Last name"
-msgstr "Efternamn"
+msgstr ""
 
 #: madetomeasure/schemas/users.py:49 madetomeasure/schemas/users.py:63
 msgid "Email"
-msgstr "Epost"
+msgstr ""
 
 #: madetomeasure/schemas/validators.py:24
 msgid "The following addresses is invalid: ${emails}"
-msgstr "Foljande adresser är ogiltiga: ${emails}"
+msgstr ""
 
 #: madetomeasure/schemas/validators.py:49 madetomeasure/views/system.py:73
 msgid "Login incorrect"
@@ -522,39 +509,39 @@ msgstr ""
 
 #: madetomeasure/views/base.py:199
 msgid "Login"
-msgstr "Login"
+msgstr ""
 
 #: madetomeasure/views/base.py:200
 #: madetomeasure/views/templates/manage_questions.pt:49
 #: madetomeasure/views/templates/reorder_folder.pt:31
 msgid "Save"
-msgstr "Spara"
+msgstr ""
 
 #: madetomeasure/views/base.py:201
 msgid "Send"
-msgstr "Skicka"
+msgstr ""
 
 #: madetomeasure/views/base.py:202
 msgid "Next"
-msgstr "Nästa"
+msgstr ""
 
 #: madetomeasure/views/base.py:203
 msgid "Previous"
-msgstr "Föregående"
+msgstr ""
 
 #: madetomeasure/views/base.py:204
 #: madetomeasure/views/templates/manage_questions.pt:51
 #: madetomeasure/views/templates/reorder_folder.pt:32
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr ""
 
 #: madetomeasure/views/base.py:205
 msgid "Request"
-msgstr "Begär"
+msgstr ""
 
 #: madetomeasure/views/base.py:206
 msgid "Change"
-msgstr "Ändra"
+msgstr ""
 
 #: madetomeasure/views/base.py:207 madetomeasure/views/templates/main.pt:122
 msgid "Delete"
@@ -565,9 +552,8 @@ msgid "Deleted"
 msgstr ""
 
 #: madetomeasure/views/base.py:258
-#, fuzzy
 msgid "Canceled"
-msgstr "Avbryt"
+msgstr ""
 
 #: madetomeasure/views/base.py:370
 msgid "Language set to ${selected_lang}"
@@ -575,16 +561,14 @@ msgstr ""
 
 #. Default: You did something that the server didn't allow. (Error 403)
 #: madetomeasure/views/exceptions.py:14
-#, fuzzy
 msgid "not_allowed_error_txt"
-msgstr "Undersökningen har inte startat än, den kommer att starta ${start_time}"
+msgstr ""
 
 #. Default: You did something that the server didn't allow. If you are a
 #. manager, perhaps you need to log in? (Error 403)
 #: madetomeasure/views/exceptions.py:17
-#, fuzzy
 msgid "not_allowed_error_anon_txt"
-msgstr "Undersökningen har inte startat än, den kommer att starta ${start_time}"
+msgstr ""
 
 #. Default: Couldn't find anything with this URL. (Error 404)
 #: madetomeasure/views/exceptions.py:24
@@ -592,9 +576,8 @@ msgid "not_found_error_text"
 msgstr ""
 
 #: madetomeasure/views/organisation.py:28
-#, fuzzy
 msgid "Invalid question name."
-msgstr "Ogilitgt fråge uid"
+msgstr ""
 
 #: madetomeasure/views/organisation.py:34
 msgid "Edit question variant for this organisation"
@@ -602,7 +585,7 @@ msgstr ""
 
 #: madetomeasure/views/surveys.py:36
 msgid "Survey has closed, you can't invite"
-msgstr "Undersökningen är stängd, du kan inte bjuda in deltagare"
+msgstr ""
 
 #. Default: There aren't any questions yet. You need to add survey sections and
 #. questions, otherwise invited users won't be able to do anything.
@@ -617,18 +600,17 @@ msgstr ""
 
 #: madetomeasure/views/surveys.py:110
 msgid "Reminder has been sent"
-msgstr "Påminnelse har skickats"
+msgstr ""
 
 #. Default: Survey has not started yet, it will start on ${start_time}
 #: madetomeasure/views/surveys.py:119
-#, fuzzy
 msgid "not_started_error"
-msgstr "Undersökningen har inte startat än, den kommer att starta ${start_time}"
+msgstr ""
 
 #. Default: Survey has ended, it closed at ${end_time}
 #: madetomeasure/views/surveys.py:124
 msgid "ended_error"
-msgstr "Undersökningen har avslutats, den stängdes ${end_time}"
+msgstr ""
 
 #: madetomeasure/views/surveys.py:326
 msgid "Invitation to survey '${s_title}'"
@@ -646,9 +628,8 @@ msgstr ""
 #. Default: Invitation sent. Check your inbox in a few minutes. If it hasn't
 #. arrived within 15 minutes, check your spam folder.
 #: madetomeasure/views/surveys.py:334
-#, fuzzy
 msgid "invitation_sent_notice"
-msgstr "Inbjudningar"
+msgstr ""
 
 #. Default: Your email address has already been used within this survey. If you
 #. need to change your replies, use the access link provided when you started
@@ -672,16 +653,15 @@ msgstr ""
 
 #: madetomeasure/views/surveys.py:412
 msgid "The survey is currently open."
-msgstr "Undersökningen är öppen nu."
+msgstr ""
 
 #: madetomeasure/views/surveys.py:433
 msgid "Order updated"
-msgstr "Ordning uppdaterad"
+msgstr ""
 
 #: madetomeasure/views/surveys.py:456
-#, fuzzy
 msgid "Updated"
-msgstr "Ordning uppdaterad"
+msgstr ""
 
 #. Default: You need to add survey sections and then use this view to manage
 #. the questions.
@@ -691,7 +671,7 @@ msgstr ""
 
 #: madetomeasure/views/surveys.py:485
 msgid "Languages"
-msgstr "Språk"
+msgstr ""
 
 #. Default: Export encountered problem(s). The response information contain
 #. data that can't be linked to any question. They were probably deleted after
@@ -722,88 +702,84 @@ msgstr ""
 
 #: madetomeasure/views/system.py:151
 msgid "Invalid security token. Did you click the link in your email?"
-msgstr "Ogiltig säkerhetstoken. Klickade du på länken i ditt epostmeddelande?"
+msgstr ""
 
 #: madetomeasure/views/system.py:182
-#, fuzzy
 msgid "Saved"
-msgstr "Spara"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:65
 msgid "Your time"
-msgstr "Din tid"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:68
 #: madetomeasure/views/templates/question_translations.pt:58
-#, fuzzy
 msgid "Language"
-msgstr "Språk"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:74
 msgid "Click to go to profile. There you can make changes as well."
-msgstr "Clicka för att gå till profilen. Där kan du göra ändringar."
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:78
 msgid "Logout"
-msgstr "Logga ut"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:89
 msgid "System users"
-msgstr "Systemanvändare"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:91
 #: madetomeasure/views/templates/main.pt:100
 msgid "Permissions"
-msgstr "Rättigheter"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:102
 #: madetomeasure/views/templates/main.pt:127
 msgid "Variants"
-msgstr "Varianter"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:115
 msgid "Add"
-msgstr "Lägg till"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:120
 #: madetomeasure/views/templates/question_type.pt:22
 msgid "Edit"
-msgstr "Redigera"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:133
 #: madetomeasure/views/templates/survey_participans.pt:32
 msgid "Invitations"
-msgstr "Inbjudningar"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:141
 msgid "Results"
-msgstr "Resultat"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:145
 msgid "Reorder sections"
-msgstr "Ändra sektioners ordning"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:149
-#, fuzzy
 msgid "Manage questions"
-msgstr "Hantera frågor"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:153
 msgid "Export"
-msgstr "Exportera"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:157
 msgid "Clone"
-msgstr "Klona"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:163
-#, fuzzy
 msgid "Change password"
-msgstr "Byta lösenord"
+msgstr ""
 
 #: madetomeasure/views/templates/main.pt:201
 msgid "If you go back, the changes made here will be permanently lost."
-msgstr "Om du går tillbaka, kommer du förlora ändringar som är gjorda här."
+msgstr ""
 
 #: madetomeasure/views/templates/manage_questions.pt:26
 msgid "Add from selected tag"
@@ -818,32 +794,28 @@ msgid "&lt;Hidden - Click header to open section&gt;"
 msgstr ""
 
 #: madetomeasure/views/templates/manage_questions.pt:58
-#, fuzzy
 msgid "Question pool"
-msgstr "Frågetyp"
+msgstr ""
 
 #: madetomeasure/views/templates/question_translations.pt:35
 msgid "Controls"
 msgstr ""
 
 #: madetomeasure/views/templates/question_translations.pt:59
-#, fuzzy
 msgid "Translated"
-msgstr "Översättningar"
+msgstr ""
 
 #: madetomeasure/views/templates/question_translations.pt:60
-#, fuzzy
 msgid "Untranslated"
-msgstr "Frågeöversättningar"
+msgstr ""
 
 #: madetomeasure/views/templates/questions.pt:28
 msgid "View"
 msgstr ""
 
 #: madetomeasure/views/templates/questions.pt:29
-#, fuzzy
 msgid "Edit base question"
-msgstr "Ändra ordning på frågor"
+msgstr ""
 
 #: madetomeasure/views/templates/questions.pt:30
 msgid "Edit local variant"
@@ -851,7 +823,7 @@ msgstr ""
 
 #: madetomeasure/views/templates/results.pt:15
 msgid "${count} participants completed this section"
-msgstr "${count} deltagare avslutade denna sektion"
+msgstr ""
 
 #: madetomeasure/views/templates/results.pt:26
 msgid "Error!"
@@ -866,16 +838,15 @@ msgstr ""
 
 #: madetomeasure/views/templates/results.pt:36
 msgid "Oh no!"
-msgstr "Åh nej!"
+msgstr ""
 
 #: madetomeasure/views/templates/results.pt:37
 msgid "No sections added yet, so there won't be any results either..."
-msgstr "Inga sektioner tillagda än, så det finns inget resultat heller..."
+msgstr ""
 
 #: madetomeasure/views/templates/root_view.pt:14
-#, fuzzy
 msgid "Survey system"
-msgstr "Undersökningar"
+msgstr ""
 
 #: madetomeasure/views/templates/root_view.pt:15
 msgid "To participate in a survey you need to use the link sent to you."
@@ -883,23 +854,23 @@ msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:15
 msgid "Start time"
-msgstr "Starttid"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:17
 msgid "Nothing set"
-msgstr "Inget inställt"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:20
 msgid "End time"
-msgstr "Sluttid"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:22
 msgid "Nothing set, this survey will never close!"
-msgstr "Inget inställt, undersökningen kommer aldrig att stänga!"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:24
 msgid "Timezone is"
-msgstr "Tidszon är"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:32
 msgid "Preview"
@@ -914,44 +885,42 @@ msgid "Finish screen"
 msgstr ""
 
 #: madetomeasure/views/templates/survey_admin_view.pt:38
-#, fuzzy
 msgid "Sections"
-msgstr "Frågor"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_form.pt:26
 msgid "Displaying form"
-msgstr "Visar forumlär"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_form.pt:27
 msgid "This is how it will appear to participants."
-msgstr "Detta är hur det kommer att visas för deltagarna."
+msgstr ""
 
 #: madetomeasure/views/templates/survey_participans.pt:12
 msgid "Manage participants"
-msgstr "Hantera deltagare"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_participans.pt:15
 msgid "Invited"
-msgstr "Inbjuden"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_participans.pt:19
 msgid "Finished"
-msgstr "Avslutad"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_participans.pt:23
 msgid "Remaining"
-msgstr "Återstående"
+msgstr ""
 
 #. Default: There aren't any particpants invited yet. Try clicking the
 #. invitations link and invite some.
 #: madetomeasure/views/templates/survey_participans.pt:29
-#, fuzzy
 msgid "no_participants_invited"
-msgstr "Deltagare"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_participans.pt:36
 msgid "Send reminder"
-msgstr "Skicka påminnelse"
+msgstr ""
 
 #. Default: Will only be sent to participants who haven't done 100 percent of
 #. the survey.
@@ -961,132 +930,23 @@ msgstr ""
 
 #: madetomeasure/views/templates/survey_translations.pt:13
 msgid "The following languages have untranslated welcome and/or finished message"
-msgstr "Följande språk har oöversatta välkomst- och/eller avslutningsmeddelande"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_translations.pt:23
 msgid "The following languages have untranslated questions"
-msgstr "Följande språk har oöversatta frågor"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_translations.pt:36
 msgid "No language has any untranslated questions"
-msgstr "Inget språk har oöversatta frågor"
+msgstr ""
 
 #: madetomeasure/views/templates/survey_view.pt:12
-#, fuzzy
 msgid "This survey currently ongoing."
-msgstr "Undersökningen är öppen nu."
+msgstr ""
 
 #: madetomeasure/views/templates/survey_view.pt:16
 msgid "This survey is closed."
 msgstr ""
-
-#~ msgid "'${val}' is not valid as date and time"
-#~ msgstr "'${val}' är inte giltigt som datum och tid"
-
-#~ msgid "1 - Not important"
-#~ msgstr "1 - Inte viktigt"
-
-#~ msgid "7 - Very important"
-#~ msgstr "7 - Mycket viktigt"
-
-#~ msgid "Agree text question"
-#~ msgstr ""
-
-#~ msgid "Default finished text"
-#~ msgstr "Standardtext avslutning"
-
-#~ msgid "Female"
-#~ msgstr "Kvinna"
-
-#~ msgid "Frequency scale question"
-#~ msgstr "Frekvensskala-fråga"
-
-#~ msgid "Gender question"
-#~ msgstr ""
-
-#~ msgid "Importance scale question 1-7"
-#~ msgstr ""
-
-#~ msgid "Importance text question"
-#~ msgstr ""
-
-#~ msgid "Male"
-#~ msgstr "Man"
-
-#~ msgid "Maybe"
-#~ msgstr "Kanske"
-
-#~ msgid "N/A"
-#~ msgstr "Ej relevant"
-
-#~ msgid "No"
-#~ msgstr "Nej"
-
-#~ msgid "Select participating questions"
-#~ msgstr "Välj deltagande frågors"
-
-#~ msgid "Small text input question"
-#~ msgstr ""
-
-#~ msgid "Yes"
-#~ msgstr "Ja"
-
-#~ msgid "Yes / Maybe question / No"
-#~ msgstr ""
-
-#~ msgid "almost always"
-#~ msgstr "Nästan alltid"
-
-#~ msgid "almost never"
-#~ msgstr "Nästan aldrig"
-
-#~ msgid "around half the time"
-#~ msgstr "ungefär hälften"
-
-#~ msgid "disagree"
-#~ msgstr "håller inte med"
-
-#~ msgid "don't know"
-#~ msgstr "vet ej"
-
-#~ msgid "fairly important"
-#~ msgstr "ganska viktigt"
-
-#~ msgid "fully agree"
-#~ msgstr "instämmer helt"
-
-#~ msgid "less than half the time"
-#~ msgstr "till mindre än hälften"
-
-#~ msgid "more than half"
-#~ msgstr "till mer än hälften"
-
-#~ msgid "not very important"
-#~ msgstr "inte särskilt viktigt"
-
-#~ msgid "somewhat agree"
-#~ msgstr "håller delvis med"
-
-#~ msgid "somewhat disagree"
-#~ msgstr "håller delvis inte med"
-
-#~ msgid "survey_default_invitation_message"
-#~ msgstr ""
-
-#~ msgid "unimportant"
-#~ msgstr "oviktigt"
-
-#~ msgid "very important"
-#~ msgstr "mycket viktigt"
-
-#~ msgid "Made To Measure"
-#~ msgstr ""
-
-#~ msgid ""
-#~ msgstr ""
-
-#~ msgid "<dynamic element> <dynamic element>"
-#~ msgstr ""
 
 #~ msgid ""
 #~ "If you're absolutely sure you wish "
@@ -1099,18 +959,12 @@ msgstr ""
 #~ "Gif, Jpeg och Png file. Max "
 #~ "width/height: 50/300 px."
 #~ msgstr ""
-#~ "Måste vara HTTP-länk till Gif, Jpeg "
-#~ "eller Png-fil. Max höjd/bredd 50/300 "
-#~ "px."
 
 #~ msgid ""
 #~ "Must be a hex rgb value, same "
 #~ "as all websites. Example: '#FF0000' for"
 #~ " red."
 #~ msgstr ""
-#~ "Måste vara ett hex rgb-värde, samma "
-#~ "som alla webbsidor. Exempel: '#FF0000' "
-#~ "för röd."
 
 #~ msgid ""
 #~ "If the title is numerical for "

@@ -78,5 +78,7 @@ class ChoiceSchema(colander.Schema):
                                 title = _(u"Base choice value - visible to users"),
                                 )
     ignore_translations = colander.SchemaNode(colander.Bool(),
-                                              title = _(u"Ignore translations"),
-                                              description = _(u"If the title is numerical for instance, there's no reason to handle translations. Translations won't be stored if this is checked."))
+        title = _(u"Ignore translations"),
+        description = _(u"choice_ignore_translations_description",
+                        default = u"If the title is numerical for instance, there's no reason to handle translations. "
+                            u"Translations won't be stored if this is checked."))
