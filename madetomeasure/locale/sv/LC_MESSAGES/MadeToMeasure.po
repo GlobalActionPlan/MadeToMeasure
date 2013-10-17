@@ -766,12 +766,12 @@ msgstr "Resultat"
 
 #: madetomeasure/views/templates/main.pt:139
 msgid "Reorder sections"
-msgstr "Ändra ordning på sektioner"
+msgstr "Ändra sektioners ordning"
 
 #: madetomeasure/views/templates/main.pt:143
 #, fuzzy
 msgid "Manage questions"
-msgstr "Ändra ordning på frågor"
+msgstr "Hantera frågor"
 
 #: madetomeasure/views/templates/main.pt:147
 msgid "Export"
@@ -784,7 +784,7 @@ msgstr "Klona"
 #: madetomeasure/views/templates/main.pt:157
 #, fuzzy
 msgid "Change password"
-msgstr "Lösenord"
+msgstr "Byta lösenord"
 
 #: madetomeasure/views/templates/main.pt:195
 msgid "If you go back, the changes made here will be permanently lost."
