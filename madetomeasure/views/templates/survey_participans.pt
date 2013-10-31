@@ -27,7 +27,7 @@
 	
 	<div tal:condition="not participants">
 		<span i18n:translate="no_participants_invited">
-		    There aren't any particpants invited yet. Try clicking the invitations link and invite some.
+		    There aren't any participants invited yet. Try clicking the invitations link and invite some.
 		</span>
 		<a href="./invitation_emails" i18n:translate="">Invitations</a>
 	</div>

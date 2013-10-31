@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MadeToMeasure 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-10-17 14:37+0200\n"
+"POT-Creation-Date: 2013-10-31 09:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -475,7 +475,7 @@ msgid "Datetime localisation"
 msgstr ""
 
 #: madetomeasure/schemas/users.py:30
-msgid "Pick locasitaion for date format for this user."
+msgid "Pick localisation for date format for this user."
 msgstr ""
 
 #: madetomeasure/schemas/users.py:38
@@ -911,7 +911,7 @@ msgstr ""
 msgid "Remaining"
 msgstr ""
 
-#. Default: There aren't any particpants invited yet. Try clicking the
+#. Default: There aren't any participants invited yet. Try clicking the
 #. invitations link and invite some.
 #: madetomeasure/views/templates/survey_participans.pt:29
 msgid "no_participants_invited"

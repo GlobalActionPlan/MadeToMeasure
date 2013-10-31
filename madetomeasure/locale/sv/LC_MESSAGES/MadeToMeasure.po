@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-10-17 14:37+0200\n"
+"POT-Creation-Date: 2013-10-31 09:55+0100\n"
 "PO-Revision-Date: 2011-12-21 13:07+0100\n"
 "Last-Translator: Fredrik Nilson <fredrik@betahaus.net>\n"
 "Language-Team: sv <LL@li.org>\n"
@@ -489,7 +489,7 @@ msgid "Datetime localisation"
 msgstr ""
 
 #: madetomeasure/schemas/users.py:30
-msgid "Pick locasitaion for date format for this user."
+msgid "Pick localisation for date format for this user."
 msgstr ""
 
 #: madetomeasure/schemas/users.py:38
@@ -942,7 +942,7 @@ msgstr "Avslutad"
 msgid "Remaining"
 msgstr "Återstående"
 
-#. Default: There aren't any particpants invited yet. Try clicking the
+#. Default: There aren't any participants invited yet. Try clicking the
 #. invitations link and invite some.
 #: madetomeasure/views/templates/survey_participans.pt:29
 #, fuzzy
@@ -1088,40 +1088,6 @@ msgstr ""
 #~ msgid "<dynamic element> <dynamic element>"
 #~ msgstr ""
 
-#~ msgid ""
-#~ "If you're absolutely sure you wish "
-#~ "to delete this, type this objects "
-#~ "title in the field below: '${obj_title}'"
-#~ msgstr ""
-
-#~ msgid ""
-#~ "Must be a HTTP link to a "
-#~ "Gif, Jpeg och Png file. Max "
-#~ "width/height: 50/300 px."
-#~ msgstr ""
-#~ "Måste vara HTTP-länk till Gif, Jpeg "
-#~ "eller Png-fil. Max höjd/bredd 50/300 "
-#~ "px."
-
-#~ msgid ""
-#~ "Must be a hex rgb value, same "
-#~ "as all websites. Example: '#FF0000' for"
-#~ " red."
-#~ msgstr ""
-#~ "Måste vara ett hex rgb-värde, samma "
-#~ "som alla webbsidor. Exempel: '#FF0000' "
-#~ "för röd."
-
-#~ msgid ""
-#~ "If the title is numerical for "
-#~ "instance, there's no reason to handle"
-#~ " translations. Translations won't be stored"
-#~ " if this is checked."
-#~ msgstr ""
-
-#~ msgid ""
-#~ "For each language - but will not"
-#~ " be available until the languages "
-#~ "have been set and saved!"
+#~ msgid "Pick locasitaion for date format for this user."
 #~ msgstr ""
 

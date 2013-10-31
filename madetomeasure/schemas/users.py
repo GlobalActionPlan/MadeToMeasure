@@ -27,7 +27,7 @@ def translator_node():
 def datetime_loc_node():
     return colander.SchemaNode(colander.String(),
                                title = _(u"Datetime localisation"),
-                               description = _(u"Pick locasitaion for date format for this user."),
+                               description = _(u"Pick localisation for date format for this user."),
                                widget = deferred_pick_language_widget,
                                missing = 'en',
                                default = 'en')
