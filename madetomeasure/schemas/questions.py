@@ -22,7 +22,7 @@ class TagsSequence(colander.SequenceSchema):
     text = colander.SchemaNode(
         colander.String(),
         preparer = adjust_tags,
-        validator = colander.All(colander.Length(max=100), colander.Regex(r'^\w*$', msg = _(u"Only letters and characters a-z allowed."))),
+        validator = colander.All(colander.Length(max=100), colander.Regex(r'^\w*$', msg = _(u"Only numbers, characters a-z and underscore allowed."))),
         widget=deferred_tags_text_widget,
         description=_(u"Enter some text"))
 
