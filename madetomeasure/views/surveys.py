@@ -548,7 +548,7 @@ class SurveysView(BaseView):
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         schema = createSchema(self.context.schemas['clone'])
-        schema = schema.bind(context = self.context, request = self.request)
+        schema = schema.bind(context = self.context, request = self.request, view = self)
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
         if 'save' in self.request.POST:

@@ -1,7 +1,9 @@
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
+from pyramid.interfaces import IAuthorizationPolicy
 from pyramid.security import Authenticated
 from pyramid.security import Everyone
+from pyramid.threadlocal import get_current_registry
 
 from madetomeasure import MadeToMeasureTSF as _
 
@@ -50,6 +52,8 @@ def context_has_permission(context, permission, userid):
         object that appears in a listing.
     """
     principals = context_effective_principals(context, userid)
+    reg = get_current_registry()
+    authz_policy = reg.getUtility(IAuthorizationPolicy)
     return authz_policy.permits(context, principals, permission)
 
 def context_effective_principals(context, userid):

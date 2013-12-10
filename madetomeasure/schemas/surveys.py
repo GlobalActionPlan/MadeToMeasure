@@ -2,7 +2,6 @@ from operator import itemgetter
 
 import colander
 import deform
-from pyramid.security import has_permission
 from pyramid.traversal import find_root
 from zope.component import getUtility
 from betahaus.pyracont.decorators import schema_factory
@@ -17,6 +16,7 @@ from madetomeasure.models.fields import TZDateTime
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.security import EDIT
+from madetomeasure.security import context_has_permission
 
 
 def survey_heading_translations_node():
@@ -209,48 +209,38 @@ class SurveyTranslateSchema(colander.Schema):
                                         missing="",)
 
 
+def _valid_organisaitons(root, userid):
+    results = []
+    for obj in root.values():
+        if IOrganisation.providedBy(obj) and context_has_permission(obj, EDIT, userid):
+            results.append(obj)
+    return sorted(results, key = lambda x: x.title.lower())
+
+
 class OrganisationValidator(object):
-    def __init__(self, context, request):
-        self.context = context
-        self.request = request
+    def __init__(self, view):
+        self.view = view
     
     def __call__(self, node, value):
-        root = find_root(self.context)
-        destination = value
-
-        invalid = False
-
-        try:
-            organisation = root[destination]
-        except KeyError:
-            invalid = True
-        else:
-            if not (IOrganisation.providedBy(organisation) and has_permission(EDIT, organisation, self.request)):
-                invalid = True
-
-        if invalid:
-            raise colander.Invalid(node, 'Not a valid organisation')
+        #Value here is the destination __name__
+        org_names = [x.__name__ for x in _valid_organisaitons(self.view.root, self.view.userid)]
+        if value not in org_names:
+            raise colander.Invalid(node, _(u"Invalid target organisation"))
 
 
 @colander.deferred
-def survey_clone_destination_validator(form, kw):
-    context = kw['context']
-    request = kw['request']
-    return OrganisationValidator(context, request)
+def survey_clone_destination_validator(node, kw):
+    view = kw['view']
+    return OrganisationValidator(view)
 
 
 @colander.deferred
 def survey_clone_destination_widget(node, kw):
-    context = kw['context']
-    request = kw['request']
-    
-    root = find_root(context)
-    choices=set()
-    for organisation in root.values():
-        if IOrganisation.providedBy(organisation) and has_permission(EDIT, organisation, request):
-            choices.add((organisation.__name__, organisation.get_field_value('title')))
-
-    return deform.widget.SelectWidget(values=choices)
+    view = kw['view']
+    choices = []
+    for organisation in _valid_organisaitons(view.root, view.userid):
+        choices.append((organisation.__name__, organisation.title))
+    return deform.widget.SelectWidget(values = choices)
 
 
 @schema_factory('SurveyCloneSchema')

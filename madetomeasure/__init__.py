@@ -19,28 +19,32 @@ def main(global_config, **settings):
     def root_factory(request):
         conn = get_connection(request)
         return appmaker(conn.root())
-
     sessionfact = UnencryptedCookieSessionFactoryConfig('messages')
-    
     config = Configurator(settings=settings,
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy,
                           root_factory=root_factory,
                           session_factory = sessionfact,)
-    
+    config.include('madetomeasure')
+    return config.make_wsgi_app()
+
+
+def includeme(config):
+    """ Check default settings and include needed components. """
+    #Adjust default settings
+    settings = config.registry.settings
+    if 'available_languages' not in settings:
+        settings['available_languages'] = 'en'
+    if 'default_timezone' not in settings:
+        settings['default_timezone'] = 'UTC'
     config.add_static_view('static', 'madetomeasure:static')
     config.add_static_view('deform', 'deform:static')
-
     config.include('madetomeasure.models.question_widgets')
     config.include('madetomeasure.models.translations')
     config.include('madetomeasure.models.date_time_helper')
-    
     config.scan('betahaus.pyracont.fields.password')
-    
     config.add_translation_dirs('deform:locale/',
                                 'colander:locale/',
                                 'madetomeasure:locale/',)
-
     config.hook_zca()
     config.scan('madetomeasure')
-    return config.make_wsgi_app()
