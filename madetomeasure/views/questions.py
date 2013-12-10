@@ -34,10 +34,10 @@ class QuestionsView(BaseView):
             security.context_has_permission(self.context, security.EDIT, self.userid) or False
         return self.response
     
-    @view_config(context=IQuestion, renderer='templates/survey_form.pt', permission=security.VIEW)
+    @view_config(context = IQuestion, renderer = 'templates/survey_form.pt', permission=security.VIEW)
     def admin_view(self):
         schema = Schema()
-        schema.add(self.context.question_schema_node('dummy'))
+        schema.add(self.context.question_schema_node('dummy', lang = self.get_lang(), context = self.context))
         form = Form(schema)
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()
