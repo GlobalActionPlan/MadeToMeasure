@@ -3,8 +3,8 @@ import os
 from setuptools import setup, find_packages
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'README.txt')).read()
-CHANGES = open(os.path.join(here, 'CHANGES.txt')).read()
+README = open(os.path.join(here, 'README.rst')).read()
+CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
 requires = [
     'pyramid',
@@ -14,12 +14,10 @@ requires = [
     'fanstatic',
     'ZODB3',
     'Babel',
-    'repoze.folder',
     'colander',
     'deform',
     'slugify',
     'lingua',
-    'webhelpers',
     'pytz',
     'betahaus.pyracont >= 0.1a3',
     'iso8601',
