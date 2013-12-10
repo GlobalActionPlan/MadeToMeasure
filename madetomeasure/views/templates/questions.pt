@@ -24,7 +24,7 @@
             <tr class="question" tal:repeat="question questions">
                 <td>
                     <div class="question_text"
-                       href="${request.resource_url(question, 'edit')}">${question.get_field_value('title')}</div>
+                       href="${request.resource_url(question, 'edit')}">${question.get_title(lang = user_lang)}</div>
                     <a tal:condition="context_has_permission(question, 'View')" href="${request.resource_url(question)}" i18n:translate="">View </a>
                     <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question </a>
                     <a tal:condition="show_edit_variants"
