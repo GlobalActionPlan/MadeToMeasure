@@ -13,7 +13,9 @@
     <script type="text/javascript" src="${request.application_url}/static/manage_questions.js"></script>
     <link href="${request.application_url}/deform/css/form.css" rel="stylesheet" type="text/css" />
 </metal:head>
-
+<metal:heading fill-slot="page_heading">
+    <h1 tal:content="context.get_translated_title()">Title</h1>
+</metal:heading>
 <div metal:fill-slot="content">
 
     <div class="column">
@@ -28,12 +30,12 @@
                             <button type="button" class="del_questions"
                                     title="Remove from selected tag" i18n:attributes="title">&ndash;</button>
                         </span>
-                        <h3><a href="javascript:" class="toggle_minimize">${section.title}</a></h3>
+                        <h3><a href="javascript:" class="toggle_minimize">${section.get_translated_title()}</a></h3>
                         <ul class="survey_section pickable_questions minimizable_area" name="${section.__name__}">
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
                                 <li id="${question.__name__}"
                                     class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
-                                    <span class="question_text">${question.title}</span>
+                                    <span class="question_text">${question.get_title(lang = user_lang)}</span>
                                     <a tal:condition="not question.is_local"
                                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
                                        class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
@@ -60,7 +62,7 @@
             <tal:questions repeat="question available_questions">
                 <li id="${question.__name__}"
                     class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
-                    <span class="question_text">${question.title}</span>
+                    <span class="question_text">${question.get_title(lang = user_lang)}</span>
                     <a tal:condition="not question.is_local"
                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
                        class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
