@@ -5,9 +5,12 @@ import deform
 from pytz import common_timezones
 from zope.component import getUtility
 from pyramid.traversal import find_root
+from pyramid.traversal import find_interface
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IQuestionTranslations
+from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestions
 
 
 def time_zone_node():
@@ -53,12 +56,25 @@ def deferred_translator_languages_widget(node, kw):
 def deferred_pick_language_widget(node, kw):
     return deform.widget.SelectWidget(values = _get_langs())
 
+
+def _fetch_questions_for_tags(context):
+    if IQuestions.providedBy(context):
+        questions = context.values()
+    else:
+        questions = []
+        questions.extend(find_root(context)['questions'].values())
+        org = find_interface(context, IOrganisation)
+        if org:
+            questions.extend(org['questions'].values())
+    return questions
+
+
 @colander.deferred
 def deferred_tags_text_widget(node, kw):
     context = kw['context']
-    questions = find_root(context)['questions']
+    questions = _fetch_questions_for_tags(context)
     tags = set()
-    [tags.update(x.tags) for x in questions.values()]
+    [tags.update(x.tags) for x in questions]
     return deform.widget.AutocompleteInputWidget(
                 title = _(u"Tags"),
                 size=60,
@@ -67,10 +83,14 @@ def deferred_tags_text_widget(node, kw):
 
 @colander.deferred
 def deferred_tags_select_widget(node, kw):
+    """ Fetch all selectable tags. Context here probably be anything,
+        but if it is a questions folder, only those tags should be fetched.
+        Otherwise, if it's within an organisation, fetch those tags and apply the global tags.
+    """
     context = kw['context']
-    questions = find_root(context)['questions']
+    questions = _fetch_questions_for_tags(context)
     tags = {}
-    for question in questions.values():
+    for question in questions:
         for tag in question.tags:
             try:
                 tags[tag] += 1
@@ -82,7 +102,7 @@ def deferred_tags_select_widget(node, kw):
         results.append((k, u"%s (%s)" % (k, tags[k])))
     return deform.widget.SelectWidget(
                 title = _(u"Tags"),
-                size=60,
+                size = 60,
                 values = tuple(results),
             )
 
