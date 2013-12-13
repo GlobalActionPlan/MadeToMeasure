@@ -327,8 +327,7 @@ class SurveysView(BaseView):
         msg = _(u"self_added_invitation_text",
                 default = u"You receive this email since someone (hopefully you) entered "
                 u"your email address as a participant of this survey. Simply follow the link to participate in the survey. "
-                u"In case you didn't ask for this email, or you've changed your mind about participating, simply do nothing. "
-                u"The survey will expire by itself.")
+                u"In case you didn't ask for this email, or you've changed your mind about participating, simply do nothing. ")
         self.context.send_invitations(self.request, emails = [email],
                                       subject = subject, message = msg)
         msg = _(u"invitation_sent_notice",
