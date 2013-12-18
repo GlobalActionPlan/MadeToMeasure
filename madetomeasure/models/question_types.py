@@ -239,7 +239,7 @@ class Choice(BaseFolder, SecurityAware):
     schemas = {'add': 'ChoiceSchema', 'edit': 'ChoiceSchema',}
     uid_name = True
 
-    def get_title(self, lang=None):
+    def get_title(self, lang = None):
         if not lang:
             # If no language specified fall-back to default locale.
             request = get_current_request()

@@ -102,6 +102,14 @@ class SurveySectionSchema(colander.Schema):
     description_translations = section_description_translations_node()
 
 
+@schema_factory('TextSectionSchema')
+class TextSectionSchema(colander.Schema):
+    title = colander.SchemaNode(colander.String(),)
+    description = colander.SchemaNode(colander.String(),
+                                      widget = deform.widget.RichTextWidget(),
+                                      missing = u"",)
+
+
 @colander.deferred
 def deferred_delete_survey_section_desc(node, kw):
     context = kw['context']

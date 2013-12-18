@@ -27,6 +27,10 @@ class ISurveySection(IBaseFolder):
     """ Survey Section model. """
 
 
+class ITextSection(IBaseFolder):
+    """ Text Section model. """
+
+
 class IParticipants(IBaseFolder):
     """ Participants model. """
 

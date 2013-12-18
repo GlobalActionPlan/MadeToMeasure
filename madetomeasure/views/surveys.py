@@ -22,6 +22,7 @@ from madetomeasure.views.base import BaseView
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.interfaces import ISurveySection
+from madetomeasure.interfaces import ITextSection
 from madetomeasure import security
 
 
@@ -37,7 +38,8 @@ class SurveysView(BaseView):
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
         #Make sure questions exist
-        question_count = sum([len(x.question_ids) for x in self.context.values()])
+        survey_sections = [x for x in self.context.values() if ISurveySection.providedBy(x)]
+        question_count = sum([len(x.question_ids) for x in survey_sections])
         if not question_count:
             msg = _(u"no_questions_notice",
                     default = u"There aren't any questions yet. You need to add survey sections and questions, "
@@ -143,14 +145,12 @@ class SurveysView(BaseView):
             self.add_flash_message(msg)
             url = self.request.resource_url(self.context, 'unavailable')
             return HTTPFound(location=url)
-
         selected_language = None
         available_languages = self.context.get_available_languages()
         schema = createSchema(self.context.schemas['language'])
         schema = schema.bind(languages = available_languages, context = self.context, request = self.request)
         form = Form(schema, buttons=(self.buttons['save'],))
         self.response['form_resources'] = form.get_widget_resources()
-
         post = self.request.POST
         if 'save' in post:
             controls = self.request.POST.items()
@@ -160,11 +160,9 @@ class SurveysView(BaseView):
                 self.response['form'] = e.render()
                 return self.response
             selected_language = appstruct['selected_language']
-
         # if no language is selected and survey only has one language available set it as the select language
         if not selected_language and len(available_languages) == 1:
             selected_language = tuple(available_languages)[0]
-
         # redirect to first section if language is selected
         if selected_language:
             self.set_lang(selected_language)
@@ -173,8 +171,7 @@ class SurveysView(BaseView):
             #All good so far, let's redirect to welcome screen of the survey
             url = self.request.resource_url(self.context, 'welcome', query = {'uid': participant_uid})
             # adding header so cookie is set
-            return HTTPFound(location=url, headers=self.request.response.headers)
-            
+            return HTTPFound(location = url, headers = self.request.response.headers)
         self.response['form'] = form.render()
         return self.response
             
@@ -245,19 +242,15 @@ class SurveysView(BaseView):
         participant_uid = self.request.params.get('uid')
         if not participant_uid in survey.tickets:
             raise Forbidden("Invalid ticket")
-
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema, self.request)
-
         next_section = self._next_section()
         previous_section = self._previous_section()
-
         buttons = [self.buttons['next']]
         if previous_section:
             buttons.insert(0, self.buttons['previous'])
         form = Form(schema, buttons=buttons)
         self.response['form_resources'] = form.get_widget_resources()
-
         post = self.request.POST
         if 'next' in post:
             controls = self.request.POST.items()
@@ -270,14 +263,42 @@ class SurveysView(BaseView):
             if next_section:
                 url = self.request.resource_url(next_section, 'do', query = {'uid': participant_uid})
             else:
-                url = self.request.resource_url(self.context.__parent__, 'finished')
+                url = self.request.resource_url(survey, 'finished')
             return HTTPFound(location=url)
         if 'previous' in post:
             url = self.request.resource_url(previous_section, 'do', query = {'uid': participant_uid})
             return HTTPFound(location=url)
-
         appstruct = self.context.response_for_uid(participant_uid)
         self.response['form'] = form.render(appstruct)
+        return self.response
+
+    @view_config(name="do", context=ITextSection, renderer='templates/survey_text_page.pt')
+    def do_text_section_view(self):
+        """ Text section, should be included in the regular do view in time. """
+        survey = self.context.__parent__
+        survey.check_open()
+        participant_uid = self.request.params.get('uid')
+        if not participant_uid in survey.tickets:
+            raise Forbidden("Invalid ticket")
+        schema = colander.Schema()
+        next_section = self._next_section()
+        previous_section = self._previous_section()
+        buttons = [self.buttons['next']]
+        if previous_section:
+            buttons.insert(0, self.buttons['previous'])
+        form = Form(schema, buttons=buttons)
+        self.response['form_resources'] = form.get_widget_resources()
+        post = self.request.POST
+        if 'next' in post:
+            if next_section:
+                url = self.request.resource_url(next_section, 'do', query = {'uid': participant_uid})
+            else:
+                url = self.request.resource_url(survey, 'finished')
+            return HTTPFound(location = url)
+        if 'previous' in post:
+            url = self.request.resource_url(previous_section, 'do', query = {'uid': participant_uid})
+            return HTTPFound(location = url)
+        self.response['form'] = form.render()
         return self.response
 
     @view_config(name="finished", context=ISurvey, renderer='templates/participant_finished.pt')
@@ -299,6 +320,8 @@ class SurveysView(BaseView):
         #Loop through all sections and save them in sections
         #Also add section data with section.__name__ as key
         for section in self.context.values():
+            if not ISurveySection.providedBy(section):
+                continue
             sections.append(section)
             section_results[section.__name__] = section.question_format_results()
 
@@ -313,13 +336,24 @@ class SurveysView(BaseView):
             [question_ids.append(x) for x in part_data.keys() if x not in question_ids]
         return [section.question_object_from_id(id) for id in question_ids]
 
-    @view_config(context=ISurveySection, renderer='templates/survey_form.pt', permission=security.VIEW)
+    @view_config(context = ISurveySection, renderer = 'templates/survey_form.pt', permission = security.VIEW)
     def show_dummy_form_view(self):
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema, self.request)
         form = Form(schema)
         self.response['form_resources'] = form.get_widget_resources()
         self.response['dummy_form'] = form.render()
+        return self.response
+
+    @view_config(context = ITextSection, renderer = 'templates/survey_form.pt', permission = security.VIEW)
+    def show_dummy_text_view(self):
+        schema = createSchema(self.context.schemas['edit'])
+        form = Form(schema)
+        lang = self.get_lang()
+        appstruct = {'title': self.context.get_title(lang = lang),
+                     'description': self.context.get_description(lang = lang)}
+        self.response['form_resources'] = form.get_widget_resources()
+        self.response['dummy_form'] = form.render(readonly = True, appstruct = appstruct)
         return self.response
 
     def send_invitation(self, email):
@@ -498,6 +532,8 @@ class SurveysView(BaseView):
         writer.writerow([])
 
         for section in self.context.values():
+            if not ISurveySection.providedBy(section):
+                continue
             writer.writerow([])
             writer.writerow(['Section: %s' % section.title.encode('utf-8')])
             writer.writerow([])

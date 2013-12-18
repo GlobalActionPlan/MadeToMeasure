@@ -115,7 +115,7 @@ def deferred_delete_title(node, kw):
     return msg
 
 
-def add_translations_node(schema, translations_key, title = _(u"Translations"), description = u""):
+def add_translations_node(schema, translations_key, based_on = None, title = _(u"Translations"), description = u""):
     """ Add a section for translations. English will be omitted, since it's the default langauge.
         
         schema
@@ -125,14 +125,34 @@ def add_translations_node(schema, translations_key, title = _(u"Translations"), 
         translations_key
             The key for the translations. We will append this section to the schema, and it must also be used
             as storage for the data. This should contain any previous data stored as well.
+
+        based_on = None
+            Specify if you want the widget to be constructed from this attribute. If you have something in the
+            schema called 'title' for instance, and you want a field called 'translated_titles' simply add 'title'
+            here to copy attributes from that schema node.
     """
     schema[translations_key] = colander.Schema(title = title, description = description)
-    for (lang, title) in _get_langs(omit = ('en',)):
-        schema[translations_key].add(
-            colander.SchemaNode(colander.String(),
-            name = lang,
-            title = title,
-            missing = u"",
-            widget = deform.widget.TextInputWidget(size=80),
+    if based_on:
+        type_cls = schema[based_on].typ.__class__
+        for (lang, title) in _get_langs(omit = ('en',)):
+            schema[translations_key].add(
+                colander.SchemaNode(
+                    type_cls(),
+                    name = lang,
+                    title = title,
+                    missing = u"",
+                    validator = schema[based_on].validator,
+                    widget = schema[based_on].widget,
+                )
             )
-        )
+    else:
+        for (lang, title) in _get_langs(omit = ('en',)):
+            schema[translations_key].add(
+                colander.SchemaNode(
+                    colander.String(),
+                    name = lang,
+                    title = title,
+                    missing = u"",
+                    widget = deform.widget.TextInputWidget(size = 80),
+                )
+            )

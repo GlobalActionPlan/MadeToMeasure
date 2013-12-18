@@ -2,12 +2,15 @@ from BTrees.OOBTree import OOBTree
 from zope.interface import implements
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
+from pyramid.threadlocal import get_current_request
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IOrganisation
+from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import ISurveySection
+from madetomeasure.interfaces import ITextSection
 from madetomeasure.models.app import select_language
 from madetomeasure.models.security_aware import SecurityAware
 
@@ -24,7 +27,6 @@ class SurveySection(BaseFolder, SecurityAware):
                        'description_translations': 'set_description_translations',
                        'question_ids': 'set_question_ids',}
     schemas = {'add': 'SurveySectionSchema', 'edit': 'SurveySectionSchema', 'delete': 'DeleteSurveySectionSchema'}
-
 
     def __init__(self, data=None, **kwargs):
         """  Init Survey section """
@@ -129,3 +131,49 @@ class SurveySection(BaseFolder, SecurityAware):
                     results[k] = []
                 results[k].append(v)
         return results
+
+
+@content_factory('TextSection')
+class TextSection(BaseFolder, SecurityAware):
+    implements(ITextSection)
+    content_type = 'TextSection'
+    display_name = _(u"Text Section")
+    allowed_contexts = ('Survey',)
+    custom_accessors = {}
+    custom_mutators = {'title_translations': 'set_title_translations',
+                       'description_translations': 'set_descripton_translations'}
+    schemas = {'add': 'TextSectionSchema', 'edit': 'TextSectionSchema', 'delete': 'DeleteSurveySectionSchema'}
+
+    def get_title(self, lang=None):
+        if not lang:
+            # If no language specified fall-back to default locale.
+            request = get_current_request()
+            trans_util = request.registry.getUtility(IQuestionTranslations)
+            lang = trans_util.default_locale_name
+        #Check for local language
+        translations = self.get_field_value('title_translations', {})
+        tr_title = translations.get(lang, None)
+        return tr_title and tr_title or self.title
+
+    def get_description(self, lang = None):
+        if not lang:
+            # If no language specified fall-back to default locale.
+            request = get_current_request()
+            trans_util = request.registry.getUtility(IQuestionTranslations)
+            lang = trans_util.default_locale_name
+        #Check for local language
+        translations = self.get_field_value('description_translations', {})
+        tr_description = translations.get(lang, None)
+        return tr_description and tr_description or self.get_field_value('description', u'')
+
+    def set_title_translations(self, value, **kw):
+        if 'title_translations' not in self.field_storage:
+            self.field_storage['title_translations'] = OOBTree()
+        self.field_storage['title_translations'].clear()
+        self.field_storage['title_translations'].update(value)
+
+    def set_descripton_translations(self, value, **kw):
+        if 'description_translations' not in self.field_storage:
+            self.field_storage['description_translations'] = OOBTree()
+        self.field_storage['description_translations'].clear()
+        self.field_storage['description_translations'].update(value)

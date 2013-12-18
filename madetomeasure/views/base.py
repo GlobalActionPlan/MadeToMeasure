@@ -1,5 +1,3 @@
-from urllib import unquote
-
 from pyramid.decorator import reify
 from pyramid.security import authenticated_userid
 from pyramid.traversal import find_root
@@ -34,6 +32,7 @@ from madetomeasure.interfaces import ISiteRoot
 from madetomeasure.interfaces import ISurvey
 from madetomeasure.interfaces import ISurveys
 from madetomeasure.interfaces import ISurveySection
+from madetomeasure.interfaces import ITextSection
 from madetomeasure.interfaces import IParticipant
 from madetomeasure.interfaces import IParticipants
 from madetomeasure.interfaces import IUsers
@@ -289,6 +288,9 @@ class BaseView(object):
             self.trans_util.add_translations_schema(schema['question_text'], self.context)
         if type_to_add == 'Choice':
             add_translations_node(schema, 'title_translations')
+        if type_to_add == 'TextSection':
+            add_translations_node(schema, 'title_translations', based_on = 'title')
+            add_translations_node(schema, 'description_translations', based_on = 'description')
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
@@ -328,7 +330,6 @@ class BaseView(object):
             return HTTPFound(location = url)
         schema = createSchema(self.context.schemas['edit'])
         schema = schema.bind(context = self.context, request = self.request)
-
         if ISurvey.providedBy(self.context):
             self.trans_util.add_translations_schema(schema['heading_translations'], self.context)
         if ISurveySection.providedBy(self.context):
@@ -338,6 +339,9 @@ class BaseView(object):
             self.trans_util.add_translations_schema(schema['question_text'], self.context)
         if IChoice.providedBy(self.context):
             add_translations_node(schema, 'title_translations')
+        if ITextSection.providedBy(self.context):
+            add_translations_node(schema, 'title_translations', based_on = 'title')
+            add_translations_node(schema, 'description_translations', based_on = 'description')
 
         form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
         self.response['form_resources'] = form.get_widget_resources()
