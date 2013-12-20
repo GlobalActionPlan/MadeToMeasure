@@ -59,32 +59,3 @@ class TranslationsView(BaseView):
         appstruct = self.context.get_field_appstruct(schema)
         self.response['form'] = form.render(appstruct)
         return self.response
-
-#     @view_config(name = "translate", context = ISurvey, renderer = BASE_FORM_TEMPLATE, permission = security.TRANSLATE)
-#     def translate_survey(self):
-#         lang = self.request.GET['lang']
-#         schema = createSchema(self.context.schemas['translate'])
-#         schema = schema.bind(context = self.context, request = self.request)
-#         form = Form(schema, buttons=(self.buttons['cancel'], self.buttons['save'],))
-#         self.response['form_resources'] = form.get_widget_resources()
-#         if self.request.method == 'POST':
-#             if 'save' in self.request.POST:
-#                 controls = self.request.POST.items()
-#                 try:
-#                     appstruct = form.validate(controls)
-#                 except ValidationFailure, e:
-#                     self.response['form'] = e.render()
-#                     return self.response
-#                 self.context.set_welcome_text(appstruct['welcome_text'], lang)
-#                 self.context.set_finished_text(appstruct['finished_text'], lang)
-#             url = self.request.resource_url(self.context)
-#             return HTTPFound(location = url)
-#         appstruct = {}
-#         appstruct['welcome_text'] = self.context.get_welcome_text(lang=lang, default=False)
-#         appstruct['finished_text'] = self.context.get_finished_text(lang=lang, default=False)
-#         self.response['form'] = form.render(appstruct)
-#         return self.response
-
-#     @view_config(name = "translate", context = ISurveySection, renderer = BASE_FORM_TEMPLATE, permission = security.TRANSLATE)
-#     def translate_survey_section(self):
-#         pass

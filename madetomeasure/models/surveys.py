@@ -43,16 +43,12 @@ class Survey(BaseFolder, SecurityAware):
     content_type = 'Survey'
     display_name = _(u"Survey")
     allowed_contexts = ('Surveys',)
-    custom_accessors = {'time_zone': 'get_time_zone', 
-                        'welcome_text': 'get_welcome_text', 
-                        'finished_text': 'get_finished_text'}
+    custom_accessors = {'time_zone': 'get_time_zone'}
     custom_mutators = {'available_languages': 'set_available_languages', 
-                       'heading_translations': 'set_heading_translations',
-                       'welcome_text': 'set_welcome_text', 
-                       'finished_text': 'set_finished_text',}
+                       'heading_translations': 'set_heading_translations',}
     schemas = {'add': 'SurveySchema', 'edit': 'SurveySchema', 'invitation': 'SurveyInvitationSchema',
                'reminder': 'SurveyReminderSchema', 'language': 'SurveyLangugageSchema',
-               'translate': 'SurveyTranslateSchema', 'clone': 'SurveyCloneSchema',
+               'clone': 'SurveyCloneSchema',
                'delete': 'SurveyDeleteSchema'}
     
     def __init__(self, data=None, **kwargs):
@@ -111,47 +107,6 @@ class Survey(BaseFolder, SecurityAware):
             if not v.strip():
                 del value[k]
         self.field_storage['heading_translations'] = value
-
-    def get_welcome_text(self, lang=None, default=True, **kwargs):
-        text = None
-        if lang:
-            text = self.get_translation('__welcome_text__', lang)
-        
-        if text:
-            return text
-            
-        if not default:
-            return ""
-            
-        return getattr(self, '__welcome_text__', '')
-
-    def set_welcome_text(self, value, lang=None, **kwargs):
-        if lang:
-            self.set_translation('__welcome_text__', lang, value)
-        else:
-            self.__welcome_text__ = value
-
-    def get_finished_text(self, lang=None, default=True, **kwargs):
-        #FIXME: Usage of default is broken here!
-        text = None
-        if lang:
-            text = self.get_translation('__finished_text__', lang)
-
-        if text:
-            return text
-
-        if not default:
-            return ""
-
-        return getattr(self, '__finished_text__', '')
-        
-    def set_finished_text(self, value, lang=None, **kwargs):
-        #FIXME: This should use standard setters and getters. Remove!
-        #FIXME: This method sets both translation and default. Is that correct?
-        if lang:
-            self.set_translation('__finished_text__', lang, value)
-        else:
-            self.__finished_text__ = value
 
     def get_time_zone(self, default=None, **kwargs):
         """ custom accessor that uses default_timezone from settings as standard value, unless overridden. """
@@ -303,20 +258,7 @@ class Survey(BaseFolder, SecurityAware):
                         'questions': questions,
                     }
         return languages
-        
-    def untranslated_texts(self):
-        trans_util = getUtility(IQuestionTranslations)
-        # get available for survey
-        available_languages = list(self.get_available_languages())
-        # remove default language
-        if trans_util.default_locale_name in available_languages:
-            available_languages.remove(trans_util.default_locale_name)
-        languages = {}
-        for language in available_languages:
-            if not self.get_welcome_text(lang=language) or not self.get_finished_text(lang=language):
-                languages[language] = "%s (%s)" % (trans_util.title_for_code_default(language), trans_util.title_for_code(language))
-        return languages
-        
+
     @property
     def participant_language(self):
         if not hasattr(self, '__participant_language__'):

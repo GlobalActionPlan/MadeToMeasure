@@ -39,24 +39,6 @@ class SurveyTests(unittest.TestCase):
     def test_verify_obj(self):
         self.failUnless(verifyObject(ISurvey, self._cut()))
 
-    def test_welcome_text(self):
-        obj = self._cut()
-        value = "Let's start, mmmkey?"
-        obj.set_welcome_text(value)
-        self.assertEqual(obj.get_welcome_text(), value)
-        value = 'Låt oss starta'
-        obj.set_welcome_text(value, lang='sv')
-        self.assertEqual(obj.get_welcome_text(lang='sv'), value)
-    
-    def test_finished_text(self):
-        obj = self._cut()
-        value = "We so happy now, okay?"
-        obj.set_finished_text(value)
-        self.assertEqual(obj.get_finished_text(), value)
-        value = 'Vi är så glada nu'
-        obj.set_finished_text(value, lang='sv')
-        self.assertEqual(obj.get_finished_text(lang='sv'), value)
-
     def test_check_open_no_date_set(self):
         obj = self._cut()
         self.assertTrue(obj.check_open(), True)

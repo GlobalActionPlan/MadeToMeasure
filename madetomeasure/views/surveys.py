@@ -168,43 +168,16 @@ class SurveysView(BaseView):
             self.set_lang(selected_language)
             participant_uid = self.context.start_survey(self.request)
             self.context.set_participant_language(participant_uid, selected_language)
-            #All good so far, let's redirect to welcome screen of the survey
-            url = self.request.resource_url(self.context, 'welcome', query = {'uid': participant_uid})
-            # adding header so cookie is set
-            return HTTPFound(location = url, headers = self.request.response.headers)
-        self.response['form'] = form.render()
-        return self.response
-            
-    @view_config(name="welcome", context=ISurvey, renderer='templates/participant_welcome.pt')
-    def welcome(self):
-        self.context.check_open()
-        participant_uid = self.request.params.get('uid')
-        readonly_view = False
-        if not participant_uid in self.context.tickets:
-            if self.context_has_permission(self.context, security.MANAGE_SURVEY):
-                readonly_view = True
-            else:
-                raise Forbidden("Invalid ticket")
-        lang = self.get_lang()
-        welcome_text = self.context.get_welcome_text(lang=lang)
-        post = self.request.POST
-        # survey has no welcome text or the user pushed next, let's redirect to the first section of the survey
-        if not welcome_text or 'next' in post:
-            # url for the first section
-            if len(self.context.order) > 0:
+            #Redirect to first page
+            if self.context.order:
                 section_id = self.context.order[0]
                 url = self.request.resource_url(self.context[section_id], 'do', query = {'uid': participant_uid})
             else:
-                url = self.request.resource_url(self.context, 'finished')
-            return HTTPFound(location = url)
-        if readonly_view:
-            buttons = ()
-        else:
-            buttons = (self.buttons['next'],)
-        form = Form(colander.Schema(), buttons = buttons)
-        self.response['form_resources'] = form.get_widget_resources()
+                self.add_flash_message(_(u"There aren't any pages in this survey"))
+                url = self.request.resource_url(self.context)
+            # adding header so cookie is set
+            return HTTPFound(location = url, headers = self.request.response.headers)
         self.response['form'] = form.render()
-        self.response['text'] = welcome_text
         return self.response
 
     def _next_section(self):
@@ -301,14 +274,10 @@ class SurveysView(BaseView):
         self.response['form'] = form.render()
         return self.response
 
-    @view_config(name="finished", context=ISurvey, renderer='templates/participant_finished.pt')
+    @view_config(name="finished", context=ISurvey, renderer='templates/survey_finished.pt')
     def finished_survey_view(self):
         """ The thank-you screen
         """
-        lang = None
-        if '_LOCALE_' in self.request.cookies:
-            lang = self.request.cookies['_LOCALE_']
-        self.response['text'] = self.context.get_finished_text(lang=lang)
         return self.response
 
     @view_config(name="results", context=ISurvey, renderer='templates/results.pt', permission=security.VIEW)

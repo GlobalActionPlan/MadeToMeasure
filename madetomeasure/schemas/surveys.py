@@ -24,14 +24,6 @@ def survey_heading_translations_node():
                            description=_(u"survey_heading_translation_description",
                                          default = u"For each language - but will not be available until the languages have been set and saved!")) #Send this to add_translations_schema
 
-def survey_welcome_translations_node():
-    return colander.Schema(title=_("Survey welcome translations"),
-                           description=_(u"For each language")) #Send this to add_translations_schema
-                           
-def survey_finished_translations_node():
-    return colander.Schema(title=_("Survey finished translations"),
-                           description=_(u"For each language")) #Send this to add_translations_schema
-
 def section_heading_translations_node():
     return colander.Schema(title=_("Section heading translations"),
                            description=_(u"For each language")) #Send this to add_translations_schema
@@ -64,12 +56,6 @@ class SurveySchema(colander.Schema):
     from_address = colander.SchemaNode(colander.String(),
                                        title = _(u"Email to send system mail from"),
                                        validator=colander.Email(),)
-    welcome_text = colander.SchemaNode(colander.String(),
-                                        widget=deform.widget.RichTextWidget(),
-                                        missing=u"",)
-    finished_text = colander.SchemaNode(colander.String(),
-                                        widget=deform.widget.RichTextWidget(),
-                                        default=_(u"Thanks a lot for filling out the survey."),)
     time_zone = time_zone_node()
     available_languages = colander.SchemaNode(deform.Set(),
                                               widget=deferred_available_languages_widget,
@@ -203,18 +189,6 @@ class SurveyLangugageSchema(colander.Schema):
     selected_language = colander.SchemaNode(colander.String(),
                                           title=_("Choose language"),
                                           widget=deferred_select_language_widget,)
-
-
-@schema_factory('SurveyTranslateSchema')
-class SurveyTranslateSchema(colander.Schema):
-    welcome_text = colander.SchemaNode(colander.String(),
-                                        widget=deform.widget.RichTextWidget(),
-                                        default="",
-                                        missing="",)
-    finished_text = colander.SchemaNode(colander.String(),
-                                        widget=deform.widget.RichTextWidget(),
-                                        default="",
-                                        missing="",)
 
 
 def _valid_organisaitons(root, userid):
