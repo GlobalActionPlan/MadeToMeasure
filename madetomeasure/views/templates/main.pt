@@ -182,7 +182,7 @@
             </div>
 
             <metal:heading define-slot="page_heading">
-                <h1 tal:content="context.title">Title</h1>
+                <h1 tal:content="context.get_translated_title()|context.title">Title</h1>
             </metal:heading>
         
             <div id="content">
