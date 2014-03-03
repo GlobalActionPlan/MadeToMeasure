@@ -5,13 +5,14 @@ from pyramid.traversal import find_root
 from pyramid.threadlocal import get_current_request
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
+from pyramid.i18n import get_locale_name
+from pyramid.threadlocal import get_current_request
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure.interfaces import ITextSection
-from madetomeasure.models.app import select_language
 from madetomeasure.models.security_aware import SecurityAware
 
 
@@ -33,28 +34,25 @@ class SurveySection(BaseFolder, SecurityAware):
         super(SurveySection, self).__init__(data=data, **kwargs)
         self.__responses__ = OOBTree()
 
-    def get_translated_title(self, key=None, default=u""):
+    def get_translated_title(self, lang = None, default=u""):
         """ This is a special version of title, since it might have translations.
             The regular setter works though, since the translations are stored in heading_translations.
         """
-        try:
-            lang = select_language(self)
-        except ValueError:
-            lang = 'en'
+        if not lang:
+            request = get_current_request()
+            lang = get_locale_name(request)
         translations = self.get_field_value('heading_translations', {})
         if lang and lang in translations:
             return translations[lang]
-        
         return self._field_storage.get('title', default)
 
-    def get_translated_description(self, key=None, default=u""):
+    def get_translated_description(self, lang = None, default=u""):
         """ This is a special version of description, since it might have translations.
             The regular setter works though, since the translations are stored in description_translations.
         """
-        try:
-            lang = select_language(self)
-        except ValueError:
-            lang = 'en'
+        if not lang:
+            request = get_current_request()
+            lang = get_locale_name(request)
         translations = self.get_field_value('description_translations', {})
         if lang and lang in translations:
             return translations[lang]

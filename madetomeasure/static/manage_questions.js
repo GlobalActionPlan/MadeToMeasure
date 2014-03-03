@@ -8,7 +8,7 @@ $('#deformsave').live('click', function() {
 });
 $(window).on('beforeunload', function() {
     if (unsaved) {
-        return "You have unsaved changes"
+        return "You have unsaved changes";
     }
 });
 

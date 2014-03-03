@@ -86,24 +86,6 @@ def get_users_dt_helper(request=None):
         locale = datetime_localisation and datetime_localisation or get_locale_name(request)
     return createObject('dt_helper', tz, locale)
 
-def select_language(context, request=None):
-    """ Try to pick a language for the current survey participant according to
-        the Survey settings or the lang session variable.
-    """
-    survey = find_interface(context, ISurvey)
-    if survey is None:
-        raise ValueError("Can't find a Survey object in context traversal path. context was: %s" % context)
-    
-    langs = survey.get_available_languages()
-    #Only one language?
-    if len(langs) == 1:
-        return tuple(langs)[0]
-    
-    if request is None:
-        request = get_current_request()
-    
-    return request.cookies.get('_LOCALE_', None)
-
 
 #def find_all_of_iface(context, iface):
 #    """ Traverser that will find all objects from context and below
