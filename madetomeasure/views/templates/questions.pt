@@ -14,10 +14,10 @@
     <table id="tag_listing" class="listing">
         <thead>
             <tr>
-                <th>Question</th>
-                <th>Tags</th>
-                <th>Translations</th>
-                <th tal:condition="is_org">Variants</th>
+                <th i18n:translate="">Question</th>
+                <th i18n:translate="">Tags</th>
+                <th i18n:translate="">Translations</th>
+                <th tal:condition="is_org" i18n:translate="">Variants</th>
             </tr>
         </thead>
         <tbody>
