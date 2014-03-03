@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MadeToMeasure 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2013-10-31 09:55+0100\n"
+"POT-Creation-Date: 2014-03-03 13:35+0100\n"
 "PO-Revision-Date: 2013-10-17 14:31+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: uk <LL@li.org>\n"
@@ -19,15 +19,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 1.3\n"
 
-#: madetomeasure/security.py:30
+#: madetomeasure/security.py:32
 msgid "Administrator"
 msgstr ""
 
-#: madetomeasure/security.py:31
+#: madetomeasure/security.py:33
 msgid "Translator"
 msgstr ""
 
-#: madetomeasure/security.py:32
+#: madetomeasure/security.py:34
 msgid "Organisation manager"
 msgstr ""
 
@@ -72,7 +72,7 @@ msgid "Number question"
 msgstr ""
 
 #: madetomeasure/models/question_types.py:167
-#: madetomeasure/views/surveys.py:485
+#: madetomeasure/views/surveys.py:484
 msgid "Total"
 msgstr ""
 
@@ -124,11 +124,11 @@ msgstr ""
 msgid "Question"
 msgstr ""
 
-#: madetomeasure/models/questions.py:201
+#: madetomeasure/models/questions.py:200
 msgid "(Nothing)"
 msgstr ""
 
-#: madetomeasure/models/questions.py:226
+#: madetomeasure/models/questions.py:225
 msgid "Can't delete this since it's used in the following survey sections: ${out}"
 msgstr ""
 
@@ -166,30 +166,31 @@ msgstr ""
 msgid "Password reset request from MadeToMeasure"
 msgstr ""
 
-#: madetomeasure/schemas/common.py:16
+#: madetomeasure/schemas/common.py:19
 msgid "Timezone"
 msgstr ""
 
-#: madetomeasure/schemas/common.py:17
+#: madetomeasure/schemas/common.py:20
 msgid "Try start typing a timezone"
 msgstr ""
 
-#: madetomeasure/schemas/common.py:63 madetomeasure/schemas/common.py:84
+#: madetomeasure/schemas/common.py:79 madetomeasure/schemas/common.py:104
 msgid "Tags"
 msgstr ""
 
-#: madetomeasure/schemas/common.py:80
+#: madetomeasure/schemas/common.py:100
 msgid "<select>"
 msgstr ""
 
 #. Default: If you're absolutely sure you wish to delete this, type this
 #. objects title in the field below: '${obj_title}'
-#: madetomeasure/schemas/common.py:92
+#: madetomeasure/schemas/common.py:112
 msgid "delete_confirmation_by_typing_title_text"
 msgstr ""
 
-#: madetomeasure/schemas/common.py:98 madetomeasure/views/templates/main.pt:124
-#: madetomeasure/views/templates/survey_admin_view.pt:27
+#: madetomeasure/schemas/common.py:118
+#: madetomeasure/views/templates/main.pt:124
+#: madetomeasure/views/templates/survey_admin_view.pt:29
 msgid "Translations"
 msgstr ""
 
@@ -270,7 +271,7 @@ msgid "Required question"
 msgstr ""
 
 #: madetomeasure/schemas/questions.py:25
-msgid "Only letters and characters a-z allowed."
+msgid "Only numbers, characters a-z and underscore allowed."
 msgstr ""
 
 #: madetomeasure/schemas/questions.py:27
@@ -412,6 +413,18 @@ msgstr ""
 msgid "invitation_emails_lang_notice"
 msgstr ""
 
+#: madetomeasure/schemas/surveys.py:151
+msgid "I want to participate in the survey - send me a link."
+msgstr ""
+
+#: madetomeasure/schemas/surveys.py:152
+msgid "I lost my access link - send me a new one."
+msgstr ""
+
+#: madetomeasure/schemas/surveys.py:154
+msgid "Start my survey without verifying my email."
+msgstr ""
+
 #: madetomeasure/schemas/surveys.py:161
 msgid "Your email"
 msgstr ""
@@ -428,12 +441,16 @@ msgstr ""
 msgid "Choose language"
 msgstr ""
 
+#: madetomeasure/schemas/surveys.py:228
+msgid "Invalid target organisation"
+msgstr ""
+
 #: madetomeasure/schemas/system.py:19 madetomeasure/schemas/system.py:32
 msgid "UserID or email address."
 msgstr ""
 
 #: madetomeasure/schemas/system.py:22 madetomeasure/schemas/system.py:45
-#: madetomeasure/schemas/users.py:41 madetomeasure/schemas/users.py:73
+#: madetomeasure/schemas/users.py:66 madetomeasure/schemas/users.py:98
 msgid "Password"
 msgstr ""
 
@@ -455,43 +472,55 @@ msgstr ""
 msgid "rename_schema_name_description"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:15
+#: madetomeasure/schemas/users.py:17
 msgid "Too short. At least 6 chars required."
 msgstr ""
 
-#: madetomeasure/schemas/users.py:17
+#: madetomeasure/schemas/users.py:19
 msgid "Less than 100 chars please."
 msgstr ""
 
-#: madetomeasure/schemas/users.py:21
+#: madetomeasure/schemas/users.py:23
 msgid "I am a translator and translate to the following languages"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:22
+#: madetomeasure/schemas/users.py:24
 msgid "You will need the translator permission to actually translate."
 msgstr ""
 
-#: madetomeasure/schemas/users.py:29
+#: madetomeasure/schemas/users.py:31
 msgid "Datetime localisation"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:30
+#: madetomeasure/schemas/users.py:32
 msgid "Pick localisation for date format for this user."
 msgstr ""
 
-#: madetomeasure/schemas/users.py:38
+#: madetomeasure/schemas/users.py:52
+msgid "Too short"
+msgstr ""
+
+#: madetomeasure/schemas/users.py:54
+msgid "Too long"
+msgstr ""
+
+#: madetomeasure/schemas/users.py:57
+msgid "Already exists"
+msgstr ""
+
+#: madetomeasure/schemas/users.py:63
 msgid "UserID"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:45 madetomeasure/schemas/users.py:59
+#: madetomeasure/schemas/users.py:70 madetomeasure/schemas/users.py:84
 msgid "First name"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:47 madetomeasure/schemas/users.py:61
+#: madetomeasure/schemas/users.py:72 madetomeasure/schemas/users.py:86
 msgid "Last name"
 msgstr ""
 
-#: madetomeasure/schemas/users.py:49 madetomeasure/schemas/users.py:63
+#: madetomeasure/schemas/users.py:74 madetomeasure/schemas/users.py:88
 msgid "Email"
 msgstr ""
 
@@ -512,8 +541,8 @@ msgid "Login"
 msgstr ""
 
 #: madetomeasure/views/base.py:200
-#: madetomeasure/views/templates/manage_questions.pt:49
-#: madetomeasure/views/templates/reorder_folder.pt:31
+#: madetomeasure/views/templates/manage_questions.pt:51
+#: madetomeasure/views/templates/reorder_folder.pt:32
 msgid "Save"
 msgstr ""
 
@@ -530,8 +559,8 @@ msgid "Previous"
 msgstr ""
 
 #: madetomeasure/views/base.py:204
-#: madetomeasure/views/templates/manage_questions.pt:51
-#: madetomeasure/views/templates/reorder_folder.pt:32
+#: madetomeasure/views/templates/manage_questions.pt:53
+#: madetomeasure/views/templates/reorder_folder.pt:33
 msgid "Cancel"
 msgstr ""
 
@@ -619,64 +648,63 @@ msgstr ""
 #. Default: You receive this email since someone (hopefully you) entered your
 #. email address as a participant of this survey. Simply follow the link to
 #. participate in the survey. In case you didn't ask for this email, or you've
-#. changed your mind about participating, simply do nothing. The survey will
-#. expire by itself.
+#. changed your mind about participating, simply do nothing.
 #: madetomeasure/views/surveys.py:327
 msgid "self_added_invitation_text"
 msgstr ""
 
 #. Default: Invitation sent. Check your inbox in a few minutes. If it hasn't
 #. arrived within 15 minutes, check your spam folder.
-#: madetomeasure/views/surveys.py:334
+#: madetomeasure/views/surveys.py:333
 msgid "invitation_sent_notice"
 msgstr ""
 
 #. Default: Your email address has already been used within this survey. If you
 #. need to change your replies, use the access link provided when you started
 #. the survey, or resend the link by using the form below.
-#: madetomeasure/views/surveys.py:373
+#: madetomeasure/views/surveys.py:372
 msgid "email_already_used_notice"
 msgstr ""
 
 #. Default: Important! Since you're starting this survey without a verified
 #. email, please copy this link in case you need to access the survey again:
 #. ${link}
-#: madetomeasure/views/surveys.py:381
+#: madetomeasure/views/surveys.py:380
 msgid "participant_unverified_link_notice"
 msgstr ""
 
 #. Default: Unable to resend access code - your email wasn't found among the
 #. invited.
-#: madetomeasure/views/surveys.py:390
+#: madetomeasure/views/surveys.py:389
 msgid "cant_resend_access_error"
 msgstr ""
 
-#: madetomeasure/views/surveys.py:412
+#: madetomeasure/views/surveys.py:411
 msgid "The survey is currently open."
 msgstr ""
 
-#: madetomeasure/views/surveys.py:433
+#: madetomeasure/views/surveys.py:432
 msgid "Order updated"
 msgstr ""
 
-#: madetomeasure/views/surveys.py:456
+#: madetomeasure/views/surveys.py:455
 msgid "Updated"
 msgstr ""
 
 #. Default: You need to add survey sections and then use this view to manage
 #. the questions.
-#: madetomeasure/views/surveys.py:469
+#: madetomeasure/views/surveys.py:468
 msgid "no_sections_added_notice"
 msgstr ""
 
-#: madetomeasure/views/surveys.py:485
+#: madetomeasure/views/surveys.py:484
 msgid "Languages"
 msgstr ""
 
 #. Default: Export encountered problem(s). The response information contain
 #. data that can't be linked to any question. They were probably deleted after
 #. the completion of the survey. This happend ${count} time(s).
-#: madetomeasure/views/surveys.py:521
+#: madetomeasure/views/surveys.py:520
 msgid "unexportable_response_data_due_to_missing_question "
 msgstr ""
 
@@ -781,19 +809,19 @@ msgstr ""
 msgid "If you go back, the changes made here will be permanently lost."
 msgstr ""
 
-#: madetomeasure/views/templates/manage_questions.pt:26
+#: madetomeasure/views/templates/manage_questions.pt:28
 msgid "Add from selected tag"
 msgstr ""
 
-#: madetomeasure/views/templates/manage_questions.pt:28
+#: madetomeasure/views/templates/manage_questions.pt:30
 msgid "Remove from selected tag"
 msgstr ""
 
-#: madetomeasure/views/templates/manage_questions.pt:44
+#: madetomeasure/views/templates/manage_questions.pt:46
 msgid "&lt;Hidden - Click header to open section&gt;"
 msgstr ""
 
-#: madetomeasure/views/templates/manage_questions.pt:58
+#: madetomeasure/views/templates/manage_questions.pt:60
 msgid "Question pool"
 msgstr ""
 
@@ -852,39 +880,39 @@ msgstr ""
 msgid "To participate in a survey you need to use the link sent to you."
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:15
+#: madetomeasure/views/templates/survey_admin_view.pt:17
 msgid "Start time"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:17
+#: madetomeasure/views/templates/survey_admin_view.pt:19
 msgid "Nothing set"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:20
+#: madetomeasure/views/templates/survey_admin_view.pt:22
 msgid "End time"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:22
+#: madetomeasure/views/templates/survey_admin_view.pt:24
 msgid "Nothing set, this survey will never close!"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:24
+#: madetomeasure/views/templates/survey_admin_view.pt:26
 msgid "Timezone is"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:32
+#: madetomeasure/views/templates/survey_admin_view.pt:34
 msgid "Preview"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:34
+#: madetomeasure/views/templates/survey_admin_view.pt:36
 msgid "Welcome screen"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:35
+#: madetomeasure/views/templates/survey_admin_view.pt:37
 msgid "Finish screen"
 msgstr ""
 
-#: madetomeasure/views/templates/survey_admin_view.pt:38
+#: madetomeasure/views/templates/survey_admin_view.pt:40
 msgid "Sections"
 msgstr ""
 
@@ -952,5 +980,8 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Pick locasitaion for date format for this user."
+#~ msgstr ""
+
+#~ msgid "Only letters and characters a-z allowed."
 #~ msgstr ""
 

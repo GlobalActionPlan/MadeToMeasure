@@ -142,10 +142,10 @@ def deferred_participant_actions(node, kw):
     context = kw['context']
     choices = []
     if context.get_field_value('allow_anonymous_to_participate', False):
-        choices.append((u'send_anon_invitation', u"I want to participate in the survey - send me a link."))
-    choices.append((u'resend_access', u"I lost my access link - send me a new one."))
+        choices.append((u'send_anon_invitation', _(u"I want to participate in the survey - send me a link.")))
+    choices.append((u'resend_access', _(u"I lost my access link - send me a new one.")))
     if context.get_field_value('allow_anonymous_to_start', False):
-        choices.append((u'start_anon', u"Start my survey without verifying my email."))
+        choices.append((u'start_anon', _(u"Start my survey without verifying my email.")))
     return deform.widget.RadioChoiceWidget(values = choices)
 
 

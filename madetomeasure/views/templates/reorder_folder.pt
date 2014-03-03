@@ -23,7 +23,8 @@
                 <li>
                     <ul id="folder_content">
                         <li tal:repeat="item context.values()">
-                            <input type="hidden" name="items" value="${item.__name__}" />${item.title}
+                            <input type="hidden" name="items" value="${item.__name__}" />
+                            <span tal:content="item.get_translated_title()|item.title">Title</span>
                         </li>
                     </ul>
                 </li>

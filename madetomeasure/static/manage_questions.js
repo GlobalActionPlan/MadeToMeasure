@@ -5,7 +5,7 @@ var edit_variant = "";
 
 $('#deformsave').live('click', function() {
     unsaved = false;
-})
+});
 $(window).on('beforeunload', function() {
     if (unsaved) {
         return "You have unsaved changes"
@@ -71,7 +71,7 @@ $(document).ready(function(){
         event.preventDefault();
         var url = $(this).attr('href');
         var fullscreen = $('#fullscreen');
-        edit_variant = $(this).parents('li')
+        edit_variant = $(this).parents('li');
         fullscreen.load(url, function() {
             fullscreen.fadeIn();
             $('#fullscreen form').on('submit', ajax_save_variant);
@@ -102,5 +102,5 @@ function ajax_save_variant(event) {
     })
     .fail(function() {
         alert("Save failed!");
-    })
+    });
 }
