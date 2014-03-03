@@ -43,7 +43,8 @@ def section_description_translations_node():
 
 @schema_factory('SurveySchema')
 class SurveySchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),)
+    title = colander.SchemaNode(colander.String(),
+                                title = _(u"Title"),)
     heading_translations = survey_heading_translations_node()
     start_time = colander.SchemaNode(
          TZDateTime(),
@@ -94,9 +95,11 @@ class SurveySchema(colander.Schema):
 @schema_factory('SurveySectionSchema')
 class SurveySectionSchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
+                                title = _(u"Title"),
                                 widget=deform.widget.TextInputWidget(size=80))
     heading_translations = section_heading_translations_node()
     description = colander.SchemaNode(colander.String(),
+                                      title = _(u"Description"),
                                       widget=deform.widget.RichTextWidget(),
                                       missing=u"",)
     description_translations = section_description_translations_node()
@@ -245,7 +248,9 @@ def survey_clone_destination_widget(node, kw):
 
 @schema_factory('SurveyCloneSchema')
 class SurveyCloneSchema(colander.Schema):
-    title = colander.SchemaNode(colander.String(),)
+    title = colander.SchemaNode(colander.String(),
+                                title = _(u"Title"),)
     destination = colander.SchemaNode(colander.String(),
+                                      title = _(u"Destination"),
                                       widget=survey_clone_destination_widget,
                                       validator=survey_clone_destination_validator,)
