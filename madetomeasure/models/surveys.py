@@ -13,6 +13,8 @@ from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.renderers import render
 from pyramid.interfaces import ISettings
+from pyramid.i18n import get_locale_name
+from pyramid.threadlocal import get_current_request
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
 
@@ -25,7 +27,6 @@ from madetomeasure.models.participants import Participant
 from madetomeasure.models.date_time_helper import utcnow
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.models.security_aware import SecurityAware
-from madetomeasure.models.app import select_language
 
 
 class Surveys(BaseFolder, SecurityAware):
@@ -59,14 +60,13 @@ class Survey(BaseFolder, SecurityAware):
         """  Init Survey """
         super(Survey, self).__init__(data=data, **kwargs)
 
-    def get_translated_title(self, key=None, default=u""):
+    def get_translated_title(self, lang = None, default=u""):
         """ This is a special version of title, since it might have translations.
             The regular setter works though, since the translations are stored in heading_translations.
         """
-        try:
-            lang = select_language(self)
-        except ValueError:
-            lang = 'en'
+        if not lang:
+            request = get_current_request()
+            lang = get_locale_name(request)
         translations = self.get_field_value('heading_translations', {})
         if lang and lang in translations:
             return translations[lang]
