@@ -171,7 +171,7 @@
             <div tal:condition="userid" id="path-bar">
                 <tal:iterate repeat="obj path">
                     &raquo;
-                    <a href="${request.resource_url(obj)}" tal:content="obj.title">Title</a>
+                    <a href="${request.resource_url(obj)}" tal:content="obj.get_translated_title()|obj.title">Title</a>
                 </tal:iterate>
             </div>
 
