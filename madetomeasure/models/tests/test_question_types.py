@@ -38,7 +38,7 @@ class QuestionTypesTests(unittest.TestCase):
 
 class BaseQuestionTypeTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        self.config = testing.setUp(request = testing.DummyRequest())
 
     def tearDown(self):
         testing.tearDown()

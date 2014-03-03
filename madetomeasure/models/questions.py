@@ -100,6 +100,8 @@ class Question(BaseFolder, SecurityAware):
         #Check if there is a variant for the question for lang
         if not lang:
             lang = request.cookies.get('_LOCALE_', None)
+            if lang is None:
+                lang = request.registry.settings.get('default_locale_name', 'en')
         #Is there a local question with that lang?
         organisation = find_interface(context, IOrganisation)
         if organisation:
@@ -123,9 +125,10 @@ class Question(BaseFolder, SecurityAware):
         if not context:
             context = getattr(request, 'context', None)
         #Check if there is a variant for the question for lang
-        if not lang and context is not None:
-            trans_util = request.registry.getUtility(IQuestionTranslations)
-            lang = trans_util.default_locale_name
+        if not lang:
+            lang = request.cookies.get('_LOCALE_', None)
+            if lang is None:
+                lang = request.registry.settings.get('default_locale_name', 'en')
         #Is there a local question with that lang?
         organisation = find_interface(context, IOrganisation)
         if organisation and self.__name__ in organisation.variants:

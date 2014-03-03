@@ -8,6 +8,7 @@ from zope.interface.verify import verifyClass
 from zope.interface.verify import verifyObject
 
 from madetomeasure.interfaces import IQuestion
+from madetomeasure.models.app import bootstrap_root
 
 
 def _fixture(config, obj):
@@ -22,7 +23,7 @@ def _fixture(config, obj):
 
 class QuestionTests(unittest.TestCase):
     def setUp(self):
-        self.config = testing.setUp()
+        self.config = testing.setUp(request = testing.DummyRequest())
 
     def tearDown(self):
         testing.tearDown()
@@ -74,21 +75,17 @@ class QuestionTests(unittest.TestCase):
         self.assertTrue('I wrote something' in result)
         
     def test_question_variant(self):
-        request = testing.DummyRequest()
-        self.config = testing.setUp(request=request)
-        
+        self.config.scan('betahaus.pyracont.fields.password')
         from madetomeasure.interfaces import IQuestionTranslations
         from madetomeasure.models.translations import QuestionTranslations
         settings = dict(default_locale_name='en',
                         available_languages='en sv de ru',)
         trans_util = QuestionTranslations(settings)
         self.config.registry.registerUtility(trans_util, IQuestionTranslations)
-        
+        root = bootstrap_root()
         from madetomeasure.models.organisation import Organisation
-        org = Organisation()
-
-        obj = self._cut(title = "Hello world")
-
+        root['org'] = org = Organisation()
+        root['questions']['test_q'] = obj = self._cut(title = "Hello world")
         self.assertEqual(obj.get_title(), u"Hello world")
         self.assertEqual(obj.get_title(lang='en'), u"Hello world")
         self.assertEqual(obj.get_title(lang='sv'), u"Hello world")
