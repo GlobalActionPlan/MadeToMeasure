@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-03 17:38+0100\n"
-"PO-Revision-Date: 2013-11-18 10:31+0100\n"
-"Last-Translator: Robin Harms Oredsson <robin@betahaus.net>\n"
+"POT-Creation-Date: 2014-03-06 11:11+0100\n"
+"PO-Revision-Date: 2014-03-05 11:27+0100\n"
+"Last-Translator: Alexander Mehlmann <alexander@globalactionplan.com>\n"
 "Language-Team: sv <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 "MIME-Version: 1.0\n"
@@ -187,6 +187,8 @@ msgstr "<välj>"
 #: madetomeasure/schemas/common.py:112
 msgid "delete_confirmation_by_typing_title_text"
 msgstr ""
+"Om du är helt säker du vill ta bort detta, skriv in objektets titel i "
+"fältet nedan: '${obj_title}'"
 
 #: madetomeasure/schemas/common.py:118
 #: madetomeasure/views/templates/main.pt:124
@@ -206,11 +208,10 @@ msgstr "Länk till logotyp"
 #. Default: Must be a HTTP link to a Gif, Jpeg och Png file. Max width/height:
 #. 50/300 px.
 #: madetomeasure/schemas/organisation.py:19
-#, fuzzy
 msgid "logo_link_description_text"
 msgstr ""
-"Meddelandet skickas endast till de deltagare som ännu inte fyllt i 100% "
-"av enkäten"
+"Måste vara en HTTP-länk till en Gif, Jpeg eller Png-fil. Max bredd/höjd: "
+"50/300 px."
 
 #: madetomeasure/schemas/organisation.py:24
 msgid "Color value"
@@ -219,11 +220,10 @@ msgstr "Färgvärde"
 #. Default: Must be a hex rgb value, same as all websites. Example: '#FF0000'
 #. for red.
 #: madetomeasure/schemas/organisation.py:25
-#, fuzzy
 msgid "hex_color__description_text"
 msgstr ""
-"Meddelandet skickas endast till de deltagare som ännu inte fyllt i 100% "
-"av enkäten"
+"Måste vara ett hex rgb-värde, samma som används på alla web-platser. "
+"Exempel: '#FF0000' betyder rött."
 
 #: madetomeasure/schemas/participants.py:8
 msgid "Change email address"
@@ -265,6 +265,8 @@ msgstr "Ignorera översättningar"
 #: madetomeasure/schemas/question_types.py:82
 msgid "choice_ignore_translations_description"
 msgstr ""
+"Om titeln är t ex numerisk finns det ingen anledning att hantera "
+"översättningar. Om detta är valt, lagras inga översättningar. "
 
 #: madetomeasure/schemas/questions.py:13
 msgid "Question translations"
@@ -281,9 +283,8 @@ msgid "Required question"
 msgstr "Obligatorisk fråga"
 
 #: madetomeasure/schemas/questions.py:25
-#, fuzzy
 msgid "Only numbers, characters a-z and underscore allowed."
-msgstr "Enbart bokstäverna a-z är tillåtna"
+msgstr "Enbart siffror, bokstäverna a-z samt understrykning (_) är tillåtna."
 
 #: madetomeasure/schemas/questions.py:27
 msgid "Enter some text"
@@ -316,9 +317,8 @@ msgstr "Översättningar för enkätrubrik"
 #. Default: For each language - but will not be available until the languages
 #. have been set and saved!
 #: madetomeasure/schemas/surveys.py:24
-#, fuzzy
 msgid "survey_heading_translation_description"
-msgstr "Översättningar för enkätrubrik"
+msgstr "För varje språk. Blir synligt först när språk har valts och sparats!"
 
 #: madetomeasure/schemas/surveys.py:28
 msgid "Survey welcome translations"
@@ -439,20 +439,19 @@ msgstr ""
 "språket"
 
 #: madetomeasure/schemas/surveys.py:154
-#, fuzzy
 msgid "I want to participate in the survey - send me a link."
 msgstr ""
 "Du har kommit till en enkät genererad av tillämpningen Made to Measure "
 "som drivs av Global Action Plan (GAP). För att delta i en enkät behöver "
-"du bli inbjuden genom att få en länk epostad till dig. "
+"du bli inbjuden genom att få en länk postad till dig. "
 
 #: madetomeasure/schemas/surveys.py:155
 msgid "I lost my access link - send me a new one."
-msgstr ""
+msgstr "Har tappat bort min anslutningslänk – skicka en ny, tack."
 
 #: madetomeasure/schemas/surveys.py:157
 msgid "Start my survey without verifying my email."
-msgstr ""
+msgstr "Starta min enkät utan verifierad mail-adress "
 
 #: madetomeasure/schemas/surveys.py:164
 msgid "Your email"
@@ -472,13 +471,11 @@ msgstr "Välj språk"
 
 #: madetomeasure/schemas/surveys.py:231
 msgid "Invalid target organisation"
-msgstr ""
+msgstr "Ogiltig mottagarorganisation"
 
 #: madetomeasure/schemas/surveys.py:254
-#, fuzzy
-#| msgid "Description"
 msgid "Destination"
-msgstr "Beskrivning"
+msgstr "Destination"
 
 #: madetomeasure/schemas/system.py:19 madetomeasure/schemas/system.py:32
 msgid "UserID or email address."
@@ -530,21 +527,20 @@ msgid "Datetime localisation"
 msgstr "Datetime lokalisering"
 
 #: madetomeasure/schemas/users.py:32
-#, fuzzy
 msgid "Pick localisation for date format for this user."
-msgstr "Välj localisation för denna användares datumformat"
+msgstr "Välj lokalisation för denna användares datumformat"
 
 #: madetomeasure/schemas/users.py:52
 msgid "Too short"
-msgstr ""
+msgstr "För kort"
 
 #: madetomeasure/schemas/users.py:54
 msgid "Too long"
-msgstr ""
+msgstr "För lång"
 
 #: madetomeasure/schemas/users.py:57
 msgid "Already exists"
-msgstr ""
+msgstr "Finns redan"
 
 #: madetomeasure/schemas/users.py:63
 msgid "UserID"
@@ -624,7 +620,7 @@ msgstr "Avbruten"
 
 #: madetomeasure/views/base.py:370
 msgid "Language set to ${selected_lang}"
-msgstr ""
+msgstr "Aktuellt språk: ${selected_lang}"
 
 #. Default: You did something that the server didn't allow. (Error 403)
 #: madetomeasure/views/exceptions.py:14
@@ -765,6 +761,9 @@ msgstr "Språk"
 #: madetomeasure/views/surveys.py:520
 msgid "unexportable_response_data_due_to_missing_question "
 msgstr ""
+"Exporten stötte på problem. Läst information innehåller data som inte kan"
+" länkas till någon fråga. Dessa frågor har sannolikt tagits bort efter "
+"enkäten avslutats. Detta hände ${count} time(s)."
 
 #: madetomeasure/views/system.py:35
 msgid "Forgot your password? ${pw_link}Click here to recover it.${pw_link_end}"
@@ -916,7 +915,7 @@ msgstr "${count} deltagare avslutade denna sektion"
 
 #: madetomeasure/views/templates/results.pt:26
 msgid "Error!"
-msgstr ""
+msgstr "Fel!"
 
 #. Default: This section contains response data that isn't linked to any
 #. question so it can't be interpreted. Don't delete questions that have been
@@ -924,6 +923,8 @@ msgstr ""
 #: madetomeasure/views/templates/results.pt:27
 msgid "cannot_understand_response_data"
 msgstr ""
+"Sektionen innehåller data som inte är länkat till någon fråga och kan "
+"inte tolkas. Varning: Ta inte bort frågor som använts i någon enkät!"
 
 #: madetomeasure/views/templates/results.pt:36
 msgid "Oh no!"
@@ -966,15 +967,15 @@ msgstr "Tidzonen är"
 
 #: madetomeasure/views/templates/survey_admin_view.pt:34
 msgid "Preview"
-msgstr ""
+msgstr "Förhandsvisning"
 
 #: madetomeasure/views/templates/survey_admin_view.pt:36
 msgid "Welcome screen"
-msgstr ""
+msgstr "Välkomst-skärm"
 
 #: madetomeasure/views/templates/survey_admin_view.pt:37
 msgid "Finish screen"
-msgstr ""
+msgstr "Avslutningsskärm"
 
 #: madetomeasure/views/templates/survey_admin_view.pt:40
 msgid "Sections"
