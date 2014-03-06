@@ -11,7 +11,6 @@ def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     #Patch is for making deform translations work
-    from madetomeasure import patches
     from madetomeasure.models.app import appmaker
     from madetomeasure.security import authn_policy
     from madetomeasure.security import authz_policy
@@ -33,7 +32,7 @@ def include_dependencies(config):
     """ Make sure 3rd party dependencies are included. """
     settings = config.registry.settings
     pyramid_includes = settings.get('pyramid.includes', '').split()
-    for requirement in ('pyramid_zodbconn', 'pyramid_tm'):
+    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_deform'):
         if requirement not in pyramid_includes:
             config.include(requirement)
 

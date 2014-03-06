@@ -11,6 +11,7 @@ requires = [
     'pyramid_mailer',
     'pyramid_zodbconn',
     'pyramid_tm',
+    'pyramid_deform',
     'fanstatic',
     'ZODB3',
     'Babel',
@@ -19,7 +20,7 @@ requires = [
     'slugify',
     'lingua',
     'pytz',
-    'betahaus.pyracont >= 0.1a3',
+    'betahaus.pyracont >= 0.2b',
     'iso8601',
     ]
 
