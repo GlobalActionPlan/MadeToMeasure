@@ -25,9 +25,17 @@ def main(global_config, **settings):
                           authorization_policy=authz_policy,
                           root_factory=root_factory,
                           session_factory = sessionfact,)
+    config.include(include_dependencies)
     config.include('madetomeasure')
     return config.make_wsgi_app()
 
+def include_dependencies(config):
+    """ Make sure 3rd party dependencies are included. """
+    settings = config.registry.settings
+    pyramid_includes = settings.get('pyramid.includes', '').split()
+    for requirement in ('pyramid_zodbconn', 'pyramid_tm'):
+        if requirement not in pyramid_includes:
+            config.include(requirement)
 
 def includeme(config):
     """ Check default settings and include needed components. """
