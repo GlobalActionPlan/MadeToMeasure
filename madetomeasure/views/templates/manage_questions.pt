@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="main_macro"
+      metal:use-macro="view.main_macro"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="MadeToMeasure">
 <body>
@@ -35,7 +35,7 @@
                             <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
                                 <li id="${question.__name__}"
                                     class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
-                                    <span class="question_text">${question.get_title(lang = user_lang)}</span>
+                                    <span class="question_text">${question.get_title(lang = view.get_lang())}</span>
                                     <a tal:condition="not question.is_local"
                                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
                                        class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
@@ -62,7 +62,7 @@
             <tal:questions repeat="question available_questions">
                 <li id="${question.__name__}"
                     class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
-                    <span class="question_text">${question.get_title(lang = user_lang)}</span>
+                    <span class="question_text">${question.get_title(lang = view.get_lang())}</span>
                     <a tal:condition="not question.is_local"
                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
                        class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>

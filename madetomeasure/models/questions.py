@@ -74,8 +74,7 @@ class Question(BaseFolder, SecurityAware):
     display_name = _(u"Question")
     allowed_contexts = ('Questions', 'LocalQuestions')
     uid_name = True
-    custom_accessors = {'title': 'get_title',
-                        'question_text': 'get_question_text',
+    custom_accessors = {'question_text': 'get_question_text',
                         'tags': '_get_tags'}
     custom_mutators = {'question_text': 'set_question_text',
                        'tags': '_set_tags',}

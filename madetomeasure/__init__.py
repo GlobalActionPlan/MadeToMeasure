@@ -32,7 +32,7 @@ def include_dependencies(config):
     """ Make sure 3rd party dependencies are included. """
     settings = config.registry.settings
     pyramid_includes = settings.get('pyramid.includes', '').split()
-    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_deform'):
+    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_deform', 'js.deform'):
         if requirement not in pyramid_includes:
             config.include(requirement)
 

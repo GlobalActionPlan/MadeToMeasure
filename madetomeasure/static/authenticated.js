@@ -12,14 +12,16 @@ $(document).ready(function() {
             $("#tag_listing a.tag_" + tag).parents('.question').show();
         }
         $('#tag_select [name="query"]').val('');
-    })
+    });
 });
+/*
 $('#tag_listing .tag').live('click', function(event) {
     var tag_select = $('#tag_select [name="tag"]');
     var tag = $(this).text();
     tag_select.find('option:selected').removeAttr('selected');
     tag_select.find('option[value="' + tag +'"]').attr('selected', 'selected').change();
-})
+});
+*/
 $(document).ready(function() {
     $('#tag_select [name="query"]').change(function(event) {
         $('#tag_listing .question').hide();
@@ -27,7 +29,7 @@ $(document).ready(function() {
         var tag_select = $('#tag_select [name="tag"]');
         tag_select.find('option:selected').removeAttr('selected');
         tag_select.find("option[value='']").attr('selected', 'selected'); //Don't trigger event
-    })
+    });
 });
 /* Minimize
  * Structure to make minimize work. elem can be most html tags
@@ -37,6 +39,7 @@ $(document).ready(function() {
  *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
  * </elem>
  */
+/*
 $('.toggle_minimize').live('click', function(event) {
     try { event.preventDefault(); } catch(e) {}
     min_parent = $(this).parents('.toggle_area');
@@ -52,5 +55,5 @@ $('.toggle_minimize').live('click', function(event) {
     }
     // Set parent class as opened or closed
     min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
-})
-
+});
+*/
