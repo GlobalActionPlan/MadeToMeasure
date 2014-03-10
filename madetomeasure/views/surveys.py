@@ -1,6 +1,5 @@
 import csv
 import StringIO
-from datetime import datetime
 
 import colander
 from deform import Form
@@ -28,14 +27,6 @@ from madetomeasure import security
 
 
 class SurveysView(BaseView):
-# 
-#     def _closed_survey(self, obj):
-#         if not ISurvey.providedBy(obj):
-#             raise TypeError("obj must be a Survey")
-#         end_time = obj.get_field_value('end_time', None)
-#         if not end_time:
-#             return False
-#         return self.survey_dt.utcnow() > end_time
 
     @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt', permission=security.MANAGE_SURVEY)
     def participants_view(self):
@@ -69,20 +60,6 @@ class SurveysView(BaseView):
         self.response['form'] = form.render()
         return self.response
 
-#     def _survey_error_msg(self, exeption):
-#         dt = self.user_dt and self.user_dt or self.survey_dt
-#         if exeption.not_started:
-#             start_time = dt.dt_format(self.context.get_field_value('start_time', None), format='full')
-#             msg = _(u"not_started_error",
-#                     default=_(u"Survey has not started yet, it will start on ${start_time}"),
-#                     mapping={'start_time':start_time})
-#         if exeption.ended:
-#             end_time = dt.dt_format(self.context.get_field_value('end_time', None))
-#             msg = _(u"ended_error",
-#                     default=_(u"Survey has ended, it closed at ${end_time}"),
-#                     mapping={'end_time':end_time})
-#         return msg
-
     @view_config(name="unavailable", context=ISurvey, renderer="templates/survey_unavailable.pt")
     def unavailable_view(self):
         """ Renders when a survey is unavailable. """
@@ -96,7 +73,6 @@ class SurveysView(BaseView):
         try:
             self.context.check_open()
         except SurveyUnavailableError as e:
-            #msg = self._survey_error_msg(e)
             self.add_flash_message(e.msg)
             url = self.request.resource_url(self.context, 'unavailable')
             return HTTPFound(location=url)
@@ -367,7 +343,7 @@ class SurveysView(BaseView):
             self.context.check_open()
             msg = _(u"The survey is currently open.")
         except SurveyUnavailableError as e:
-            msg = self._survey_error_msg(e)
+            msg = e.msg
         self.response['survey_state_msg'] = msg
         return self.response
 
