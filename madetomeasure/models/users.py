@@ -113,8 +113,10 @@ class User(BaseFolder, SecurityAware):
 
     def validate_password_token(self, node, value):
         """ Validate input from a colander form. See token_password_change schema """
-        #FIXME: We need to handle an error here in a nicer way
-        self.__token__.validate(value)
+        if getattr(self, '__token__', None):
+            self.__token__.validate(value)
+        else:
+            raise ValueError()
 
 
 class RequestPasswordToken(object):

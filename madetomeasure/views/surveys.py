@@ -1,11 +1,11 @@
 import csv
 import StringIO
-from datetime import datetime
 
 import colander
 from deform import Form
 from deform.exception import ValidationFailure
 from pyramid.view import view_config
+from pyramid.decorator import reify
 from pyramid.httpexceptions import HTTPFound
 from pyramid.traversal import find_interface
 from pyramid.exceptions import Forbidden
@@ -19,6 +19,7 @@ from madetomeasure.interfaces import IMultiChoiceQuestionType
 from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.views.base import BaseView
+from madetomeasure.views.base import BaseForm
 from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.interfaces import ISurveySection
@@ -27,60 +28,6 @@ from madetomeasure import security
 
 
 class SurveysView(BaseView):
-
-    @view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_SURVEY)
-    def invitation_emails_view(self):
-        closed_survey = self._closed_survey(self.context)
-        post = self.request.POST
-        if 'cancel' in post or closed_survey:
-            if closed_survey:
-                self.add_flash_message(_(u"Survey has closed, you can't invite"))
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location = url)
-        #Make sure questions exist
-        survey_sections = [x for x in self.context.values() if ISurveySection.providedBy(x)]
-        question_count = sum([len(x.question_ids) for x in survey_sections])
-        if not question_count:
-            msg = _(u"no_questions_notice",
-                    default = u"There aren't any questions yet. You need to add survey sections and questions, "
-                              u"otherwise invited users won't be able to do anything.")
-            self.add_flash_message(msg)
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location = url)
-        schema = createSchema(self.context.schemas['invitation'])
-        schema = schema.bind(context = self.context, request = self.request)
-        form = Form(schema, buttons=(self.buttons['send'], self.buttons['cancel']))
-        self.response['form_resources'] = form.get_widget_resources()
-
-        if 'send' in post:
-            controls = self.request.POST.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            emails = set()
-            for email in appstruct['emails'].splitlines():
-                emails.add(email.strip())
-            message = appstruct['message']
-            subject = appstruct['subject']
-            self.context.send_invitations(self.request, emails, subject, message)
-            msg = _(u"invitations_sent_notice",
-                    default = u"${count} Invitation(s) sent",
-                    mapping = {'count': len(emails)})
-            self.add_flash_message(msg)
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location = url)
-        self.response['form'] = form.render()
-        return self.response
-
-    def _closed_survey(self, obj):
-        if not ISurvey.providedBy(obj):
-            raise TypeError("obj must be a Survey")
-        end_time = obj.get_field_value('end_time', None)
-        if not end_time:
-            return False
-        return self.survey_dt.utcnow() > end_time
 
     @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt', permission=security.MANAGE_SURVEY)
     def participants_view(self):
@@ -114,20 +61,6 @@ class SurveysView(BaseView):
         self.response['form'] = form.render()
         return self.response
 
-    def _survey_error_msg(self, exeption):
-        dt = self.user_dt and self.user_dt or self.survey_dt
-        if exeption.not_started:
-            start_time = dt.dt_format(self.context.get_field_value('start_time', None), format='full')
-            msg = _(u"not_started_error",
-                    default=_(u"Survey has not started yet, it will start on ${start_time}"),
-                    mapping={'start_time':start_time})
-        if exeption.ended:
-            end_time = dt.dt_format(self.context.get_field_value('end_time', None))
-            msg = _(u"ended_error",
-                    default=_(u"Survey has ended, it closed at ${end_time}"),
-                    mapping={'end_time':end_time})
-        return msg
-
     @view_config(name="unavailable", context=ISurvey, renderer="templates/survey_unavailable.pt")
     def unavailable_view(self):
         """ Renders when a survey is unavailable. """
@@ -141,8 +74,7 @@ class SurveysView(BaseView):
         try:
             self.context.check_open()
         except SurveyUnavailableError as e:
-            msg = self._survey_error_msg(e)
-            self.add_flash_message(msg)
+            self.add_flash_message(e.msg)
             url = self.request.resource_url(self.context, 'unavailable')
             return HTTPFound(location=url)
         selected_language = None
@@ -413,7 +345,7 @@ class SurveysView(BaseView):
             self.context.check_open()
             msg = _(u"The survey is currently open.")
         except SurveyUnavailableError as e:
-            msg = self._survey_error_msg(e)
+            msg = e.msg
         self.response['survey_state_msg'] = msg
         return self.response
 
@@ -543,30 +475,68 @@ class SurveysView(BaseView):
         response = Response(content_type='text/csv',
                             body=contents)
         return response
-        
-    @view_config(name='clone', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
-    def clone(self):
-        """ Cloning survey
-        """
-        if 'cancel' in self.request.POST:
-            url = self.request.resource_url(self.context)
-            return HTTPFound(location = url)
-        schema = createSchema(self.context.schemas['clone'])
-        schema = schema.bind(context = self.context, request = self.request, view = self)
-        form = Form(schema, buttons=(self.buttons['save'], self.buttons['cancel'], ))
-        self.response['form_resources'] = form.get_widget_resources()
-        if 'save' in self.request.POST:
-            controls = self.request.POST.items()
-            try:
-                appstruct = form.validate(controls)
-            except ValidationFailure, e:
-                self.response['form'] = e.render()
-                return self.response
-            new_survey = self.context.clone(appstruct['title'], appstruct['destination'])
-            url = self.request.resource_url(new_survey, 'edit')
-            return HTTPFound(location = url)
 
+
+@view_config(name='clone', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
+class CloneSurveyForm(BaseForm):
+
+    @property
+    def buttons(self):
+        return (self.button_save, self.button_cancel,)
+
+    @reify
+    def schema(self):
+        return createSchema(self.context.schemas['clone'])
+
+    def appstruct(self):
         appstruct = {}
-        appstruct['title'] = "%s_clone_%s" % (self.context.title, datetime.now())
-        self.response['form'] = form.render(appstruct)
-        return self.response
+        appstruct['title'] = self.localizer.translate(_(u"${title} (Clone)", mapping = {'title': self.context.title}))
+        return appstruct
+
+    def save_success(self, appstruct):
+        new_survey = self.context.clone(appstruct['title'], appstruct['destination'])
+        url = self.request.resource_url(new_survey, 'edit')
+        return HTTPFound(location = url)
+
+
+@view_config(name='invitation_emails', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.MANAGE_SURVEY)
+class InvitationEmailsForm(BaseForm):
+
+    def __call__(self):
+        return_url = self.request.resource_url(self.context)
+        try:
+            self.context.check_open()
+        except SurveyUnavailableError as exc:
+            self.add_flash_message(exc.msg)
+            return HTTPFound(location = return_url)
+        survey_sections = [x for x in self.context.values() if ISurveySection.providedBy(x)]
+        question_count = sum([len(x.question_ids) for x in survey_sections])
+        if not question_count:
+            msg = _(u"no_questions_notice",
+                    default = u"There aren't any questions yet. You need to add survey sections and questions, "
+                              u"otherwise invited users won't be able to do anything.")
+            self.add_flash_message(msg)
+            return HTTPFound(location = return_url)
+        return super(InvitationEmailsForm, self).__call__()
+
+    @property
+    def buttons(self):
+        return (self.button_send, self.button_cancel,)
+
+    @reify
+    def schema(self):
+        return createSchema(self.context.schemas['invitation'])
+
+    def send_success(self, appstruct):
+        emails = set()
+        for email in appstruct['emails'].splitlines():
+            emails.add(email.strip())
+        message = appstruct['message']
+        subject = appstruct['subject']
+        self.context.send_invitations(self.request, emails, subject, message)
+        msg = _(u"invitations_sent_notice",
+                default = u"${count} Invitation(s) sent",
+                mapping = {'count': len(emails)})
+        self.add_flash_message(msg)
+        url = self.request.resource_url(self.context)
+        return HTTPFound(location = url)

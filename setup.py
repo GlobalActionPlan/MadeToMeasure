@@ -11,6 +11,7 @@ requires = [
     'pyramid_mailer',
     'pyramid_zodbconn',
     'pyramid_tm',
+    'pyramid_deform',
     'fanstatic',
     'ZODB3',
     'Babel',
@@ -19,8 +20,9 @@ requires = [
     'slugify',
     'lingua',
     'pytz',
-    'betahaus.pyracont >= 0.1a3',
+    'betahaus.pyracont >= 0.2b',
     'iso8601',
+    'js.deform'
     ]
 
 setup(name='MadeToMeasure',
@@ -48,6 +50,8 @@ setup(name='MadeToMeasure',
       main = madetomeasure:main
       [console_scripts]
       debug_instance = madetomeasure.scripts.debug:debug_instance
+      [fanstatic.libraries]
+      m2m = madetomeasure.fanstaticlib:m2m_lib
       """,
       message_extractors = { '.': [
           ('**.py',   'lingua_python', None ),

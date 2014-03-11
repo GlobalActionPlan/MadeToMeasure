@@ -11,44 +11,15 @@
         </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
-
-    <link href="${request.application_url}/static/reset.css" rel="stylesheet" type="text/css" />
-    <link href="${request.application_url}/static/main.css" rel="stylesheet" type="text/css" />
-
     <style tal:condition="organisation and hex_color|False" type="text/css">
-        a,
-        button {
-            color: ${hex_color};
-        }
-        button {
-            border: 1px solid ${hex_color};
-        }
-        #page-wrapper {
-            background-color: ${hex_color};
-        }
-
+        a, button { color: ${hex_color}; }
+        button { border: 1px solid ${hex_color}; }
+        #page-wrapper { background-color: ${hex_color}; }
     </style>
     <style tal:condition="organisation and logo_link|False" type="text/css">
-        #logo {
-            background-image: url(${logo_link});
-        }
+        #logo { background-image: url(${logo_link}); }
     </style>
-    <tal:deform tal:condition="form_resources|False">
-        <tal:css repeat="css_file form_resources['css']|[]">
-        <link rel="stylesheet"
-              tal:attributes="href string:/deform/${css_file}" type="text/css" />
-        </tal:css>
-        <tal:js repeat="js_file form_resources['js']|[]">
-        <script type="text/javascript"
-                tal:attributes="src string:/deform/${js_file}"></script>
-        </tal:js>
-        <script type="text/javascript">
-            deform.load();
-        </script>
-    </tal:deform>
-
     <metal:head define-slot="head"></metal:head>
-    
 </head>
 <body>
     
@@ -59,108 +30,107 @@
             
             <div id="logo"></div>
             
-            <div tal:condition="userid" id="system-toolbar">
+            <div tal:condition="view.userid" id="system-toolbar">
                 
                 <div id="your">
                     <span i18n:translate="">Your time</span>
-                    <span tal:content="user_dt.dt_format(user_dt.localnow())"></span>
+                    <span tal:content="view.user_dt.dt_format(view.user_dt.localnow())"></span>
                     |
                     <span i18n:translate="">Language</span>
-                    <tal:iterate repeat="lang trans_util.available_languages">
-                        <a tal:omit-tag="lang == user_lang"
-                            href="${request.resource_url(root, 'select_lang', query = {'lang': lang, 'return_url': request.url})}">${lang}</a>
+                    <tal:iterate repeat="lang view.trans_util.available_languages">
+                        <a tal:omit-tag="lang == view.get_lang()"
+                            href="${request.resource_url(view.root, 'select_lang', query = {'lang': lang, 'return_url': request.url})}">${lang}</a>
                     </tal:iterate>
                     |
-                    <a href="${request.resource_url(user)}"
+                    <a href="${request.resource_url(view.user_profile)}"
                        title="Click to go to profile. There you can make changes as well."
-                       i18n:attributes="title">${user.title} (${userid})</a>
+                       i18n:attributes="title">${view.user_profile.title} (${view.userid})</a>
                     |
-                    <a href="${request.resource_url(root, 'logout')}" i18n:translate="">Logout</a>
+                    <a href="${request.resource_url(view.root, 'logout')}" i18n:translate="">Logout</a>
                 </div>
 
                 <div id="global">
                     Global:
-                    <a tal:condition="context_has_permission(root['participants'], 'View')"
-                       href="${request.resource_url(root['participants'])}" i18n:translate="">Participants</a>
-                    <a tal:condition="context_has_permission(root['questions'], 'View')"
-                       href="${request.resource_url(root['questions'])}" i18n:translate="">Questions</a>
-                    <a tal:condition="context_has_permission(root['question_types'], 'View')"
-                       href="${request.resource_url(root['question_types'])}" i18n:translate="">Question types</a>
-                    <a tal:condition="context_has_permission(root['users'], 'View')"
-                       href="${request.resource_url(root['users'])}" i18n:translate="">System users</a>
-                    <a tal:condition="context_has_permission(root, 'Manage server')"
-                       href="${request.resource_url(root, 'permissions')}" i18n:translate="">Permissions</a>
+                    <a tal:condition="view.context_has_permission(view.root['participants'], 'View')"
+                       href="${request.resource_url(view.root['participants'])}" i18n:translate="">Participants</a>
+                    <a tal:condition="view.context_has_permission(view.root['questions'], 'View')"
+                       href="${request.resource_url(view.root['questions'])}" i18n:translate="">Questions</a>
+                    <a tal:condition="view.context_has_permission(view.root['question_types'], 'View')"
+                       href="${request.resource_url(view.root['question_types'])}" i18n:translate="">Question types</a>
+                    <a tal:condition="view.context_has_permission(view.root['users'], 'View')"
+                       href="${request.resource_url(view.root['users'])}" i18n:translate="">System users</a>
+                    <a tal:condition="view.context_has_permission(view.root, 'Manage server')"
+                       href="${request.resource_url(view.root, 'permissions')}" i18n:translate="">Permissions</a>
                 </div>
 
-                <div tal:condition="organisation and context_has_permission(organisation, 'View')|False" id="organisation">
+                <div tal:condition="organisation and view.context_has_permission(organisation, 'View')|False" id="organisation">
                     <span tal:content="organisation.title">Title</span>:
                     <tal:iterate repeat="obj organisation.values()">
                         <a href="${request.resource_url(obj)}">${obj.title}</a>
                     </tal:iterate>
-                    <a tal:condition="context_has_permission(organisation, 'Manage organisation')"
+                    <a tal:condition="view.context_has_permission(organisation, 'Manage organisation')"
                        href="${request.resource_url(organisation, 'permissions')}" i18n:translate="">Permissions</a>
-                    <a tal:condition="context_has_permission(organisation, 'Edit')"
+                    <a tal:condition="view.context_has_permission(organisation, 'Edit')"
                        href="${request.resource_url(organisation, 'variants')}" i18n:translate="">Variants</a>
                 </div>
             </div>
         </div>
         
         <div id="main-area-wrapper"><div id="main-area">
-
-            <div id="context-toolbar" tal:condition="userid and not exception|False">
-                <tal:add tal:condition="addable_types">
-                    <tal:iterate repeat="type_id addable_types">
+            <div id="context-toolbar" tal:condition="view.userid and not view.exception|False">
+                <tal:add tal:condition="view.addable_types">
+                    <tal:iterate repeat="type_id view.addable_types">
                         <a class="context-tab add"
                            href="${request.resource_url(context, 'add', query={'content_type': type_id})}">
                             <span i18n:translate="">Add</span>
-                            <span tal:content="content_info[type_id]._callable.display_name|type_id">Type</span>
+                            <span tal:content="view.content_info[type_id]._callable.display_name">Type</span>
                         </a>
                     </tal:iterate>
                 </tal:add>
-                <a tal:condition="context_has_permission(context, 'Edit') and context_has_schema(context, 'edit')"
+                <a tal:condition="view.context_has_permission(context, 'Edit') and view.context_has_schema(context, 'edit')"
                    class="context-tab edit" href="${request.resource_url(context) + 'edit'}" i18n:translate="">Edit</a>
-                <a tal:condition="context_has_permission(context, 'Delete') and context_has_schema(context, 'delete')"
+                <a tal:condition="view.context_has_permission(context, 'Delete') and view.context_has_schema(context, 'delete')"
                    class="context-tab delete" href="${request.resource_url(context) + 'delete'}" i18n:translate="">Delete</a>
-                <a tal:condition="context.content_type in ('Questions', 'LocalQuestions') and context_has_permission(context, 'Translate')"
+                <a tal:condition="context.content_type in ('Questions', 'LocalQuestions') and view.context_has_permission(context, 'Translate')"
                    class="context-tab translate" href="${request.resource_url(context, 'translations')}" i18n:translate="">Translations</a>
                 <tal:organisation condition="context.content_type == 'Organisation'">
-                   <a tal:condition="context_has_permission(context, 'Edit')"
+                   <a tal:condition="view.context_has_permission(context, 'Edit')"
                       class="context-tab variants"
                       href="${request.resource_url(context, 'variants')}"
                       i18n:translate="">Variants</a>
                 </tal:organisation>
                 <tal:survey condition="context.content_type == 'Survey'">
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab invitaions" 
                        href="${request.resource_url(context, 'invitation_emails')}"
                        i18n:translate="">Invitations</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab participants"
                        href="${request.resource_url(context, 'participants')}"
                        i18n:translate="">Participants</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab results"
                        href="${request.resource_url(context, 'results')}"
                        i18n:translate="">Results</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab reorder"
                        href="${request.resource_url(context, 'reorder')}"
                        i18n:translate="">Reorder sections</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab manage_questions"
                        href="${request.resource_url(context, 'manage_questions')}"
                        i18n:translate="">Manage questions</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab export"
                        href="${request.resource_url(context, 'export.csv')}"
                        i18n:translate="">Export</a>
-                    <a tal:condition="context_has_permission(context, 'Manage survey')"
+                    <a tal:condition="view.context_has_permission(context, 'Manage survey')"
                        class="context-tab export"
                        href="${request.resource_url(context, 'clone')}"
                        i18n:translate="">Clone</a>
                 </tal:survey>
                 <tal:user condition="context.content_type == 'User'">
-                    <a tal:condition="context_has_permission(context, 'Edit')"
+                    <a tal:condition="view.context_has_permission(context, 'Edit')"
                        class="context-tab change_password"
                        href="${request.resource_url(context, 'change_password')}"
                        i18n:translate="">Change password</a>
@@ -168,14 +138,14 @@
                 <div class="clear"><!-- --></div>
             </div>
 
-            <div tal:condition="userid" id="path-bar">
-                <tal:iterate repeat="obj path">
+            <div tal:condition="view.userid" id="path-bar">
+                <tal:iterate repeat="obj view.path">
                     &raquo;
                     <a href="${request.resource_url(obj)}" tal:content="obj.get_translated_title()|obj.title">Title</a>
                 </tal:iterate>
             </div>
 
-            <div id="flash_messages" tal:define="flash_messages flash_messages()">
+            <div id="flash_messages" tal:define="flash_messages view.get_flash_messages()">
                 <tal:iterate repeat="flash_message flash_messages">
                     <div class="message" tal:content="structure flash_message">Message</div>
                 </tal:iterate>
@@ -193,7 +163,7 @@
         </div></div><!-- main area and wrapper -->
     
     </div>
-    <div id="footer" tal:condition="root" tal:content="structure root.get_field_value('footer_html', u'')">
+    <div id="footer" tal:condition="view.root" tal:content="structure view.root.get_field_value('footer_html', u'')">
         Footer html code
     </div>
 
@@ -202,7 +172,7 @@
     </div>
 
     <script type="text/javascript" src="${request.application_url}/static/main.js"></script>
-    <script tal:condition="userid|False" type="text/javascript" src="${request.application_url}/static/authenticated.js"></script>
+    <script tal:condition="view.userid|False" type="text/javascript" src="${request.application_url}/static/authenticated.js"></script>
 
 </body>
 </html>

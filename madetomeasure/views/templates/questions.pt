@@ -2,7 +2,7 @@
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
-      metal:use-macro="main_macro"
+      metal:use-macro="view.main_macro"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="MadeToMeasure">
 <body>
@@ -24,8 +24,8 @@
             <tr class="question" tal:repeat="question questions">
                 <td>
                     <div class="question_text"
-                       href="${request.resource_url(question, 'edit')}">${question.get_title(lang = user_lang)}</div>
-                    <a tal:condition="context_has_permission(question, 'View')" href="${request.resource_url(question)}" i18n:translate="">View </a>
+                       href="${request.resource_url(question, 'edit')}">${question.get_title(lang = view.get_lang())}</div>
+                    <a tal:condition="view.context_has_permission(question, 'View')" href="${request.resource_url(question)}" i18n:translate="">View </a>
                     <a tal:condition="show_edit" href="${request.resource_url(question, 'edit')}" i18n:translate="">Edit base question </a>
                     <a tal:condition="show_edit_variants"
                        href="${request.resource_url(context, 'variant' , query={'question_name': question.__name__})}"

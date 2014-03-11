@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MadeToMeasure 0.1dev\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2014-03-03 13:35+0100\n"
+"POT-Creation-Date: 2014-03-06 11:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -120,14 +120,15 @@ msgid "Local questions"
 msgstr ""
 
 #: madetomeasure/models/questions.py:74
+#: madetomeasure/views/templates/questions.pt:17
 msgid "Question"
 msgstr ""
 
-#: madetomeasure/models/questions.py:200
+#: madetomeasure/models/questions.py:203
 msgid "(Nothing)"
 msgstr ""
 
-#: madetomeasure/models/questions.py:225
+#: madetomeasure/models/questions.py:228
 msgid "Can't delete this since it's used in the following survey sections: ${out}"
 msgstr ""
 
@@ -135,15 +136,15 @@ msgstr ""
 msgid "Site root"
 msgstr ""
 
-#: madetomeasure/models/survey_section.py:19
+#: madetomeasure/models/survey_section.py:20
 msgid "Survey Section"
 msgstr ""
 
-#: madetomeasure/models/surveys.py:35
+#: madetomeasure/models/surveys.py:36
 msgid "Surveys"
 msgstr ""
 
-#: madetomeasure/models/surveys.py:44
+#: madetomeasure/models/surveys.py:45
 msgid "Survey"
 msgstr ""
 
@@ -174,6 +175,7 @@ msgid "Try start typing a timezone"
 msgstr ""
 
 #: madetomeasure/schemas/common.py:79 madetomeasure/schemas/common.py:104
+#: madetomeasure/views/templates/questions.pt:18
 msgid "Tags"
 msgstr ""
 
@@ -189,6 +191,7 @@ msgstr ""
 
 #: madetomeasure/schemas/common.py:118
 #: madetomeasure/views/templates/main.pt:124
+#: madetomeasure/views/templates/questions.pt:19
 #: madetomeasure/views/templates/survey_admin_view.pt:29
 msgid "Translations"
 msgstr ""
@@ -222,10 +225,13 @@ msgid "Change email address"
 msgstr ""
 
 #: madetomeasure/schemas/question_types.py:11
+#: madetomeasure/schemas/surveys.py:47 madetomeasure/schemas/surveys.py:98
+#: madetomeasure/schemas/surveys.py:252
 msgid "Title"
 msgstr ""
 
 #: madetomeasure/schemas/question_types.py:16
+#: madetomeasure/schemas/surveys.py:102
 msgid "Description"
 msgstr ""
 
@@ -323,125 +329,129 @@ msgstr ""
 msgid "Section description translations"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:50
+#: madetomeasure/schemas/surveys.py:51
 msgid "Start time for survey"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:58
+#: madetomeasure/schemas/surveys.py:59
 msgid "End time for survey"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:65
+#: madetomeasure/schemas/surveys.py:66
 msgid "Email to send system mail from"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:72
+#: madetomeasure/schemas/surveys.py:73
 msgid "Thanks a lot for filling out the survey."
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:76
+#: madetomeasure/schemas/surveys.py:77
 msgid "Available languages"
 msgstr ""
 
 #. Default: Allow anonymous people to participate in the survey?
-#: madetomeasure/schemas/surveys.py:78
+#: madetomeasure/schemas/surveys.py:79
 msgid "allow_anonymous_to_participate_title"
 msgstr ""
 
 #. Default: When someone reaches the survey link, allow them to enter their
 #. email address to get an invitation and participate in the survey.
-#: madetomeasure/schemas/surveys.py:80
+#: madetomeasure/schemas/surveys.py:81
 msgid "allow_anonymous_to_participate_description"
 msgstr ""
 
 #. Default: Allow anonymous people to start the survey without validating their
 #. email.
-#: madetomeasure/schemas/surveys.py:86
+#: madetomeasure/schemas/surveys.py:87
 msgid "allow_anonymous_to_start_title"
 msgstr ""
 
 #. Default: Last resort - only allow this if there's major email problems with
 #. outgoing email!
-#: madetomeasure/schemas/surveys.py:88
+#: madetomeasure/schemas/surveys.py:89
 msgid "allow_anonymous_to_start_description"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:109
+#: madetomeasure/schemas/surveys.py:112
 msgid ""
 "WARNING! This section has response data. If you delete it, it will be "
 "lost forever!"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:113
+#: madetomeasure/schemas/surveys.py:116
 msgid "Really delete object?"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:120
+#: madetomeasure/schemas/surveys.py:123
 msgid "Really delete this survey?"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:121
+#: madetomeasure/schemas/surveys.py:124
 msgid "WARNING: There's no undo if you do this!"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:131 madetomeasure/schemas/surveys.py:171
+#: madetomeasure/schemas/surveys.py:134 madetomeasure/schemas/surveys.py:174
 msgid "Email subject and text header"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:132 madetomeasure/schemas/surveys.py:172
+#: madetomeasure/schemas/surveys.py:135 madetomeasure/schemas/surveys.py:175
 msgid "Will be visible in the subject line, and as a header in the email body."
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:134
+#: madetomeasure/schemas/surveys.py:137
 msgid ""
 "Message - please note that the link will be added as a new line below the"
 " message!"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:136
+#: madetomeasure/schemas/surveys.py:139
 msgid "Please fill in the survey. Click the link below to access it:"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:138
+#: madetomeasure/schemas/surveys.py:141
 msgid "Participant email addresses - add one per row."
 msgstr ""
 
 #. Default: Remember to only add users who should recieve the message in this
 #. language.
-#: madetomeasure/schemas/surveys.py:139
+#: madetomeasure/schemas/surveys.py:142
 msgid "invitation_emails_lang_notice"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:151
+#: madetomeasure/schemas/surveys.py:154
 msgid "I want to participate in the survey - send me a link."
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:152
+#: madetomeasure/schemas/surveys.py:155
 msgid "I lost my access link - send me a new one."
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:154
+#: madetomeasure/schemas/surveys.py:157
 msgid "Start my survey without verifying my email."
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:161
+#: madetomeasure/schemas/surveys.py:164
 msgid "Your email"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:164
+#: madetomeasure/schemas/surveys.py:167
 msgid "Actions"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:174
+#: madetomeasure/schemas/surveys.py:177
 msgid "Reminder message"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:196
+#: madetomeasure/schemas/surveys.py:199
 msgid "Choose language"
 msgstr ""
 
-#: madetomeasure/schemas/surveys.py:228
+#: madetomeasure/schemas/surveys.py:231
 msgid "Invalid target organisation"
+msgstr ""
+
+#: madetomeasure/schemas/surveys.py:254
+msgid "Destination"
 msgstr ""
 
 #: madetomeasure/schemas/system.py:19 madetomeasure/schemas/system.py:32
@@ -763,6 +773,7 @@ msgstr ""
 
 #: madetomeasure/views/templates/main.pt:102
 #: madetomeasure/views/templates/main.pt:127
+#: madetomeasure/views/templates/questions.pt:20
 msgid "Variants"
 msgstr ""
 

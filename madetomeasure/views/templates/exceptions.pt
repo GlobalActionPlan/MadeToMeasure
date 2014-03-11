@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      metal:use-macro="main_macro"
+      metal:use-macro="view.main_macro"
       i18n:domain="MadeToMeasure">
 <body>
 <div metal:fill-slot="content">
