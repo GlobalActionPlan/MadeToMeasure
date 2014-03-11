@@ -15,11 +15,10 @@ $(document).ready(function () {
 
 /* warn when user click previous */
 $(document).ready(function() {
-    /*
-    $("#deformprevious").live('click', function(event) {
+    $("#deformprevious").on('click', function(event) {
         if(!confirm(m2m.translation['confirm_back']))
             event.preventDefault();
-    });*/
+    });
 });
 
 /* descriptions */
