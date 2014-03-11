@@ -14,14 +14,14 @@ $(document).ready(function() {
         $('#tag_select [name="query"]').val('');
     });
 });
-/*
-$('#tag_listing .tag').live('click', function(event) {
+
+$('#tag_listing .tag').on('click', function(event) {
     var tag_select = $('#tag_select [name="tag"]');
     var tag = $(this).text();
     tag_select.find('option:selected').removeAttr('selected');
     tag_select.find('option[value="' + tag +'"]').attr('selected', 'selected').change();
 });
-*/
+
 $(document).ready(function() {
     $('#tag_select [name="query"]').change(function(event) {
         $('#tag_listing .question').hide();
@@ -39,8 +39,8 @@ $(document).ready(function() {
  *   <elem class="minimizable_inverted">Stuff that will only be visible when it's minimized</elem>
  * </elem>
  */
-/*
-$('.toggle_minimize').live('click', function(event) {
+
+$('.toggle_minimize').on('click', function(event) {
     try { event.preventDefault(); } catch(e) {}
     min_parent = $(this).parents('.toggle_area');
     // set cookie for opened or closed
@@ -56,4 +56,3 @@ $('.toggle_minimize').live('click', function(event) {
     // Set parent class as opened or closed
     min_parent.toggleClass('toggle_opened').toggleClass('toggle_closed');
 });
-*/

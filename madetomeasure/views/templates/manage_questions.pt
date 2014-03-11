@@ -6,13 +6,6 @@
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
       i18n:domain="MadeToMeasure">
 <body>
-
-<metal:head fill-slot="head">
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="${request.application_url}/static/manage_questions.js"></script>
-    <link href="${request.application_url}/deform/css/form.css" rel="stylesheet" type="text/css" />
-</metal:head>
 <metal:heading fill-slot="page_heading">
     <h1 tal:content="context.get_translated_title()">Title</h1>
 </metal:heading>

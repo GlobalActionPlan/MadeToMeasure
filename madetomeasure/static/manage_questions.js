@@ -3,7 +3,7 @@ var unsaved = false;
 var edit_variant = "";
 
 
-$('#deformsave').live('click', function() {
+$('#deformsave').on('click', function() {
     unsaved = false;
 });
 $(window).on('beforeunload', function() {
@@ -75,7 +75,7 @@ $(document).ready(function(){
         fullscreen.load(url, function() {
             fullscreen.fadeIn();
             $('#fullscreen form').on('submit', ajax_save_variant);
-            $('#deformcancel').live('click', function(event) {
+            $('#deformcancel').on('click', function(event) {
                 event.preventDefault();
                 fullscreen.empty().fadeOut();
             });

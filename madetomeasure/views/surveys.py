@@ -12,6 +12,7 @@ from pyramid.exceptions import Forbidden
 from pyramid.response import Response
 from pyramid.security import NO_PERMISSION_REQUIRED
 from betahaus.pyracont.factories import createSchema
+from js.jqueryui import ui_sortable
 
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IChoiceQuestionType
@@ -24,6 +25,7 @@ from madetomeasure.views.base import BASE_FORM_TEMPLATE
 from madetomeasure.models.exceptions import SurveyUnavailableError
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure.interfaces import ITextSection
+from madetomeasure.fanstaticlib import manage_questions
 from madetomeasure import security
 
 
@@ -354,6 +356,7 @@ class SurveysView(BaseView):
     @view_config(name='reorder', context=ISurvey, renderer='templates/reorder_folder.pt', permission=security.EDIT)
     def reorder_folder(self):
         post = self.request.POST
+        ui_sortable.need()
         if 'cancel' in self.request.POST:
             url = self.request.resource_url(self.context)
             return HTTPFound(location = url)
@@ -381,6 +384,7 @@ class SurveysView(BaseView):
 
     @view_config(name='manage_questions', context=ISurvey, renderer='templates/manage_questions.pt', permission=security.EDIT)
     def manage_questions(self):
+        manage_questions.need()
         post = self.request.POST
         if 'cancel' in self.request.POST:
             url = self.request.resource_url(self.context)
