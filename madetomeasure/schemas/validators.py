@@ -31,6 +31,36 @@ def deferred_userid_or_email_validation(node, kw):
     root = find_root(context)
     return UseridOrEmailValidator(root['users'])
 
+@colander.deferred
+def deferred_login_validator(form, kw):
+    context = kw['context']
+    root = find_root(context)
+    return LoginPasswordValidator(root)
+
+
+class LoginPasswordValidator(object):
+    """ Validate a password during login. context must be site root."""
+    
+    def __init__(self, context):
+        self.context = context
+        
+    def __call__(self, form, value):
+        exc = colander.Invalid(form, u"Login invalid") #Raised if trouble
+        password = value['password']
+        userid_or_email = value['userid_or_email']
+        if '@' in userid_or_email:
+            #assume email
+            user = self.context['users'].get_user_by_email(userid_or_email)
+        else:
+            user = self.context['users'].get(userid_or_email)
+        if not user:
+            raise exc
+        #Validate password
+        pw_field = user.get_custom_field('password')
+        if not pw_field.check_input(password):
+            exc['password'] = _(u"Wrong password. Remember that passwords are case sensitive.")
+            raise exc
+
 
 class UseridOrEmailValidator(object):
     """ Make sure a userid or an email address can be used to fetch a user object.

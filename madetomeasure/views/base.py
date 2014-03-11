@@ -196,6 +196,7 @@ class BaseForm(BaseView, FormView):
     default_cancel = _(u"Canceled")
 
     button_login = Button('login', _(u"Login"))
+    button_forgot_pw = Button('forgot_pw', _(u"Forgot password?"))
     button_save = Button('save', _(u"Save"))
     button_add = Button('add', _(u"Add"))
     button_send = Button('send', _(u"Send"))
