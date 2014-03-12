@@ -7,7 +7,6 @@ from zope.interface import implements
 from zope.component import getUtility
 from pyramid_mailer import get_mailer
 from pyramid_mailer.message import Message
-from pyramid.url import resource_url
 from pyramid.exceptions import Forbidden
 from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
@@ -143,7 +142,7 @@ class Survey(BaseFolder, SecurityAware):
         mailer = get_mailer(request)
         sender = self.get_field_value('from_address', '')
         response = {}
-        response['access_link'] = "%sdo?uid=%s" % (resource_url(self, request), uid)
+        response['access_link'] = request.resource_url(self, 'do', query = {'uid': uid})
         response['message'] = message
         response['subject'] = subject
         body_html = render('../views/templates/survey_invitation_mail.pt', response, request = request)

@@ -16,7 +16,6 @@ from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
 from madetomeasure.interfaces import ILocalQuestions
-from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.interfaces import ISurvey
 from madetomeasure.interfaces import ISurveySection
 from madetomeasure.models.security_aware import SecurityAware

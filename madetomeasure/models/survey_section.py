@@ -6,7 +6,6 @@ from pyramid.threadlocal import get_current_request
 from betahaus.pyracont import BaseFolder
 from betahaus.pyracont.decorators import content_factory
 from pyramid.i18n import get_locale_name
-from pyramid.threadlocal import get_current_request
 
 from madetomeasure import MadeToMeasureTSF as _
 from madetomeasure.interfaces import IOrganisation

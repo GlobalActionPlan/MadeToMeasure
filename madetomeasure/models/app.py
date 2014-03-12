@@ -1,13 +1,11 @@
 from slugify import slugify
 from pyramid.threadlocal import get_current_request
 from pyramid.security import authenticated_userid
-from pyramid.traversal import find_interface
 from pyramid.traversal import find_root
 from pyramid.i18n import get_locale_name
 from pyramid.interfaces import ISettings
 from zope.component import createObject
 
-from madetomeasure.interfaces import ISurvey
 from madetomeasure import MadeToMeasureTSF as _
 
 
@@ -88,18 +86,3 @@ def get_users_dt_helper(request=None):
         datetime_localisation = user.get_field_value('datetime_localisation', None)
         locale = datetime_localisation and datetime_localisation or get_locale_name(request)
     return createObject('dt_helper', tz, locale)
-
-
-#def find_all_of_iface(context, iface):
-#    """ Traverser that will find all objects from context and below
-#        implementing a specific interface.
-#    """
-#    def _recurse(context, results):
-#        for obj in context.values():
-#            if iface.providedBy(obj):
-#                results.add(obj)
-#            _recurse(obj, results)
-#    
-#    results = set()
-#    _recurse(context, results)
-#    return results
