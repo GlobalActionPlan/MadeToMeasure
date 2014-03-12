@@ -337,9 +337,9 @@ class SurveysView(BaseView):
         start_time = self.context.get_field_value('start_time', None)
         end_time = self.context.get_field_value('end_time', None)
         if start_time:
-            start_time = self.response['user_dt'].dt_format(start_time)
+            start_time = self.user_dt.dt_format(start_time)
         if end_time:
-            end_time = self.response['user_dt'].dt_format(end_time)
+            end_time = self.user_dt.dt_format(end_time)
         self.response['start_time'] = start_time
         self.response['end_time'] = end_time
         #Is survey active?

@@ -22,7 +22,8 @@ requires = [
     'pytz',
     'betahaus.pyracont >= 0.2b',
     'iso8601',
-    'js.deform'
+    'js.deform',
+    'repoze.evolution'
     ]
 
 setup(name='MadeToMeasure',
@@ -50,6 +51,7 @@ setup(name='MadeToMeasure',
       main = madetomeasure:main
       [console_scripts]
       debug_instance = madetomeasure.scripts.debug:debug_instance
+      evolve = madetomeasure.evolve:run_evolve
       [fanstatic.libraries]
       m2m = madetomeasure.fanstaticlib:m2m_lib
       """,
@@ -58,4 +60,3 @@ setup(name='MadeToMeasure',
           ('**.pt',   'lingua_xml', None ),
           ]},
       )
-
