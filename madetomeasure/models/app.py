@@ -15,16 +15,18 @@ def appmaker(zodb_root):
     try:
         return zodb_root['app_root']
     except KeyError:
-        app_root = bootstrap_root()
-        zodb_root['app_root'] = app_root
+        from repoze.evolution import ZODBEvolutionManager
+        from madetomeasure.evolve import VERSION
+        root = bootstrap_root()
+        zodb_root['app_root'] = root
         import transaction
         transaction.commit()
-        return zodb_root['app_root']
-
+        manager = ZODBEvolutionManager(root, evolve_packagename = 'madetomeasure.evolve', sw_version = VERSION)
+        manager.set_db_version(VERSION)
+        manager.transaction.commit()
+        return root
 
 def bootstrap_root():
-    from repoze.evolution import ZODBEvolutionManager
-
     from madetomeasure.models.root import SiteRoot
     from madetomeasure.models.users import User
     from madetomeasure.models.users import Users
@@ -33,7 +35,6 @@ def bootstrap_root():
     from madetomeasure.models.question_types import QuestionTypes
     from madetomeasure.models.question_types import TextQuestionType
     from madetomeasure import security
-    from madetomeasure.evolve import VERSION
 
     root = SiteRoot(creators=['admin'], title = u"Made To Measure")
     root['users'] = Users(title = _(u"Users"))
@@ -49,9 +50,6 @@ def bootstrap_root():
     root['question_types']['free_text_question'] = TextQuestionType(title = u"Free text question",
                                                                     description = u"Just a text field",
                                                                     input_widget = 'text_widget')
-    manager = ZODBEvolutionManager(root, evolve_packagename = 'madetomeasure.evolve', sw_version = VERSION)
-    manager.set_db_version(VERSION)
-    manager.transaction.commit()
     return root
 
 def generate_slug(context, text, limit=20):
