@@ -12,6 +12,7 @@ requires = [
     'pyramid_zodbconn',
     'pyramid_tm',
     'pyramid_deform',
+    'deform_bootstrap',
     'fanstatic',
     'ZODB3',
     'Babel',
@@ -23,6 +24,8 @@ requires = [
     'betahaus.pyracont >= 0.2b',
     'iso8601',
     'js.deform',
+    'js.bootstrap',
+    'js.deform_bootstrap',
     'repoze.evolution'
     ]
 

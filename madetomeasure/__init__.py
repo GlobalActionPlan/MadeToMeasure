@@ -32,7 +32,12 @@ def include_dependencies(config):
     """ Make sure 3rd party dependencies are included. """
     settings = config.registry.settings
     pyramid_includes = settings.get('pyramid.includes', '').split()
-    for requirement in ('pyramid_zodbconn', 'pyramid_tm', 'pyramid_deform', 'js.deform'):
+    for requirement in ('pyramid_zodbconn',
+                        'pyramid_tm',
+                        'pyramid_deform',
+                        'deform_bootstrap',
+                        'js.deform',
+                        'js.deform_bootstrap',):
         if requirement not in pyramid_includes:
             config.include(requirement)
 
@@ -45,7 +50,7 @@ def includeme(config):
     if 'default_timezone' not in settings:
         settings['default_timezone'] = 'UTC'
     config.add_static_view('static', 'madetomeasure:static')
-    config.add_static_view('deform', 'deform:static')
+    #config.add_static_view('deform', 'deform:static')
     config.include('madetomeasure.models.question_widgets')
     config.include('madetomeasure.models.translations')
     config.include('madetomeasure.models.date_time_helper')
