@@ -29,6 +29,34 @@ from madetomeasure.fanstaticlib import manage_questions
 from madetomeasure import security
 
 
+def _next_section(context):
+    """ Return next section object if there is one.
+    """
+    parent = context.__parent__
+    section_order = tuple(parent.order)
+    cur_index = section_order.index(context.__name__)
+    try:
+        next_name = section_order[cur_index+1]
+        return parent[next_name]
+    except IndexError:
+        return
+
+def _previous_section(context):
+    """ Return previous section object if there is one.
+    """
+    parent = context.__parent__
+    section_order = tuple(parent.order)
+    cur_index = section_order.index(context.__name__)
+    if cur_index == 0:
+        #Since -1 is a valid index :)
+        return
+    try:
+        previous_name = section_order[cur_index-1]
+        return parent[previous_name]
+    except IndexError:
+        return
+
+
 class SurveysView(BaseView):
 
     @view_config(name='participants', context=ISurvey, renderer='templates/survey_participans.pt', permission=security.MANAGE_SURVEY)
@@ -114,33 +142,6 @@ class SurveysView(BaseView):
         self.response['form'] = form.render()
         return self.response
 
-    def _next_section(self):
-        """ Return next section object if there is one.
-        """
-        parent = self.context.__parent__
-        section_order = tuple(parent.order)
-        cur_index = section_order.index(self.context.__name__)
-        try:
-            next_name = section_order[cur_index+1]
-            return parent[next_name]
-        except IndexError:
-            return
-
-    def _previous_section(self):
-        """ Return previous section object if there is one.
-        """
-        parent = self.context.__parent__
-        section_order = tuple(parent.order)
-        cur_index = section_order.index(self.context.__name__)
-        if cur_index == 0:
-            #Since -1 is a valid index :)
-            return
-        try:
-            previous_name = section_order[cur_index-1]
-            return parent[previous_name]
-        except IndexError:
-            return        
-
     @view_config(name="do", context=ISurveySection, renderer='templates/survey_form.pt')
     def do_survey_section_view(self):
         """ Where participants go to tell us about their life... """
@@ -151,8 +152,8 @@ class SurveysView(BaseView):
             raise Forbidden("Invalid ticket")
         schema = colander.Schema()
         self.context.append_questions_to_schema(schema, self.request)
-        next_section = self._next_section()
-        previous_section = self._previous_section()
+        next_section = _next_section(self.context)
+        previous_section = _previous_section(self.context)
         buttons = [self.buttons['next']]
         if previous_section:
             buttons.insert(0, self.buttons['previous'])
@@ -188,8 +189,8 @@ class SurveysView(BaseView):
         if not participant_uid in survey.tickets:
             raise Forbidden("Invalid ticket")
         schema = colander.Schema()
-        next_section = self._next_section()
-        previous_section = self._previous_section()
+        next_section = _next_section(self.context)
+        previous_section = _previous_section(self.context)
         buttons = [self.buttons['next']]
         if previous_section:
             buttons.insert(0, self.buttons['previous'])
@@ -238,15 +239,6 @@ class SurveysView(BaseView):
         for part_data in section.responses.values():
             [question_ids.append(x) for x in part_data.keys() if x not in question_ids]
         return [section.question_object_from_id(id) for id in question_ids]
-
-    @view_config(context = ISurveySection, renderer = 'templates/survey_form.pt', permission = security.VIEW)
-    def show_dummy_form_view(self):
-        schema = colander.Schema()
-        self.context.append_questions_to_schema(schema, self.request)
-        form = Form(schema)
-        self.response['form_resources'] = form.get_widget_resources()
-        self.response['dummy_form'] = form.render()
-        return self.response
 
     @view_config(context = ITextSection, renderer = 'templates/survey_form.pt', permission = security.VIEW)
     def show_dummy_text_view(self):
@@ -479,6 +471,20 @@ class SurveysView(BaseView):
         response = Response(content_type='text/csv',
                             body=contents)
         return response
+
+
+@view_config(context = ISurveySection, renderer = 'templates/survey_form.pt', permission = security.VIEW)
+class SurveyViewDummyForm(BaseForm):
+    buttons = ()
+
+    @reify
+    def schema(self):
+        schema = colander.Schema()
+        self.context.append_questions_to_schema(schema, self.request)
+        return schema
+
+    def appstruct(self):
+        return {}
 
 
 @view_config(name='clone', context=ISurvey, renderer=BASE_FORM_TEMPLATE, permission=security.EDIT)
