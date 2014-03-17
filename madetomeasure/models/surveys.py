@@ -229,7 +229,7 @@ class Survey(BaseFolder, SecurityAware):
         
         #Check if it has end time and that it hasn't passed
         if end_time and end_time < now:
-            msg = u"Survey has ended"
+            msg = _(u"Survey has ended")
             raise SurveyUnavailableError(self, msg=msg, ended=True)
         
         return True

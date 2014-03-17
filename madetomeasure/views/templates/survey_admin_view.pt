@@ -9,26 +9,36 @@
 <metal:heading fill-slot="page_heading">
     <h1 tal:content="context.get_translated_title()">Title</h1>
 </metal:heading>
-<div metal:fill-slot="content">
+<div metal:fill-slot="content" class="row">
 
-    <ul id="survey-state">
-    	<li tal:content="survey_state_msg"></li>
-		<li>
-			<span i18n:translate="">Start time</span> &mdash;
-			<span tal:condition="start_time|False" tal:content="start_time"></span>
-			<span tal:condition="not start_time" i18n:translate="">Nothing set</span>
-		</li>
-		<li>
-			<span i18n:translate="">End time</span> &mdash;
-	        <span tal:condition="end_time|False" tal:content="end_time"></span>
-	        <span tal:condition="not end_time" i18n:translate="">Nothing set, this survey will never close!</span>
-		</li>
-		<li><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</li>
-   </ul>
-
-    <h2 i18n:translate="">Sections</h2>
-    <tal:listing replace="structure view.listing_sniplet()"></tal:listing>
-
+    <div class="col-md-6">
+        <h2 i18n:translate="">Sections</h2>
+        <div class="list-group">
+          <a class="list-group-item" tal:repeat="obj context.values()"
+             href="${request.resource_url(obj)}">
+            ${obj.title}
+            <span class="label label-default" tal:condition="hasattr(obj, 'question_ids')">${len(obj.question_ids)}</span>
+            <span class="badge">${obj.content_type}</span>
+          </a>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2 i18n:translate="">About</h2>
+        <div id="list-group">
+        	<div class="list-group-item" tal:content="survey_state_msg"></div>
+    		<div class="list-group-item">
+    			<span i18n:translate="">Start time</span> &mdash;
+    			<span tal:condition="start_time|False" tal:content="start_time"></span>
+    			<span tal:condition="not start_time" i18n:translate="">Nothing set</span>
+    		</div>
+    		<div class="list-group-item">
+    			<span i18n:translate="">End time</span> &mdash;
+    	        <span tal:condition="end_time|False" tal:content="end_time"></span>
+    	        <span tal:condition="not end_time" i18n:translate="">Nothing set, this survey will never close!</span>
+    		</div>
+    		<div class="list-group-item"><span i18n:translate="">Timezone is</span> ${context.get_time_zone()}</div>
+       </div>
+    </div>
 
 </div>
 </body>
