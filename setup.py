@@ -22,6 +22,7 @@ requires = [
     'lingua',
     'pytz',
     'betahaus.pyracont >= 0.2b',
+    'betahaus.viewcomponent',
     'iso8601',
     'js.deform',
     'js.bootstrap',

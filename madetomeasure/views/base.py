@@ -16,6 +16,7 @@ from zope.component import createObject
 from betahaus.pyracont.interfaces import IBaseFolder
 from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.pyracont.factories import createSchema
+from betahaus.viewcomponent import render_view_group
 from pyramid_deform import FormView
 
 from madetomeasure.models.app import get_users_dt_helper
@@ -102,6 +103,10 @@ class BaseView(object):
         return find_interface(self.context, IOrganisation)
 
     @reify
+    def survey(self):
+        return find_interface(self.context, ISurvey)
+
+    @reify
     def main_macro(self):
         return get_renderer('templates/main.pt').implementation().macros['master']
         
@@ -176,6 +181,10 @@ class BaseView(object):
 
     def get_lang(self):
         return self.request.cookies.get('_LOCALE_', None)
+
+    def render_view_group(self, group, context = None, **kw):
+        context = context and context or self.context
+        return render_view_group(context, self.request, group, view = self, **kw)    
 
     @reify
     def buttons(self):

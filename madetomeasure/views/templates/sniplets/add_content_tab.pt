@@ -1,0 +1,17 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="MadeToMeasure">
+  <li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <span i18n:translate="">Add</span>
+      <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <tal:types repeat="ctype view.addable_types">
+            <li>
+                <a href="${request.resource_url(context, 'add', query={'content_type': ctype})}">
+                    <span tal:replace="view.content_info[ctype].display_name|ctype">
+                </a>
+            </li>
+        </tal:types>
+    </ul>
+  </li>
+</tal:main>

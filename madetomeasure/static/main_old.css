@@ -1,0 +1,297 @@
+/* The basics */
+html, body {
+    font-family: 'Helvetica', sans-serif;
+	height: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    margin: 0.5em 0;
+    font-family: 'Helvetica', sans-serif;
+}
+h1 {
+    font-size: 200%;
+}
+h2 {
+    font-size: 175%;
+}
+h3 {
+    font-size: 150%;
+}
+h4 {
+    font-size: 125%;
+}
+h5 {
+    font-size: 100%;
+}
+h6 {
+    font-size: 85%;
+}
+a {
+    color: #4A9EC6;
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+	cursor: pointer;
+}
+ul > li {
+	margin-left: 2em;
+	list-style-type:square;
+}
+p {
+	margin: 1.1em 0;
+}
+
+/* Font size */
+body,
+input,
+textarea,
+button {
+    font-size: 16px;
+}
+
+/* area positions and layout */
+#page-wrapper {
+	background: #4A9EC6;
+	min-height: 100%;
+	min-width: 100%;
+}
+#page-header {
+    height: 100px;
+	display: block;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px 0 #ccc;
+	margin-bottom: 40px;
+}
+#main-area-wrapper {
+	position: relative;
+	width: 100%;
+    padding-bottom: 100px;
+}
+#main-area {
+    overflow: hidden;
+	width: 1000px;
+	position: relative;
+	margin: auto;
+	background: #fff;
+	/* bottom padding must be same as footer height */
+	padding: 20px 20px 20px 20px;
+    border-radius: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px #ccc;
+}
+#content {}
+#footer {
+	/* Mind bottom padding on main-area-wrapper! */
+	position: relative;
+    margin-top: -60px;
+	height: 40px;
+	clear: both;
+    display: block;
+    background: #fff;
+    padding: 10px;
+    box-shadow: 0 0 20px 0 #ccc;
+    -moz-box-shadow: 0 0 20px 0 #ccc;
+    -webkit-box-shadow: 0 0 20px 0 #ccc;
+	overflow: hidden;
+	text-align: center;
+}
+
+#logo {
+	display: block;
+	float: left;
+	width: 400px;
+	height: 100px;
+    background: url(/static/dummy_logo.png) no-repeat;
+}
+#system-toolbar {
+	text-align: right;
+	margin-left: 400px;
+	z-index: -1;
+
+}
+#context-toolbar {
+	display: block;
+	margin-bottom: 10px;
+	border-bottom: 2px solid #ccc;
+	padding: 5px 0;
+}
+#flash_messages {
+}
+#flash_messages .message {
+	border: 1px solid #aaa;
+	background-color: #ccc;
+	padding: 5px;
+	margin: 5px 0px;
+}
+
+/* Administrative controls */
+#context-toolbar .button {
+}
+#context-toolbar .button:hover {
+}
+
+/* table */
+table.listing th {
+    font-size: 120%;
+}
+table.listing th,
+table.listing td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.question_text {
+    font-size: 110%;
+    margin-bottom: 5px;
+}
+.question a {
+    float: right;
+    padding-left: 10px;
+}
+/* Survey form tweaks */
+#survey ul.deformSet > li {
+    display: inline;
+    margin: 0.5em;
+}
+
+/* Deform tweaks */
+.deform label {
+    margin: 1em 0 0.5em 0;
+}
+.deform > fieldset > ul > li {
+    border-top: solid 1px #ccc;
+}
+.deform li.buttons {
+	padding-top: 1em;
+	text-align: center;
+}
+
+#deformcancel {
+    border-color: red;
+	color: red;
+}
+
+/* Regular form tweaks and "buttonization" of links. */
+button,
+.button {
+    border: 1px solid #4A9EC6;
+	background: #fff;
+	color: #4A9EC6;
+	font-weight: bold;
+	padding: 0.5em 1em;
+}
+button:hover,
+.button:hover {
+    cursor: pointer;
+}
+#context-toolbar {
+    clear: both;
+}
+.context-tab {
+    border-left: 1px solid #4A9EC6;
+    border-right: 1px solid #4A9EC6;
+    padding: 5px;
+    float: left;
+}
+textarea,
+input {
+	border: 2px solid #ccc;
+}
+legend {
+    font-size: 125%;
+}
+/* reorder */
+ul.ui-sortable {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    min-height: 20px;
+    border: 1px solid #CCC;
+}
+ul.ui-sortable li {
+    cursor: pointer;
+    background-color: #EEFFEE;
+    padding: 0.5em;
+    margin: 0.25em 0.5em;
+}
+ul.ui-sortable li:hover {
+    background-color: #DDEEEE;
+}
+ul.ui-sortable li.variant {
+    background-color: #EECCEE;
+}
+ul.ui-sortable li.variant:hover {
+    background-color: #DDCCEE;
+}
+ul.ui-sortable li.local {
+    background-color: #EEEECC;
+}
+ul.ui-sortable li.local:hover {
+    background-color: #EEEEAA;
+}
+ul.survey_section {
+    margin: 1em 0;
+}
+.column ul li {
+    list-style-type: none;
+}
+.column {
+    float: left;
+    padding-right: 1%;
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
+}
+
+/* manage questions */
+.sectiontags {
+    float: right;
+    padding-left: 10px;
+}
+.add_questions {
+    color: green;
+    padding: 2pt;
+}
+.del_questions {
+    color: red;
+    padding: 2pt 4pt;
+}
+
+/* manage section */
+#manage_sections > li {
+    margin-left: 0px;
+}
+
+/* fullscreen */
+#fullscreen {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    background: #fff;
+    overflow: auto;
+    z-index: 1000;
+    display: none;
+}
+/* Minimizable content */
+.toggle_minimize {
+}
+.toggle_opened .toggle_minimize {
+}
+.toggle_opened .toggle_minimize:hover {}
+.toggle_closed .toggle_minimize {
+}
+.toggle_closed .toggle_minimize:hover {}
+.toggle_area.toggle_closed .minimizable_area {
+    display: none !important;
+}
+.toggle_area.toggle_opened .minimizable_inverted {
+    display: none !important;
+}

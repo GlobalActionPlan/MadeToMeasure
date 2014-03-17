@@ -1,0 +1,5 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="MadeToMeasure">
+<li tal:attributes="class active and 'active' or ''">
+    <a href="${url}">${va.title}</a>
+</li>
+</tal:main>
