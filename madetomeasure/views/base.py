@@ -205,17 +205,17 @@ class BaseForm(BaseView, FormView):
     default_success = _(u"Done")
     default_cancel = _(u"Canceled")
 
-    button_login = Button('login', _(u"Login"))
-    button_forgot_pw = Button('forgot_pw', _(u"Forgot password?"))
-    button_save = Button('save', _(u"Save"))
-    button_add = Button('add', _(u"Add"))
-    button_send = Button('send', _(u"Send"))
-    button_next = Button('next', _(u"Next"))
-    button_previous = Button('previous', _(u"Previous"))
-    button_cancel = Button('cancel', _(u"Cancel"))
-    button_request = Button('request', _(u"Request"))
-    button_change = Button('change', _(u"Change"))
-    button_delete = Button('delete', _(u"Delete"))
+    button_login = Button('login', _(u"Login"), css_class="btn btn-primary")
+    button_forgot_pw = Button('forgot_pw', _(u"Forgot password?"), css_class="btn btn-primary")
+    button_save = Button('save', _(u"Save"), css_class="btn btn-primary")
+    button_add = Button('add', _(u"Add"), css_class="btn btn-primary")
+    button_send = Button('send', _(u"Send"), css_class="btn btn-primary")
+    button_next = Button('next', _(u"Next"), css_class="btn btn-primary")
+    button_previous = Button('previous', _(u"Previous"), css_class="btn btn-primary")
+    button_cancel = Button('cancel', _(u"Cancel"), css_class="btn btn-default")
+    button_request = Button('request', _(u"Request"), css_class="btn btn-primary")
+    button_change = Button('change', _(u"Change"), css_class="btn btn-primary")
+    button_delete = Button('delete', _(u"Delete"), css_class="btn btn-danger")
 
     def get_bind_data(self):
         return {'context': self.context, 'request': self.request, 'view': self}
