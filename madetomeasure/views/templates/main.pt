@@ -25,7 +25,7 @@
 <body>
 
 <nav class="navbar navbar-default" role="navigation">
-  <div class="container-fluid">
+  <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
@@ -101,8 +101,9 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<div class=".container-fluid">
-        
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
         <div id="main-area-wrapper"><div id="main-area">
 
             <div tal:condition="view.userid">
@@ -115,7 +116,10 @@
 
             <div id="flash_messages" tal:define="flash_messages view.get_flash_messages()">
                 <tal:iterate repeat="flash_message flash_messages">
-                    <div class="message" tal:content="structure flash_message">Message</div>
+                    <div class="alert alert-info alert-dismissable">
+                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                      <div class="message" tal:content="structure flash_message">Message</div>
+                    </div>
                 </tal:iterate>
             </div>
 
@@ -131,8 +135,10 @@
                     <!-- Content slot, where other templates render -->
                 </metal:main-content>
             </div>
+            
         </div></div><!-- main area and wrapper -->
-    
+        </div>
+    </div><!-- /row -->
 </div>
 
 <div class="footer navbar-bottom" tal:condition="view.root"
