@@ -10,51 +10,72 @@
     <h1 tal:content="context.get_translated_title()">Title</h1>
 </metal:heading>
 <div metal:fill-slot="content">
-
-    <div class="column">
+<div class="row">
+    <div class="col-md-6">
         <form method="POST">
-            <ul id="manage_sections">
+            <div id="manage_sections" class="panel-group">
                 <tal:sections repeat="section survey_sections">
-                    <li class="toggle_area toggle_closed">
-                        <span class="sectiontags minimizable_area">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" href="#${section.uid}">
+                              ${section.get_translated_title()}
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="${section.uid}" class="panel-collapse collapse in">
+                        <div class="panel-body">
                             <select class="add_from_tag"><option>(tags)</option></select>
-                            <button type="button" class="add_questions"
-                                    title="Add from selected tag" i18n:attributes="title">+</button>
-                            <button type="button" class="del_questions"
-                                    title="Remove from selected tag" i18n:attributes="title">&ndash;</button>
-                        </span>
-                        <h3><a href="javascript:" class="toggle_minimize">${section.get_translated_title()}</a></h3>
-                        <ul class="survey_section pickable_questions minimizable_area" name="${section.__name__}">
-                            <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
-                                <li id="${question.__name__}"
-                                    class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
-                                    <span class="question_text">${question.get_title(lang = view.get_lang())}</span>
-                                    <a tal:condition="not question.is_local"
-                                       href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
-                                       class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
-                                    <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
-                                </li>
-                            </tal:questions>
-                        </ul>
-                        <div class="minimizable_inverted" i18n:translate="">&lt;Hidden - Click header to open section&gt;</div>
-                    </li>
+                            
+                            <button type="button" class="add_questions btn btn-success btn-xs"
+                                    title="Add from selected tag" i18n:attributes="title">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                            <button type="button" class="del_questions  btn btn-warning btn-xs"
+                                    title="Remove from selected tag" i18n:attributes="title">
+                                <span class="glyphicon glyphicon-minus"></span>
+                            </button>
+                            <ul class="survey_section pickable_questions list-group" name="${section.__name__}">
+                                <tal:questions repeat="question [section.question_object_from_id(id) for id in section.question_ids]">
+                                    <li id="${question.__name__}"
+                                        class="question list-group-item ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
+                                        <!--
+                                        <span tal:condition="question.is_variant" class="badge" i18n:translate="">Variant</span>
+                                        <span tal:condition="question.is_local" class="badge" i18n:translate="">Local</span>
+                                        -->
+                                        <span class="question_text">${question.get_title(lang = view.get_lang())}</span>
+                                        
+                                        <a tal:condition="not question.is_local"
+                                           href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
+                                           class="edit_variant" target="_blank"><img src="/static/editpen.png" /></a>
+                                        <input type="hidden" class="${' '.join(['tag_' + x for x in question.tags])}" name="${section.__name__}" value="${question.__name__}" />
+                                    </li>
+                                </tal:questions>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
                 </tal:sections>
-            </ul>
+            </div><!--/manage_sections -->
             <div>
-                <button id="deformsave" name="save" type="submit" class="btnText submit"
+                <button id="deformsave" name="save" type="submit" class="btn btn-primary"
                         value="save" i18n:translate="">Save</button>
-                <button id="deformcancel" name="cancel" type="submit" class="btnText submit"
+                <button id="deformcancel" name="cancel" type="submit" class="btn btn-default"
                         value="cancel" i18n:translate="">Cancel</button>
             </div>
         </form>
     </div>
 
-    <div class="column">
-        <h3 i18n:translate="">Question pool</h3>
-        <ul id="tag_listing" class="survey_section pickable_questions">
+    <div class="col-md-6">
+        <h2 i18n:translate="">Question pool</h2>
+        <ul id="tag_listing" class="survey_section pickable_questions list-group">
             <tal:questions repeat="question available_questions">
                 <li id="${question.__name__}"
-                    class="question ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
+                    class="question list-group-item ${('',' variant')[question.is_variant]} ${('',' local')[question.is_local]}">
+                    <!--
+                    <span tal:condition="question.is_variant" class="badge" i18n:translate="">Variant</span>
+                    <span tal:condition="question.is_local" class="badge" i18n:translate="">Local</span>
+                    -->
                     <span class="question_text">${question.get_title(lang = view.get_lang())}</span>
                     <a tal:condition="not question.is_local"
                        href="${request.resource_url(organisation, 'variant', query={'question_name': question.__name__})}"
@@ -64,9 +85,8 @@
             </tal:questions>
         </ul>
     </div>
-
-    <div id="fullscreen"></div>
-
+</div>
+<div id="fullscreen"></div>
 </div>
 </body>
 </html>

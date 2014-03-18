@@ -89,7 +89,7 @@ function ajax_save_variant(event) {
     var url = $(this).attr('action');
     var fullscreen = $('#fullscreen');
     var formdata = $(this).serialize();
-    formdata += "&save=1";
+    formdata += "&save=save";
     $.post(url, formdata, function(data) {
         var data = $.parseJSON(data);
         edit_variant.children('.question_text').html(data['question_text']);
