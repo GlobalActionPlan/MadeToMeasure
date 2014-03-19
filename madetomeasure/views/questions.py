@@ -7,6 +7,7 @@ from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestion
 from madetomeasure.interfaces import IQuestions
 from madetomeasure.views.base import BaseView
+from madetomeasure.fanstaticlib import questions_listing
 from madetomeasure import security
 
 
@@ -17,6 +18,7 @@ class QuestionsView(BaseView):
     def questions_view(self):
         """ This view is for any IQuestions context, both the global one and the local one + the Organisation objects 'variants' view.
         """
+        questions_listing.need()
         schema = createSchema('QuestionSearchSchema').bind(context = self.context, request = self.request)
         form = Form(schema, buttons = (), formid = 'tag_select', action = 'javascript:')
         self.response['form_resources'] = form.get_widget_resources()

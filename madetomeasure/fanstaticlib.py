@@ -13,6 +13,7 @@ main_css = Resource(m2m_lib, 'main.css', depends = (bootstrap_theme, bootstrap,)
 
 main_js = Resource(m2m_lib, 'main.js', depends = (deform_bootstrap_js,))
 manage_questions = Resource(m2m_lib, 'manage_questions.js', depends = (main_js, ui_sortable,))
+questions_listing = Resource(m2m_lib, 'questions_listing.js', depends = (main_js,))
 
 survey_managers_resources = Group([main_css, main_js])
 survey_participants_resources = Group([main_css, main_js])

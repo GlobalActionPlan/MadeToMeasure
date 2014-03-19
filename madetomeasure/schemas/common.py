@@ -102,7 +102,7 @@ def deferred_tags_select_widget(node, kw):
         results.append((k, u"%s (%s)" % (k, tags[k])))
     return deform.widget.SelectWidget(
                 title = _(u"Tags"),
-                size = 60,
+                size = 1,
                 values = tuple(results),
             )
 

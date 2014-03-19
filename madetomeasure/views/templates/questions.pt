@@ -11,7 +11,7 @@
 
     <tal:form replace="structure tag_form">Tag select form</tal:form>
 
-    <table id="tag_listing" class="listing">
+    <table id="tag_listing" class="table table-hover">
         <thead>
             <tr>
                 <th i18n:translate="">Question</th>
@@ -34,14 +34,14 @@
                 </td>
                 <td class="tags">
                     <tal:iterate repeat="tag question.tags">
-                        <a href="javascript:" class="tag ${'tag_%s' % tag}">${tag}</a>
+                        <a href="javascript:" class="tag ${'tag_%s' % tag}"><span class="label label-primary">${tag}</span></a>
                     </tal:iterate>
                 </td>
                 <td>
-                    <tal:lang replace="', '.join(question.get_question_text().keys())"></tal:lang>
+                    <span class="label label-default" tal:repeat="lang question.get_question_text().keys()">${lang}</span>
                 </td>
                 <td tal:condition="is_org">
-                    <tal:lang_variants replace="', '.join(context.variants.get(question.__name__, {}).keys())">sv, de</tal:lang_variants>
+                    <span class="label label-default" tal:repeat="lang context.variants.get(question.__name__, {}).keys()">${lang}</span>
                 </td>
             </tr>
         </tbody>
