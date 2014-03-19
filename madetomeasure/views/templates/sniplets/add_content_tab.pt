@@ -1,6 +1,7 @@
 <tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="MadeToMeasure">
   <li class="dropdown">
     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+      <span class="glyphicon glyphicon-plus"></span>
       <span i18n:translate="">Add</span>
       <span class="caret"></span>
     </a>

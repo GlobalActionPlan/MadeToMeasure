@@ -66,17 +66,19 @@ def generic_survey_menu_item(context, request, va, **kw):
     assert context.content_type == 'Survey' #Just to avoid silly bugs
     return _render_default_menu(context, request, va, **kw)
 
-@view_action('context_menu', 'add', title = _(u"Add"))
+@view_action('context_menu', 'add', title = _(u"Add"), priority = 1)
 def add_context_tab(context, request, va, **kw):
     """ This is the dropdown add tab. Permissions are for each addable content type. """
     view = kw['view']
     response = dict(context = context, va = va, view = view)
     return render("madetomeasure:views/templates/sniplets/add_content_tab.pt", response, request = request)
 
-@view_action('context_menu', 'edit', title = _(u"Edit"),
-             permission = security.EDIT, schema_name = 'edit', view_name = 'edit')
-@view_action('context_menu', 'delete', title = _(u"Delete"),
-             permission = security.DELETE, schema_name = 'delete', view_name = 'delete')
+@view_action('context_menu', 'edit', title = _(u"Edit"), priority = 2,
+             permission = security.EDIT, schema_name = 'edit', view_name = 'edit',
+             icon = 'pencil')
+@view_action('context_menu', 'delete', title = _(u"Delete"), priority = 5,
+             permission = security.DELETE, schema_name = 'delete', view_name = 'delete',
+             icon = 'remove')
 #FIXME: Translations!
 def generic_context_tabs(context, request, va, **kw):
     """ Actions for a specific context. """
@@ -85,7 +87,12 @@ def generic_context_tabs(context, request, va, **kw):
         return
     view = kw['view']
     view_name = va.kwargs.get('view_name', '')
+    icon = va.kwargs.get('icon', None)
     url = request.resource_url(context, view_name)
-    response = dict(context = context, va = va, view = view, url = url,
+    response = dict(context = context,
+                    va = va,
+                    view = view,
+                    url = url,
+                    icon = icon,
                     active = request.view_name == view_name,)
     return render("madetomeasure:views/templates/sniplets/context_tab.pt", response, request = request)

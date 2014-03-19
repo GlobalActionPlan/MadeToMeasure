@@ -41,6 +41,7 @@
       <ul class="nav navbar-nav" tal:condition="view.userid"><!-- only authenticated -->
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-globe"></span>
               <span i18n:translate="">System</span> <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
@@ -49,6 +50,7 @@
         </li>
         <li class="dropdown" tal:condition="view.organisation">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-briefcase"></span>
               <span i18n:translate="">Organisation</span> <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
@@ -57,6 +59,7 @@
         </li>
         <li class="dropdown" tal:condition="view.survey">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <span class="glyphicon glyphicon-inbox"></span>
               <span i18n:translate="">Survey</span> <b class="caret"></b>
           </a>
           <ul class="dropdown-menu">
