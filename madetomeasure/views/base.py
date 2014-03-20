@@ -56,9 +56,6 @@ class BaseView(object):
             self.exception = None
         self.request = request
         self.response = {}
-        if self.organisation:
-            self.response['hex_color'] = self.organisation.get_field_value('hex_color')
-            self.response['logo_link'] = self.organisation.get_field_value('logo_link')
         if self.userid:
             survey_managers_resources.need()
         else:
@@ -109,7 +106,12 @@ class BaseView(object):
     @reify
     def main_macro(self):
         return get_renderer('templates/main.pt').implementation().macros['master']
-        
+
+    @reify
+    def logo_link(self):
+        if self.organisation:
+            return self.organisation.get_field_value('logo_link')
+
     def get_flash_messages(self):
         for message in self.request.session.pop_flash():
             yield message
@@ -363,12 +365,11 @@ class DefaultViews(BaseView):
 
     @view_config(context=ISiteRoot, renderer="templates/root_view.pt", permission = NO_PERMISSION_REQUIRED)
     def root_view(self):
-        contents = []
+        organisations = []
         for obj in self.context.values():
             if IOrganisation.providedBy(obj) and security.context_has_permission(obj, security.VIEW, self.userid):
-                contents.append(obj)
-        contents = sorted(contents, key = lambda x: x.title.lower())
-        self.response['listing'] = self.listing_sniplet(contents)
+                organisations.append(obj)
+        self.response['organisations'] = sorted(organisations, key = lambda x: x.title.lower())
         return self.response
 
     @view_config(context=IChoice)

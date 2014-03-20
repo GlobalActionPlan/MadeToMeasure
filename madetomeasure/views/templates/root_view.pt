@@ -10,10 +10,42 @@
     Note that this view is visible for anyone, even visitors who aren't logged in.
 </tal:comment>
 <div metal:fill-slot="content">
+
     <!-- FIXME: Proper text -->
-    <div i18n:translate="">Survey system</div>
-    <p i18n:translate="">To participate in a survey you need to use the link sent to you.</p>
-    <tal:listing replace="structure listing"></tal:listing>
+    <tal:unauthenticated condition="not view.userid">
+        <div i18n:translate="">Survey system</div>
+        <p i18n:translate="">To participate in a survey you need to use the link sent to you.</p>
+    </tal:unauthenticated>
+
+    <tal:authenticated condition="view.userid">
+    <tal:iterate repeat="org organisations">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a href="${request.resource_url(org)}">${org.title}</a>
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                      <ul class="nav nav-pills">
+                          <li>
+                              <a href="${request.resource_url(org['surveys'])}">
+                                  <span class="glyphicon glyphicon-inbox"></span>
+                                  <span i18n:translate="">Surveys</span>
+                                  <span class="label label-default">${len(org['surveys'])}</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <img class="img-responsive" src="${org.get_field_value('logo_link')}" alt="">
+            </div>
+        </div>
+    </tal:iterate>
+    </tal:authenticated>
 </div>
 </body>
 </html>

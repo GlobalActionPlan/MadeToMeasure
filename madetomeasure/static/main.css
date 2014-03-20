@@ -16,3 +16,8 @@
 .local {
     background-color: #eec;
 }
+/*logo */
+.navbar-brand  img {
+    margin: -10px 0;
+    max-height: 40px;
+}

@@ -12,14 +12,6 @@
         </metal:page_title>
     <meta name="keywords" content="python web application" />
     <meta name="description" content="pyramid web application" />
-    <style tal:condition="organisation and hex_color|False" type="text/css">
-        a, button { color: ${hex_color}; }
-        button { border: 1px solid ${hex_color}; }
-        #page-wrapper { background-color: ${hex_color}; }
-    </style>
-    <style tal:condition="organisation and logo_link|False" type="text/css">
-        #logo { background-image: url(${logo_link}); }
-    </style>
     <metal:head define-slot="head"></metal:head>
 </head>
 <body>
@@ -33,7 +25,10 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="${request.resource_url(view.root)}">m2m</a>
+      <a class="navbar-brand" href="${request.resource_url(view.root)}">
+          <span tal:condition="not view.logo_link">m2m</span>
+          <img tal:condition="view.logo_link" src="${view.logo_link}" alt="" class="img-responsive" />
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

@@ -221,17 +221,14 @@ class Survey(BaseFolder, SecurityAware):
         now = utcnow()
         start_time = self.get_field_value('start_time', None)
         end_time = self.get_field_value('end_time', None)
-        
         #Check if it has start time and is started
         if start_time and start_time > now:
             msg = u"Survey has not opened"
             raise SurveyUnavailableError(self, msg=msg, not_started=True)
-        
         #Check if it has end time and that it hasn't passed
         if end_time and end_time < now:
             msg = _(u"Survey has ended")
             raise SurveyUnavailableError(self, msg=msg, ended=True)
-        
         return True
         
     def untranslated_languages(self):
