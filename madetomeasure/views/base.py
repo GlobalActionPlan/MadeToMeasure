@@ -18,6 +18,7 @@ from betahaus.pyracont.interfaces import IContentFactory
 from betahaus.pyracont.factories import createSchema
 from betahaus.viewcomponent import render_view_group
 from pyramid_deform import FormView
+from deform_autoneed import need_lib
 
 from madetomeasure.models.app import get_users_dt_helper
 from madetomeasure.interfaces import IChoice
@@ -56,6 +57,7 @@ class BaseView(object):
             self.exception = None
         self.request = request
         self.response = {}
+        need_lib('basic')
         if self.userid:
             survey_managers_resources.need()
         else:

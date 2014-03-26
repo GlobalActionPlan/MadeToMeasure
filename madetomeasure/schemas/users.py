@@ -19,7 +19,7 @@ def password_validation(node, value):
         raise colander.Invalid(node, _(u"Less than 100 chars please."))
 
 def translator_node():
-    return colander.SchemaNode(deform.Set(allow_empty = True),
+    return colander.SchemaNode(colander.Set(),
                                title = _(u"I am a translator and translate to the following languages"),
                                description = _(u"You will need the translator permission to actually translate."),
                                widget = deferred_translator_languages_widget,

@@ -2,7 +2,6 @@ from operator import itemgetter
 
 import colander
 import deform
-from pyramid.traversal import find_root
 from zope.component import getUtility
 from betahaus.pyracont.decorators import schema_factory
 
@@ -12,7 +11,6 @@ from madetomeasure.schemas.common import deferred_delete_title
 from madetomeasure.schemas.common import time_zone_node
 from madetomeasure.schemas.validators import deferred_confirm_delete_with_title_validator
 from madetomeasure.schemas.validators import multiple_email_validator
-from madetomeasure.models.fields import TZDateTime
 from madetomeasure.interfaces import IOrganisation
 from madetomeasure.interfaces import IQuestionTranslations
 from madetomeasure.security import EDIT
@@ -38,27 +36,11 @@ class SurveySchema(colander.Schema):
     title = colander.SchemaNode(colander.String(),
                                 title = _(u"Title"),)
     heading_translations = survey_heading_translations_node()
-    start_time = colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"Start time for survey"),
-         missing=colander.null,
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-    )
-    end_time = colander.SchemaNode(
-         TZDateTime(),
-         title = _(u"End time for survey"),
-         missing=colander.null,
-         widget=deform.widget.DateTimeInputWidget(options={'dateFormat': 'yy-mm-dd',
-                                                           'timeFormat': 'hh:mm',
-                                                           'separator': ' '}),
-    )
     from_address = colander.SchemaNode(colander.String(),
                                        title = _(u"Email to send system mail from"),
                                        validator=colander.Email(),)
     time_zone = time_zone_node()
-    available_languages = colander.SchemaNode(deform.Set(),
+    available_languages = colander.SchemaNode(colander.Set(),
                                               widget=deferred_available_languages_widget,
                                               title=_("Available languages"),)
     allow_anonymous_to_participate = colander.SchemaNode(colander.Bool(),

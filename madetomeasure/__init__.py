@@ -35,9 +35,7 @@ def include_dependencies(config):
     for requirement in ('pyramid_zodbconn',
                         'pyramid_tm',
                         'pyramid_deform',
-                        'deform_bootstrap',
-                        'js.deform',
-                        'js.deform_bootstrap',):
+                        'deform_autoneed',):
         if requirement not in pyramid_includes:
             config.include(requirement)
 
@@ -55,8 +53,6 @@ def includeme(config):
     config.include('madetomeasure.models.translations')
     config.include('madetomeasure.models.date_time_helper')
     config.scan('betahaus.pyracont.fields.password')
-    config.add_translation_dirs('deform:locale/',
-                                'colander:locale/',
-                                'madetomeasure:locale/',)
+    config.add_translation_dirs('madetomeasure:locale/',)
     config.hook_zca()
     config.scan('madetomeasure')

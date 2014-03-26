@@ -1,0 +1,12 @@
+<tal:main xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="MadeToMeasure">
+    <ul tal:condition="contents">
+    <tal:iterate repeat="obj contents">
+        <li tal:condition="context_has_permission(obj, 'View')">
+            <a tal:content="obj.get_translated_title()|obj.title"
+               href="${request.resource_url(obj)}">Title</a>
+            <div tal:condition="display_type|hasattr(obj, 'display_name')"
+                 tal:content="obj.display_name">Display name</div>
+        </li>
+    </tal:iterate>
+    </ul>
+</tal:main>

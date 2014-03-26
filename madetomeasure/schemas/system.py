@@ -72,7 +72,7 @@ class UserIDAndGroupsSchema(colander.Schema):
         widget = deferred_user_choices_widget,
         )
     groups = colander.SchemaNode(
-        deform.Set(allow_empty = True),
+        colander.Set(),
         title = _(u"Role"),
         widget=deferred_role_choices_widget,
         )
