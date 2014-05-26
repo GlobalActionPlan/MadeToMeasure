@@ -423,8 +423,7 @@ class SurveysView(BaseView):
         lrow = [_(u"Languages").encode('utf-8'), _(u"Total").encode('utf-8')]
         langs = set(languages.keys()) | set(self.context.get_available_languages())
         for lang in langs:
-            lrow.append(u"%s (%s)" % (self.trans_util.title_for_code(lang).encode('utf-8'), 
-                                      self.trans_util.title_for_code_default(lang).encode('utf-8')))
+            lrow.append("%s (%s)" % (self.trans_util.title_for_code(lang).encode('utf-8'), self.trans_util.title_for_code_default(lang).encode('utf-8')))
         writer.writerow(lrow)
         lrow = [""]
         for lang in langs:
