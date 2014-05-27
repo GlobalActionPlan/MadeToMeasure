@@ -102,7 +102,7 @@ class TextSectionSchema(colander.Schema):
 @colander.deferred
 def deferred_delete_survey_section_desc(node, kw):
     context = kw['context']
-    if len(context.responses):
+    if len(getattr(context, 'responses', ())):
         return _(u"WARNING! This section has response data. If you delete it, it will be lost forever!")
     return u""
 
