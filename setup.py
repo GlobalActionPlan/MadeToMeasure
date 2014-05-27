@@ -23,7 +23,8 @@ requires = [
     'betahaus.pyracont >= 0.2b',
     'iso8601',
     'js.deform',
-    'repoze.evolution'
+    'repoze.evolution',
+    'js.tinymce == 3.5.2-1', #This pinning should go later
     ]
 
 setup(name='MadeToMeasure',
